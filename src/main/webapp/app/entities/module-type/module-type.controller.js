@@ -3,11 +3,11 @@
 
     angular
         .module('miuApp')
-        .controller('ModuleController', ModuleController);
+        .controller('ModuleTypeController', ModuleTypeController);
 
-    ModuleController.$inject = ['$scope', '$state', 'Module', 'ParseLinks', 'AlertService', 'paginationConstants', 'pagingParams'];
+    ModuleTypeController.$inject = ['$scope', '$state', 'ModuleType', 'ParseLinks', 'AlertService', 'paginationConstants', 'pagingParams'];
 
-    function ModuleController ($scope, $state, Module, ParseLinks, AlertService, paginationConstants, pagingParams) {
+    function ModuleTypeController ($scope, $state, ModuleType, ParseLinks, AlertService, paginationConstants, pagingParams) {
         var vm = this;
 
         vm.loadPage = loadPage;
@@ -19,7 +19,7 @@
         loadAll();
 
         function loadAll () {
-            Module.query({
+            ModuleType.query({
                 page: pagingParams.page - 1,
                 size: vm.itemsPerPage,
                 sort: sort()
@@ -35,7 +35,7 @@
                 vm.links = ParseLinks.parse(headers('link'));
                 vm.totalItems = headers('X-Total-Count');
                 vm.queryCount = vm.totalItems;
-                vm.modules = data;
+                vm.moduleTypes = data;
                 vm.page = pagingParams.page;
             }
             function onError(error) {

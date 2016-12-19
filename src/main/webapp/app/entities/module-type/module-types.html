@@ -1,13 +1,13 @@
 <div>
-    <h2>Courses</h2>
+    <h2>Module Types</h2>
     <jhi-alert></jhi-alert>
     <div class="container-fluid">
         <div class="row">
             <div class="col-xs-4 no-padding-left">
-                <button class="btn btn-primary" ui-sref="course.new" >
+                <button class="btn btn-primary" ui-sref="module-type.new" >
                     <span class="glyphicon glyphicon-plus"></span>
                     <span >
-                        Create new Course
+                        Create new Module Type
                     </span>
                 </button>
             </div>
@@ -19,34 +19,34 @@
             <thead>
                 <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.transition()">
                     <th jh-sort-by="id"><span>ID</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="description"><span>Description</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="courseOrder"><span>Course Order</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="title"><span>Title</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="description"><span>Description</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="moduleTypeOrder"><span>Module Type Order</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="course in vm.courses track by course.id">
-                    <td><a ui-sref="course-detail({id:course.id})">{{course.id}}</a></td>
-                    <td>{{course.description}}</td>
-                    <td>{{course.courseOrder}}</td>
-                    <td>{{course.title}}</td>
+                <tr ng-repeat="moduleType in vm.moduleTypes track by moduleType.id">
+                    <td><a ui-sref="module-type-detail({id:moduleType.id})">{{moduleType.id}}</a></td>
+                    <td>{{moduleType.title}}</td>
+                    <td>{{moduleType.description}}</td>
+                    <td>{{moduleType.moduleTypeOrder}}</td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">
                             <button type="submit"
-                                    ui-sref="course-detail({id:course.id})"
+                                    ui-sref="module-type-detail({id:moduleType.id})"
                                     class="btn btn-info btn-sm">
                                 <span class="glyphicon glyphicon-eye-open"></span>
                                 <span class="hidden-xs hidden-sm"></span>
                             </button>
                             <button type="submit"
-                                    ui-sref="course.edit({id:course.id})"
+                                    ui-sref="module-type.edit({id:moduleType.id})"
                                     class="btn btn-primary btn-sm">
                                 <span class="glyphicon glyphicon-pencil"></span>
                                 <span class="hidden-xs hidden-sm"></span>
                             </button>
                             <button type="submit"
-                                    ui-sref="course.delete({id:course.id})"
+                                    ui-sref="module-type.delete({id:moduleType.id})"
                                     class="btn btn-danger btn-sm">
                                 <span class="glyphicon glyphicon-remove-circle"></span>
                                 <span class="hidden-xs hidden-sm"></span>

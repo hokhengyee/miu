@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -44,7 +45,7 @@ public class ModuleResource {
      */
     @PostMapping("/modules")
     @Timed
-    public ResponseEntity<Module> createModule(@RequestBody Module module) throws URISyntaxException {
+    public ResponseEntity<Module> createModule(@Valid @RequestBody Module module) throws URISyntaxException {
         log.debug("REST request to save Module : {}", module);
         if (module.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("module", "idexists", "A new module cannot already have an ID")).body(null);
@@ -66,7 +67,7 @@ public class ModuleResource {
      */
     @PutMapping("/modules")
     @Timed
-    public ResponseEntity<Module> updateModule(@RequestBody Module module) throws URISyntaxException {
+    public ResponseEntity<Module> updateModule(@Valid @RequestBody Module module) throws URISyntaxException {
         log.debug("REST request to update Module : {}", module);
         if (module.getId() == null) {
             return createModule(module);

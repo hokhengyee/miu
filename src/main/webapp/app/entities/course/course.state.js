@@ -115,9 +115,9 @@
                     resolve: {
                         entity: function () {
                             return {
-                                title: null,
                                 description: null,
                                 courseOrder: null,
+                                title: null,
                                 id: null
                             };
                         }

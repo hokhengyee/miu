@@ -19,19 +19,25 @@
             <thead>
                 <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.transition()">
                     <th jh-sort-by="id"><span>ID</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="title"><span>Title</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="description"><span>Description</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="moduleOrder"><span>Module Order</span> <span class="glyphicon glyphicon-sort"></span></th>
-                    <th jh-sort-by="course.id"><span>Course</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="moduleCode"><span>Module Code</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="title"><span>Title</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="moduleType.title"><span>Module Type</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="course.title"><span>Course</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 <tr ng-repeat="module in vm.modules track by module.id">
                     <td><a ui-sref="module-detail({id:module.id})">{{module.id}}</a></td>
-                    <td>{{module.title}}</td>
                     <td>{{module.description}}</td>
                     <td>{{module.moduleOrder}}</td>
+                    <td>{{module.moduleCode}}</td>
+                    <td>{{module.title}}</td>
+                    <td>
+                        <a ui-sref="module-type-detail({id:module.moduleType.id})">{{module.moduleType.title}}</a>
+                    </td>
                     <td>
                         <a ui-sref="course-detail({id:module.course.id})">{{module.course.title}}</a>
                     </td>

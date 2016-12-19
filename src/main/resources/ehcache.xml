@@ -24,5 +24,7 @@
 
     <cache alias="com.miu.domain.Module" uses-template="simple"/>
 
+    <cache alias="com.miu.domain.ModuleType" uses-template="simple"/>
+
     <!-- jhipster-needle-ehcache-add-entry -->
 </config>

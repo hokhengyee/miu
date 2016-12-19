@@ -4,10 +4,6 @@
     <hr>
     <jhi-alert-error></jhi-alert-error>
     <dl class="dl-horizontal jh-entity-details">
-        <dt><span>Title</span></dt>
-        <dd>
-            <span>{{vm.module.title}}</span>
-        </dd>
         <dt><span>Description</span></dt>
         <dd>
             <span>{{vm.module.description}}</span>
@@ -15,6 +11,18 @@
         <dt><span>Module Order</span></dt>
         <dd>
             <span>{{vm.module.moduleOrder}}</span>
+        </dd>
+        <dt><span>Module Code</span></dt>
+        <dd>
+            <span>{{vm.module.moduleCode}}</span>
+        </dd>
+        <dt><span>Title</span></dt>
+        <dd>
+            <span>{{vm.module.title}}</span>
+        </dd>
+        <dt><span>Module Type</span></dt>
+        <dd>
+            <a ui-sref="module-type-detail({id:vm.module.moduleType.id})">{{vm.module.moduleType.title}}</a>
         </dd>
         <dt><span>Course</span></dt>
         <dd>

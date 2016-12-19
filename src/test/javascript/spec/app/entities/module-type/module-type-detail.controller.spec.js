@@ -2,9 +2,9 @@
 
 describe('Controller Tests', function() {
 
-    describe('Module Management Detail Controller', function() {
+    describe('ModuleType Management Detail Controller', function() {
         var $scope, $rootScope;
-        var MockEntity, MockPreviousState, MockModule, MockModuleType, MockCourse;
+        var MockEntity, MockPreviousState, MockModuleType;
         var createController;
 
         beforeEach(inject(function($injector) {
@@ -12,9 +12,7 @@ describe('Controller Tests', function() {
             $scope = $rootScope.$new();
             MockEntity = jasmine.createSpy('MockEntity');
             MockPreviousState = jasmine.createSpy('MockPreviousState');
-            MockModule = jasmine.createSpy('MockModule');
             MockModuleType = jasmine.createSpy('MockModuleType');
-            MockCourse = jasmine.createSpy('MockCourse');
             
 
             var locals = {
@@ -22,19 +20,17 @@ describe('Controller Tests', function() {
                 '$rootScope': $rootScope,
                 'entity': MockEntity,
                 'previousState': MockPreviousState,
-                'Module': MockModule,
-                'ModuleType': MockModuleType,
-                'Course': MockCourse
+                'ModuleType': MockModuleType
             };
             createController = function() {
-                $injector.get('$controller')("ModuleDetailController", locals);
+                $injector.get('$controller')("ModuleTypeDetailController", locals);
             };
         }));
 
 
         describe('Root Scope Listening', function() {
             it('Unregisters root scope listener upon scope destruction', function() {
-                var eventType = 'miuApp:moduleUpdate';
+                var eventType = 'miuApp:moduleTypeUpdate';
 
                 createController();
                 expect($rootScope.$$listenerCount[eventType]).toEqual(1);

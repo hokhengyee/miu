@@ -17,22 +17,22 @@
     <property name="floatType" value="float" dbms="mysql, oracle, mssql"/>
 
     <!--
-        Added the entity Course.
+        Added the entity ModuleType.
     -->
-    <changeSet id="20161219044346-1" author="jhipster">
-        <createTable tableName="course">
+    <changeSet id="20161219064046-1" author="jhipster">
+        <createTable tableName="module_type">
             <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
+            <column name="title" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            
             <column name="description" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
             
-            <column name="course_order" type="bigint">
-                <constraints nullable="true" />
-            </column>
-            
-            <column name="title" type="varchar(255)">
+            <column name="module_type_order" type="bigint">
                 <constraints nullable="false" />
             </column>
             

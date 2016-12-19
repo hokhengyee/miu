@@ -37,14 +37,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = MiuApp.class)
 public class CourseResourceIntTest {
 
-    private static final String DEFAULT_TITLE = "AAAAAAAAAA";
-    private static final String UPDATED_TITLE = "BBBBBBBBBB";
-
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
     private static final Long DEFAULT_COURSE_ORDER = 1L;
     private static final Long UPDATED_COURSE_ORDER = 2L;
+
+    private static final String DEFAULT_TITLE = "AAAAAAAAAA";
+    private static final String UPDATED_TITLE = "BBBBBBBBBB";
 
     @Inject
     private CourseRepository courseRepository;
@@ -80,9 +80,9 @@ public class CourseResourceIntTest {
      */
     public static Course createEntity(EntityManager em) {
         Course course = new Course()
-                .title(DEFAULT_TITLE)
                 .description(DEFAULT_DESCRIPTION)
-                .courseOrder(DEFAULT_COURSE_ORDER);
+                .courseOrder(DEFAULT_COURSE_ORDER)
+                .title(DEFAULT_TITLE);
         return course;
     }
 
@@ -107,9 +107,9 @@ public class CourseResourceIntTest {
         List<Course> courseList = courseRepository.findAll();
         assertThat(courseList).hasSize(databaseSizeBeforeCreate + 1);
         Course testCourse = courseList.get(courseList.size() - 1);
-        assertThat(testCourse.getTitle()).isEqualTo(DEFAULT_TITLE);
         assertThat(testCourse.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testCourse.getCourseOrder()).isEqualTo(DEFAULT_COURSE_ORDER);
+        assertThat(testCourse.getTitle()).isEqualTo(DEFAULT_TITLE);
     }
 
     @Test
@@ -134,6 +134,24 @@ public class CourseResourceIntTest {
 
     @Test
     @Transactional
+    public void checkTitleIsRequired() throws Exception {
+        int databaseSizeBeforeTest = courseRepository.findAll().size();
+        // set the field null
+        course.setTitle(null);
+
+        // Create the Course, which fails.
+
+        restCourseMockMvc.perform(post("/api/courses")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(course)))
+            .andExpect(status().isBadRequest());
+
+        List<Course> courseList = courseRepository.findAll();
+        assertThat(courseList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void getAllCourses() throws Exception {
         // Initialize the database
         courseRepository.saveAndFlush(course);
@@ -143,9 +161,9 @@ public class CourseResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(course.getId().intValue())))
-            .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE.toString())))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
-            .andExpect(jsonPath("$.[*].courseOrder").value(hasItem(DEFAULT_COURSE_ORDER.intValue())));
+            .andExpect(jsonPath("$.[*].courseOrder").value(hasItem(DEFAULT_COURSE_ORDER.intValue())))
+            .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE.toString())));
     }
 
     @Test
@@ -159,9 +177,9 @@ public class CourseResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(course.getId().intValue()))
-            .andExpect(jsonPath("$.title").value(DEFAULT_TITLE.toString()))
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
-            .andExpect(jsonPath("$.courseOrder").value(DEFAULT_COURSE_ORDER.intValue()));
+            .andExpect(jsonPath("$.courseOrder").value(DEFAULT_COURSE_ORDER.intValue()))
+            .andExpect(jsonPath("$.title").value(DEFAULT_TITLE.toString()));
     }
 
     @Test
@@ -182,9 +200,9 @@ public class CourseResourceIntTest {
         // Update the course
         Course updatedCourse = courseRepository.findOne(course.getId());
         updatedCourse
-                .title(UPDATED_TITLE)
                 .description(UPDATED_DESCRIPTION)
-                .courseOrder(UPDATED_COURSE_ORDER);
+                .courseOrder(UPDATED_COURSE_ORDER)
+                .title(UPDATED_TITLE);
 
         restCourseMockMvc.perform(put("/api/courses")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -195,9 +213,9 @@ public class CourseResourceIntTest {
         List<Course> courseList = courseRepository.findAll();
         assertThat(courseList).hasSize(databaseSizeBeforeUpdate);
         Course testCourse = courseList.get(courseList.size() - 1);
-        assertThat(testCourse.getTitle()).isEqualTo(UPDATED_TITLE);
         assertThat(testCourse.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testCourse.getCourseOrder()).isEqualTo(UPDATED_COURSE_ORDER);
+        assertThat(testCourse.getTitle()).isEqualTo(UPDATED_TITLE);
     }
 
     @Test

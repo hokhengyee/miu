@@ -2,12 +2,12 @@
     'use strict';
     angular
         .module('miuApp')
-        .factory('Module', Module);
+        .factory('ModuleType', ModuleType);
 
-    Module.$inject = ['$resource'];
+    ModuleType.$inject = ['$resource'];
 
-    function Module ($resource) {
-        var resourceUrl =  'api/modules/:id';
+    function ModuleType ($resource) {
+        var resourceUrl =  'api/module-types/:id';
 
         return $resource(resourceUrl, {}, {
             'query': { method: 'GET', isArray: true},

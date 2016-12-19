@@ -9,17 +9,17 @@
 
     function stateConfig($stateProvider) {
         $stateProvider
-        .state('module', {
+        .state('module-type', {
             parent: 'entity',
-            url: '/module?page&sort&search',
+            url: '/module-type?page&sort&search',
             data: {
                 authorities: ['ROLE_USER'],
-                pageTitle: 'Modules'
+                pageTitle: 'ModuleTypes'
             },
             views: {
                 'content@': {
-                    templateUrl: 'app/entities/module/modules.html',
-                    controller: 'ModuleController',
+                    templateUrl: 'app/entities/module-type/module-types.html',
+                    controller: 'ModuleTypeController',
                     controllerAs: 'vm'
                 }
             },
@@ -46,27 +46,27 @@
                 }]
             }
         })
-        .state('module-detail', {
+        .state('module-type-detail', {
             parent: 'entity',
-            url: '/module/{id}',
+            url: '/module-type/{id}',
             data: {
                 authorities: ['ROLE_USER'],
-                pageTitle: 'Module'
+                pageTitle: 'ModuleType'
             },
             views: {
                 'content@': {
-                    templateUrl: 'app/entities/module/module-detail.html',
-                    controller: 'ModuleDetailController',
+                    templateUrl: 'app/entities/module-type/module-type-detail.html',
+                    controller: 'ModuleTypeDetailController',
                     controllerAs: 'vm'
                 }
             },
             resolve: {
-                entity: ['$stateParams', 'Module', function($stateParams, Module) {
-                    return Module.get({id : $stateParams.id}).$promise;
+                entity: ['$stateParams', 'ModuleType', function($stateParams, ModuleType) {
+                    return ModuleType.get({id : $stateParams.id}).$promise;
                 }],
                 previousState: ["$state", function ($state) {
                     var currentStateData = {
-                        name: $state.current.name || 'module',
+                        name: $state.current.name || 'module-type',
                         params: $state.params,
                         url: $state.href($state.current.name, $state.params)
                     };
@@ -74,22 +74,22 @@
                 }]
             }
         })
-        .state('module-detail.edit', {
-            parent: 'module-detail',
+        .state('module-type-detail.edit', {
+            parent: 'module-type-detail',
             url: '/detail/edit',
             data: {
                 authorities: ['ROLE_USER']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
-                    templateUrl: 'app/entities/module/module-dialog.html',
-                    controller: 'ModuleDialogController',
+                    templateUrl: 'app/entities/module-type/module-type-dialog.html',
+                    controller: 'ModuleTypeDialogController',
                     controllerAs: 'vm',
                     backdrop: 'static',
                     size: 'lg',
                     resolve: {
-                        entity: ['Module', function(Module) {
-                            return Module.get({id : $stateParams.id}).$promise;
+                        entity: ['ModuleType', function(ModuleType) {
+                            return ModuleType.get({id : $stateParams.id}).$promise;
                         }]
                     }
                 }).result.then(function() {
@@ -99,81 +99,80 @@
                 });
             }]
         })
-        .state('module.new', {
-            parent: 'module',
+        .state('module-type.new', {
+            parent: 'module-type',
             url: '/new',
             data: {
                 authorities: ['ROLE_USER']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
-                    templateUrl: 'app/entities/module/module-dialog.html',
-                    controller: 'ModuleDialogController',
+                    templateUrl: 'app/entities/module-type/module-type-dialog.html',
+                    controller: 'ModuleTypeDialogController',
                     controllerAs: 'vm',
                     backdrop: 'static',
                     size: 'lg',
                     resolve: {
                         entity: function () {
                             return {
-                                description: null,
-                                moduleOrder: null,
-                                moduleCode: null,
                                 title: null,
+                                description: null,
+                                moduleTypeOrder: null,
                                 id: null
                             };
                         }
                     }
                 }).result.then(function() {
-                    $state.go('module', null, { reload: 'module' });
+                    $state.go('module-type', null, { reload: 'module-type' });
                 }, function() {
-                    $state.go('module');
+                    $state.go('module-type');
                 });
             }]
         })
-        .state('module.edit', {
-            parent: 'module',
+        .state('module-type.edit', {
+            parent: 'module-type',
             url: '/{id}/edit',
             data: {
                 authorities: ['ROLE_USER']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
-                    templateUrl: 'app/entities/module/module-dialog.html',
-                    controller: 'ModuleDialogController',
+                    templateUrl: 'app/entities/module-type/module-type-dialog.html',
+                    controller: 'ModuleTypeDialogController',
                     controllerAs: 'vm',
                     backdrop: 'static',
                     size: 'lg',
                     resolve: {
-                        entity: ['Module', function(Module) {
-                            return Module.get({id : $stateParams.id}).$promise;
+                        entity: ['ModuleType', function(ModuleType) {
+                            return ModuleType.get({id : $stateParams.id}).$promise;
                         }]
                     }
                 }).result.then(function() {
-                    $state.go('module', null, { reload: 'module' });
+                    $state.go('module-type', null, { reload: 'module-type' });
                 }, function() {
                     $state.go('^');
                 });
             }]
         })
-        .state('module.delete', {
-            parent: 'module',
+        .state('module-type.delete', {
+            parent: 'module-type',
             url: '/{id}/delete',
             data: {
                 authorities: ['ROLE_USER']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
-                    templateUrl: 'app/entities/module/module-delete-dialog.html',
-                    controller: 'ModuleDeleteController',
+                    templateUrl: 'app/entities/module-type/module-type-delete-dialog.html',
+                    controller: 'ModuleTypeDeleteController',
                     controllerAs: 'vm',
                     size: 'md',
                     resolve: {
-                        entity: ['Module', function(Module) {
-                            return Module.get({id : $stateParams.id}).$promise;
+                        entity: ['ModuleType', function(ModuleType) {
+                            return ModuleType.get({id : $stateParams.id}).$promise;
                         }]
                     }
                 }).result.then(function() {
-                    $state.go('module', null, { reload: 'module' });
+                    $state.go('module-type', null, { reload: 'module-type' });
                 }, function() {
                     $state.go('^');
                 });

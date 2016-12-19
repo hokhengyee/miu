@@ -4,6 +4,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -21,14 +22,15 @@ public class Course implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "title")
-    private String title;
-
     @Column(name = "description")
     private String description;
 
     @Column(name = "course_order")
     private Long courseOrder;
+
+    @NotNull
+    @Column(name = "title", nullable = false)
+    private String title;
 
     public Long getId() {
         return id;
@@ -36,19 +38,6 @@ public class Course implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public Course title(String title) {
-        this.title = title;
-        return this;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getDescription() {
@@ -77,6 +66,19 @@ public class Course implements Serializable {
         this.courseOrder = courseOrder;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public Course title(String title) {
+        this.title = title;
+        return this;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -101,9 +103,9 @@ public class Course implements Serializable {
     public String toString() {
         return "Course{" +
             "id=" + id +
-            ", title='" + title + "'" +
             ", description='" + description + "'" +
             ", courseOrder='" + courseOrder + "'" +
+            ", title='" + title + "'" +
             '}';
     }
 }

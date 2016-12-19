@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -44,7 +45,7 @@ public class CourseResource {
      */
     @PostMapping("/courses")
     @Timed
-    public ResponseEntity<Course> createCourse(@RequestBody Course course) throws URISyntaxException {
+    public ResponseEntity<Course> createCourse(@Valid @RequestBody Course course) throws URISyntaxException {
         log.debug("REST request to save Course : {}", course);
         if (course.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("course", "idexists", "A new course cannot already have an ID")).body(null);
@@ -66,7 +67,7 @@ public class CourseResource {
      */
     @PutMapping("/courses")
     @Timed
-    public ResponseEntity<Course> updateCourse(@RequestBody Course course) throws URISyntaxException {
+    public ResponseEntity<Course> updateCourse(@Valid @RequestBody Course course) throws URISyntaxException {
         log.debug("REST request to update Course : {}", course);
         if (course.getId() == null) {
             return createCourse(course);

@@ -3,6 +3,8 @@ package com.miu.web.rest;
 import com.miu.MiuApp;
 
 import com.miu.domain.Module;
+import com.miu.domain.ModuleType;
+import com.miu.domain.Course;
 import com.miu.repository.ModuleRepository;
 
 import org.junit.Before;
@@ -37,14 +39,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = MiuApp.class)
 public class ModuleResourceIntTest {
 
-    private static final String DEFAULT_TITLE = "AAAAAAAAAA";
-    private static final String UPDATED_TITLE = "BBBBBBBBBB";
-
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
     private static final Long DEFAULT_MODULE_ORDER = 1L;
     private static final Long UPDATED_MODULE_ORDER = 2L;
+
+    private static final String DEFAULT_MODULE_CODE = "AAAAAAAAAA";
+    private static final String UPDATED_MODULE_CODE = "BBBBBBBBBB";
+
+    private static final String DEFAULT_TITLE = "AAAAAAAAAA";
+    private static final String UPDATED_TITLE = "BBBBBBBBBB";
 
     @Inject
     private ModuleRepository moduleRepository;
@@ -80,9 +85,20 @@ public class ModuleResourceIntTest {
      */
     public static Module createEntity(EntityManager em) {
         Module module = new Module()
-                .title(DEFAULT_TITLE)
                 .description(DEFAULT_DESCRIPTION)
-                .moduleOrder(DEFAULT_MODULE_ORDER);
+                .moduleOrder(DEFAULT_MODULE_ORDER)
+                .moduleCode(DEFAULT_MODULE_CODE)
+                .title(DEFAULT_TITLE);
+        // Add required entity
+        ModuleType moduleType = ModuleTypeResourceIntTest.createEntity(em);
+        em.persist(moduleType);
+        em.flush();
+        module.setModuleType(moduleType);
+        // Add required entity
+        Course course = CourseResourceIntTest.createEntity(em);
+        em.persist(course);
+        em.flush();
+        module.setCourse(course);
         return module;
     }
 
@@ -107,9 +123,10 @@ public class ModuleResourceIntTest {
         List<Module> moduleList = moduleRepository.findAll();
         assertThat(moduleList).hasSize(databaseSizeBeforeCreate + 1);
         Module testModule = moduleList.get(moduleList.size() - 1);
-        assertThat(testModule.getTitle()).isEqualTo(DEFAULT_TITLE);
         assertThat(testModule.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testModule.getModuleOrder()).isEqualTo(DEFAULT_MODULE_ORDER);
+        assertThat(testModule.getModuleCode()).isEqualTo(DEFAULT_MODULE_CODE);
+        assertThat(testModule.getTitle()).isEqualTo(DEFAULT_TITLE);
     }
 
     @Test
@@ -134,6 +151,42 @@ public class ModuleResourceIntTest {
 
     @Test
     @Transactional
+    public void checkModuleCodeIsRequired() throws Exception {
+        int databaseSizeBeforeTest = moduleRepository.findAll().size();
+        // set the field null
+        module.setModuleCode(null);
+
+        // Create the Module, which fails.
+
+        restModuleMockMvc.perform(post("/api/modules")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(module)))
+            .andExpect(status().isBadRequest());
+
+        List<Module> moduleList = moduleRepository.findAll();
+        assertThat(moduleList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    public void checkTitleIsRequired() throws Exception {
+        int databaseSizeBeforeTest = moduleRepository.findAll().size();
+        // set the field null
+        module.setTitle(null);
+
+        // Create the Module, which fails.
+
+        restModuleMockMvc.perform(post("/api/modules")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(module)))
+            .andExpect(status().isBadRequest());
+
+        List<Module> moduleList = moduleRepository.findAll();
+        assertThat(moduleList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void getAllModules() throws Exception {
         // Initialize the database
         moduleRepository.saveAndFlush(module);
@@ -143,9 +196,10 @@ public class ModuleResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(module.getId().intValue())))
-            .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE.toString())))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
-            .andExpect(jsonPath("$.[*].moduleOrder").value(hasItem(DEFAULT_MODULE_ORDER.intValue())));
+            .andExpect(jsonPath("$.[*].moduleOrder").value(hasItem(DEFAULT_MODULE_ORDER.intValue())))
+            .andExpect(jsonPath("$.[*].moduleCode").value(hasItem(DEFAULT_MODULE_CODE.toString())))
+            .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE.toString())));
     }
 
     @Test
@@ -159,9 +213,10 @@ public class ModuleResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(module.getId().intValue()))
-            .andExpect(jsonPath("$.title").value(DEFAULT_TITLE.toString()))
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
-            .andExpect(jsonPath("$.moduleOrder").value(DEFAULT_MODULE_ORDER.intValue()));
+            .andExpect(jsonPath("$.moduleOrder").value(DEFAULT_MODULE_ORDER.intValue()))
+            .andExpect(jsonPath("$.moduleCode").value(DEFAULT_MODULE_CODE.toString()))
+            .andExpect(jsonPath("$.title").value(DEFAULT_TITLE.toString()));
     }
 
     @Test
@@ -182,9 +237,10 @@ public class ModuleResourceIntTest {
         // Update the module
         Module updatedModule = moduleRepository.findOne(module.getId());
         updatedModule
-                .title(UPDATED_TITLE)
                 .description(UPDATED_DESCRIPTION)
-                .moduleOrder(UPDATED_MODULE_ORDER);
+                .moduleOrder(UPDATED_MODULE_ORDER)
+                .moduleCode(UPDATED_MODULE_CODE)
+                .title(UPDATED_TITLE);
 
         restModuleMockMvc.perform(put("/api/modules")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -195,9 +251,10 @@ public class ModuleResourceIntTest {
         List<Module> moduleList = moduleRepository.findAll();
         assertThat(moduleList).hasSize(databaseSizeBeforeUpdate);
         Module testModule = moduleList.get(moduleList.size() - 1);
-        assertThat(testModule.getTitle()).isEqualTo(UPDATED_TITLE);
         assertThat(testModule.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testModule.getModuleOrder()).isEqualTo(UPDATED_MODULE_ORDER);
+        assertThat(testModule.getModuleCode()).isEqualTo(UPDATED_MODULE_CODE);
+        assertThat(testModule.getTitle()).isEqualTo(UPDATED_TITLE);
     }
 
     @Test

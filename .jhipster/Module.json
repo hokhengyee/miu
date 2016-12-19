@@ -2,19 +2,25 @@
     "fluentMethods": true,
     "relationships": [
         {
+            "relationshipName": "moduleType",
+            "otherEntityName": "moduleType",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "title"
+        },
+        {
             "relationshipName": "course",
             "otherEntityName": "course",
             "relationshipType": "many-to-one",
-            "relationshipValidateRules": [],
-            "otherEntityField": "id"
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "title"
         }
     ],
     "fields": [
-        {
-            "fieldName": "title",
-            "fieldType": "String",
-            "fieldValidateRules": []
-        },
         {
             "fieldName": "description",
             "fieldType": "String"
@@ -23,6 +29,20 @@
             "fieldName": "moduleOrder",
             "fieldType": "Long",
             "fieldValidateRules": []
+        },
+        {
+            "fieldName": "moduleCode",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "title",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
         }
     ],
     "changelogDate": "20161219050608",

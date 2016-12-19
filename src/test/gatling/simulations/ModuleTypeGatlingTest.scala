@@ -7,9 +7,9 @@ import org.slf4j.LoggerFactory
 import scala.concurrent.duration._
 
 /**
- * Performance test for the Course entity.
+ * Performance test for the ModuleType entity.
  */
-class CourseGatlingTest extends Simulation {
+class ModuleTypeGatlingTest extends Simulation {
 
     val context: LoggerContext = LoggerFactory.getILoggerFactory.asInstanceOf[LoggerContext]
     // Log all HTTP requests
@@ -37,7 +37,7 @@ class CourseGatlingTest extends Simulation {
         "X-XSRF-TOKEN" -> "${xsrf_token}"
     )
 
-    val scn = scenario("Test the Course entity")
+    val scn = scenario("Test the ModuleType entity")
         .exec(http("First unauthenticated request")
         .get("/api/account")
         .headers(headers_http)
@@ -59,26 +59,26 @@ class CourseGatlingTest extends Simulation {
         .check(status.is(200)))
         .pause(10)
         .repeat(2) {
-            exec(http("Get all courses")
-            .get("/api/courses")
+            exec(http("Get all moduleTypes")
+            .get("/api/module-types")
             .headers(headers_http_authenticated)
             .check(status.is(200)))
             .pause(10 seconds, 20 seconds)
-            .exec(http("Create new course")
-            .post("/api/courses")
+            .exec(http("Create new moduleType")
+            .post("/api/module-types")
             .headers(headers_http_authenticated)
-            .body(StringBody("""{"id":null, "description":"SAMPLE_TEXT", "courseOrder":null, "title":"SAMPLE_TEXT"}""")).asJSON
+            .body(StringBody("""{"id":null, "title":"SAMPLE_TEXT", "description":"SAMPLE_TEXT", "moduleTypeOrder":null}""")).asJSON
             .check(status.is(201))
-            .check(headerRegex("Location", "(.*)").saveAs("new_course_url"))).exitHereIfFailed
+            .check(headerRegex("Location", "(.*)").saveAs("new_moduleType_url"))).exitHereIfFailed
             .pause(10)
             .repeat(5) {
-                exec(http("Get created course")
-                .get("${new_course_url}")
+                exec(http("Get created moduleType")
+                .get("${new_moduleType_url}")
                 .headers(headers_http_authenticated))
                 .pause(10)
             }
-            .exec(http("Delete created course")
-            .delete("${new_course_url}")
+            .exec(http("Delete created moduleType")
+            .delete("${new_moduleType_url}")
             .headers(headers_http_authenticated))
             .pause(10)
         }
