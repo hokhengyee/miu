@@ -12,9 +12,13 @@
         <dd>
             <span>{{vm.module.description}}</span>
         </dd>
+        <dt><span>Module Order</span></dt>
+        <dd>
+            <span>{{vm.module.moduleOrder}}</span>
+        </dd>
         <dt><span>Course</span></dt>
         <dd>
-            <a ui-sref="course-detail({id:vm.module.course.id})">{{vm.module.course.id}}</a>
+            <a ui-sref="course-detail({id:vm.module.course.id})">{{vm.module.course.title}}</a>
         </dd>
     </dl>
 

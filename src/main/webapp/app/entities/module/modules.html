@@ -21,6 +21,7 @@
                     <th jh-sort-by="id"><span>ID</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="title"><span>Title</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="description"><span>Description</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="moduleOrder"><span>Module Order</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="course.id"><span>Course</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th></th>
                 </tr>
@@ -30,8 +31,9 @@
                     <td><a ui-sref="module-detail({id:module.id})">{{module.id}}</a></td>
                     <td>{{module.title}}</td>
                     <td>{{module.description}}</td>
+                    <td>{{module.moduleOrder}}</td>
                     <td>
-                        <a ui-sref="course-detail({id:module.course.id})">{{module.course.id}}</a>
+                        <a ui-sref="course-detail({id:module.course.id})">{{module.course.title}}</a>
                     </td>
                     <td class="text-right">
                         <div class="btn-group flex-btn-group-container">

@@ -43,6 +43,9 @@ public class ModuleResourceIntTest {
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
+    private static final Long DEFAULT_MODULE_ORDER = 1L;
+    private static final Long UPDATED_MODULE_ORDER = 2L;
+
     @Inject
     private ModuleRepository moduleRepository;
 
@@ -78,7 +81,8 @@ public class ModuleResourceIntTest {
     public static Module createEntity(EntityManager em) {
         Module module = new Module()
                 .title(DEFAULT_TITLE)
-                .description(DEFAULT_DESCRIPTION);
+                .description(DEFAULT_DESCRIPTION)
+                .moduleOrder(DEFAULT_MODULE_ORDER);
         return module;
     }
 
@@ -105,6 +109,7 @@ public class ModuleResourceIntTest {
         Module testModule = moduleList.get(moduleList.size() - 1);
         assertThat(testModule.getTitle()).isEqualTo(DEFAULT_TITLE);
         assertThat(testModule.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
+        assertThat(testModule.getModuleOrder()).isEqualTo(DEFAULT_MODULE_ORDER);
     }
 
     @Test
@@ -139,7 +144,8 @@ public class ModuleResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(module.getId().intValue())))
             .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE.toString())))
-            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())));
+            .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
+            .andExpect(jsonPath("$.[*].moduleOrder").value(hasItem(DEFAULT_MODULE_ORDER.intValue())));
     }
 
     @Test
@@ -154,7 +160,8 @@ public class ModuleResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(module.getId().intValue()))
             .andExpect(jsonPath("$.title").value(DEFAULT_TITLE.toString()))
-            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()));
+            .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
+            .andExpect(jsonPath("$.moduleOrder").value(DEFAULT_MODULE_ORDER.intValue()));
     }
 
     @Test
@@ -176,7 +183,8 @@ public class ModuleResourceIntTest {
         Module updatedModule = moduleRepository.findOne(module.getId());
         updatedModule
                 .title(UPDATED_TITLE)
-                .description(UPDATED_DESCRIPTION);
+                .description(UPDATED_DESCRIPTION)
+                .moduleOrder(UPDATED_MODULE_ORDER);
 
         restModuleMockMvc.perform(put("/api/modules")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -189,6 +197,7 @@ public class ModuleResourceIntTest {
         Module testModule = moduleList.get(moduleList.size() - 1);
         assertThat(testModule.getTitle()).isEqualTo(UPDATED_TITLE);
         assertThat(testModule.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
+        assertThat(testModule.getModuleOrder()).isEqualTo(UPDATED_MODULE_ORDER);
     }
 
     @Test

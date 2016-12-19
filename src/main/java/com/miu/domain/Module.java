@@ -27,6 +27,9 @@ public class Module implements Serializable {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "module_order")
+    private Long moduleOrder;
+
     @ManyToOne
     private Course course;
 
@@ -62,6 +65,19 @@ public class Module implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Long getModuleOrder() {
+        return moduleOrder;
+    }
+
+    public Module moduleOrder(Long moduleOrder) {
+        this.moduleOrder = moduleOrder;
+        return this;
+    }
+
+    public void setModuleOrder(Long moduleOrder) {
+        this.moduleOrder = moduleOrder;
     }
 
     public Course getCourse() {
@@ -103,6 +119,7 @@ public class Module implements Serializable {
             "id=" + id +
             ", title='" + title + "'" +
             ", description='" + description + "'" +
+            ", moduleOrder='" + moduleOrder + "'" +
             '}';
     }
 }

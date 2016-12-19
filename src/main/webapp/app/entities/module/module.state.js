@@ -117,6 +117,7 @@
                             return {
                                 title: null,
                                 description: null,
+                                moduleOrder: null,
                                 id: null
                             };
                         }

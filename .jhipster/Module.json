@@ -18,6 +18,11 @@
         {
             "fieldName": "description",
             "fieldType": "String"
+        },
+        {
+            "fieldName": "moduleOrder",
+            "fieldType": "Long",
+            "fieldValidateRules": []
         }
     ],
     "changelogDate": "20161219050608",
