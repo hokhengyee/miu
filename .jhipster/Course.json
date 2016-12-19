@@ -1,0 +1,24 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "title",
+            "fieldType": "String",
+            "fieldValidateRules": []
+        },
+        {
+            "fieldName": "description",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "courseOrder",
+            "fieldType": "Long"
+        }
+    ],
+    "changelogDate": "20161219044346",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "course",
+    "pagination": "pager"
+}
