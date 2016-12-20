@@ -26,5 +26,9 @@
 
     <cache alias="com.miu.domain.ModuleType" uses-template="simple"/>
 
+    <cache alias="com.miu.domain.ForumRoom" uses-template="simple"/>
+
+    <cache alias="com.miu.domain.ForumRoomMessage" uses-template="simple"/>
+
     <!-- jhipster-needle-ehcache-add-entry -->
 </config>
