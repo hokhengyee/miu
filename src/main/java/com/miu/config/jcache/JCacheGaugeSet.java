@@ -1,8 +1,6 @@
 package com.miu.config.jcache;
 
-import com.codahale.metrics.JmxAttributeGauge;
-import com.codahale.metrics.Metric;
-import com.codahale.metrics.MetricSet;
+import static com.codahale.metrics.MetricRegistry.name;
 
 import java.lang.management.ManagementFactory;
 import java.util.Arrays;
@@ -18,53 +16,56 @@ import javax.management.MalformedObjectNameException;
 import javax.management.ObjectInstance;
 import javax.management.ObjectName;
 
-import static com.codahale.metrics.MetricRegistry.name;
+import com.codahale.metrics.JmxAttributeGauge;
+import com.codahale.metrics.Metric;
+import com.codahale.metrics.MetricSet;
 
 /**
  * MetricSet retrieving JCache specific JMX metrics for every configured caches.
  */
 public class JCacheGaugeSet implements MetricSet {
 
-    private static final String M_BEAN_COORDINATES = "javax.cache:type=CacheStatistics,CacheManager=*,Cache=*";
+	private static final String M_BEAN_COORDINATES = "javax.cache:type=CacheStatistics,CacheManager=*,Cache=*";
 
-    @Override
-    public Map<String, Metric> getMetrics() {
-        Set<ObjectInstance> objectInstances = getCacheMBeans();
+	private static String toDashCase(String camelCase) {
+		return camelCase.replaceAll("(.)(\\p{Upper})", "$1-$2").toLowerCase();
+	}
 
-        Map<String, Metric> gauges = new HashMap<String, Metric>();
+	private Set<ObjectInstance> getCacheMBeans() {
+		try {
+			return ManagementFactory.getPlatformMBeanServer().queryMBeans(ObjectName.getInstance(M_BEAN_COORDINATES),
+					null);
+		}
 
-        List<String> availableStatsNames = retrieveStatsNames();
+		catch (MalformedObjectNameException e) {
+			throw new InternalError("Shouldn't happen since the query is hardcoded", e);
+		}
+	}
 
-        for (ObjectInstance objectInstance : objectInstances) {
-            ObjectName objectName = objectInstance.getObjectName();
-            String cacheName = objectName.getKeyProperty("Cache");
+	@Override
+	public Map<String, Metric> getMetrics() {
+		Set<ObjectInstance> objectInstances = getCacheMBeans();
 
-            for (String statsName : availableStatsNames) {
-                JmxAttributeGauge jmxAttributeGauge = new JmxAttributeGauge(objectName, statsName);
-                gauges.put(name(cacheName, toDashCase(statsName)), jmxAttributeGauge);
-            }
-        }
+		Map<String, Metric> gauges = new HashMap<String, Metric>();
 
-        return Collections.unmodifiableMap(gauges);
-    }
+		List<String> availableStatsNames = retrieveStatsNames();
 
-    private Set<ObjectInstance> getCacheMBeans() {
-        try {
-            return ManagementFactory.getPlatformMBeanServer().queryMBeans(ObjectName.getInstance(M_BEAN_COORDINATES), null);
-        } catch (MalformedObjectNameException e) {
-            throw new InternalError("Shouldn't happen since the query is hardcoded", e);
-        }
-    }
+		for (ObjectInstance objectInstance : objectInstances) {
+			ObjectName objectName = objectInstance.getObjectName();
+			String cacheName = objectName.getKeyProperty("Cache");
 
-    private List<String> retrieveStatsNames() {
-        Class<?> c = CacheStatisticsMXBean.class;
-        return Arrays.stream(c.getMethods())
-            .filter(method -> method.getName().startsWith("get"))
-            .map(method -> method.getName().substring(3))
-            .collect(Collectors.toList());
-    }
+			for (String statsName : availableStatsNames) {
+				JmxAttributeGauge jmxAttributeGauge = new JmxAttributeGauge(objectName, statsName);
+				gauges.put(name(cacheName, toDashCase(statsName)), jmxAttributeGauge);
+			}
+		}
 
-    private static String toDashCase(String camelCase) {
-        return camelCase.replaceAll("(.)(\\p{Upper})", "$1-$2").toLowerCase();
-    }
+		return Collections.unmodifiableMap(gauges);
+	}
+
+	private List<String> retrieveStatsNames() {
+		Class<?> c = CacheStatisticsMXBean.class;
+		return Arrays.stream(c.getMethods()).filter(method -> method.getName().startsWith("get"))
+				.map(method -> method.getName().substring(3)).collect(Collectors.toList());
+	}
 }

@@ -1,14 +1,18 @@
 package com.miu.web.rest;
 
-import com.miu.config.DefaultProfileUtil;
-import com.miu.config.JHipsterProperties;
-import org.springframework.core.env.Environment;
-import org.springframework.web.bind.annotation.*;
-
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import javax.inject.Inject;
+
+import org.springframework.core.env.Environment;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.miu.config.DefaultProfileUtil;
+import com.miu.config.JHipsterProperties;
 
 /**
  * Resource to return information about the currently running Spring profiles.
@@ -17,43 +21,44 @@ import java.util.List;
 @RequestMapping("/api")
 public class ProfileInfoResource {
 
-    @Inject
-    private Environment env;
+	class ProfileInfoResponse {
 
-    @Inject
-    private JHipsterProperties jHipsterProperties;
+		public String[] activeProfiles;
+		public String ribbonEnv;
 
-    @GetMapping("/profile-info")
-    public ProfileInfoResponse getActiveProfiles() {
-        String[] activeProfiles = DefaultProfileUtil.getActiveProfiles(env);
-        return new ProfileInfoResponse(activeProfiles, getRibbonEnv(activeProfiles));
-    }
+		ProfileInfoResponse(String[] activeProfiles, String ribbonEnv) {
+			this.activeProfiles = activeProfiles;
+			this.ribbonEnv = ribbonEnv;
+		}
+	}
 
-    private String getRibbonEnv(String[] activeProfiles) {
-        String[] displayOnActiveProfiles = jHipsterProperties.getRibbon().getDisplayOnActiveProfiles();
+	@Inject
+	private Environment env;
 
-        if (displayOnActiveProfiles == null) {
-            return null;
-        }
+	@Inject
+	private JHipsterProperties jHipsterProperties;
 
-        List<String> ribbonProfiles = new ArrayList<>(Arrays.asList(displayOnActiveProfiles));
-        List<String> springBootProfiles = Arrays.asList(activeProfiles);
-        ribbonProfiles.retainAll(springBootProfiles);
+	@GetMapping("/profile-info")
+	public ProfileInfoResponse getActiveProfiles() {
+		String[] activeProfiles = DefaultProfileUtil.getActiveProfiles(env);
+		return new ProfileInfoResponse(activeProfiles, getRibbonEnv(activeProfiles));
+	}
 
-        if (ribbonProfiles.size() > 0) {
-            return ribbonProfiles.get(0);
-        }
-        return null;
-    }
+	private String getRibbonEnv(String[] activeProfiles) {
+		String[] displayOnActiveProfiles = jHipsterProperties.getRibbon().getDisplayOnActiveProfiles();
 
-    class ProfileInfoResponse {
+		if (displayOnActiveProfiles == null) {
+			return null;
+		}
 
-        public String[] activeProfiles;
-        public String ribbonEnv;
+		List<String> ribbonProfiles = new ArrayList<>(Arrays.asList(displayOnActiveProfiles));
+		List<String> springBootProfiles = Arrays.asList(activeProfiles);
+		ribbonProfiles.retainAll(springBootProfiles);
 
-        ProfileInfoResponse(String[] activeProfiles, String ribbonEnv) {
-            this.activeProfiles = activeProfiles;
-            this.ribbonEnv = ribbonEnv;
-        }
-    }
+		if (ribbonProfiles.size() > 0) {
+			return ribbonProfiles.get(0);
+		}
+		
+		return null;
+	}
 }

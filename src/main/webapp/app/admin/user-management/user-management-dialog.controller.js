@@ -1,44 +1,43 @@
 (function() {
-    'use strict';
+	'use strict';
 
-    angular
-        .module('miuApp')
-        .controller('UserManagementDialogController',UserManagementDialogController);
+	angular.module('miuApp').controller('UserManagementDialogController',
+			UserManagementDialogController);
 
-    UserManagementDialogController.$inject = ['$stateParams', '$uibModalInstance', 'entity', 'User'];
+	UserManagementDialogController.$inject = [ '$stateParams',
+			'$uibModalInstance', 'entity', 'User' ];
 
-    function UserManagementDialogController ($stateParams, $uibModalInstance, entity, User) {
-        var vm = this;
+	function UserManagementDialogController($stateParams, $uibModalInstance,
+			entity, User) {
+		var vm = this;
 
-        vm.authorities = ['ROLE_USER', 'ROLE_ADMIN'];
-        vm.clear = clear;
-        vm.languages = null;
-        vm.save = save;
-        vm.user = entity;
+		vm.authorities = [ 'ROLE_USER', 'ROLE_ADMIN', 'ROLE_LECTURER' ];
+		vm.clear = clear;
+		vm.languages = null;
+		vm.save = save;
+		vm.user = entity;
 
+		function clear() {
+			$uibModalInstance.dismiss('cancel');
+		}
 
+		function onSaveSuccess(result) {
+			vm.isSaving = false;
+			$uibModalInstance.close(result);
+		}
 
-        function clear () {
-            $uibModalInstance.dismiss('cancel');
-        }
+		function onSaveError() {
+			vm.isSaving = false;
+		}
 
-        function onSaveSuccess (result) {
-            vm.isSaving = false;
-            $uibModalInstance.close(result);
-        }
-
-        function onSaveError () {
-            vm.isSaving = false;
-        }
-
-        function save () {
-            vm.isSaving = true;
-            if (vm.user.id !== null) {
-                User.update(vm.user, onSaveSuccess, onSaveError);
-            } else {
-                vm.user.langKey = 'en';
-                User.save(vm.user, onSaveSuccess, onSaveError);
-            }
-        }
-    }
+		function save() {
+			vm.isSaving = true;
+			if (vm.user.id !== null) {
+				User.update(vm.user, onSaveSuccess, onSaveError);
+			} else {
+				vm.user.langKey = 'en';
+				User.save(vm.user, onSaveSuccess, onSaveError);
+			}
+		}
+	}
 })();

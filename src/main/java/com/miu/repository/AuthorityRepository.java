@@ -1,8 +1,8 @@
 package com.miu.repository;
 
-import com.miu.domain.Authority;
-
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.miu.domain.Authority;
 
 /**
  * Spring Data JPA repository for the Authority entity.

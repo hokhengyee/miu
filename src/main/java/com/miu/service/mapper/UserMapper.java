@@ -1,13 +1,15 @@
 package com.miu.service.mapper;
 
-import com.miu.domain.Authority;
-import com.miu.domain.User;
-import com.miu.service.dto.UserDTO;
-import org.mapstruct.*;
-
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+
+import com.miu.domain.Authority;
+import com.miu.domain.User;
+import com.miu.service.dto.UserDTO;
 
 /**
  * Mapper for the entity User and its DTO UserDTO.
@@ -15,43 +17,43 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring", uses = {})
 public interface UserMapper {
 
-    UserDTO userToUserDTO(User user);
+	default Set<Authority> authoritiesFromStrings(Set<String> strings) {
+		return strings.stream().map(string -> {
+			Authority auth = new Authority();
+			auth.setName(string);
+			return auth;
+		}).collect(Collectors.toSet());
+	}
 
-    List<UserDTO> usersToUserDTOs(List<User> users);
+	default Set<String> stringsFromAuthorities(Set<Authority> authorities) {
+		return authorities.stream().map(Authority::getName).collect(Collectors.toSet());
+	}
 
-    @Mapping(target = "createdBy", ignore = true)
-    @Mapping(target = "createdDate", ignore = true)
-    @Mapping(target = "lastModifiedBy", ignore = true)
-    @Mapping(target = "lastModifiedDate", ignore = true)
-    @Mapping(target = "persistentTokens", ignore = true)
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "activationKey", ignore = true)
-    @Mapping(target = "resetKey", ignore = true)
-    @Mapping(target = "resetDate", ignore = true)
-    @Mapping(target = "password", ignore = true)
-    User userDTOToUser(UserDTO userDTO);
+	List<User> userDTOsToUsers(List<UserDTO> userDTOs);
 
-    List<User> userDTOsToUsers(List<UserDTO> userDTOs);
+	@Mapping(target = "createdBy", ignore = true)
+	@Mapping(target = "createdDate", ignore = true)
+	@Mapping(target = "lastModifiedBy", ignore = true)
+	@Mapping(target = "lastModifiedDate", ignore = true)
+	@Mapping(target = "persistentTokens", ignore = true)
+	@Mapping(target = "id", ignore = true)
+	@Mapping(target = "activationKey", ignore = true)
+	@Mapping(target = "resetKey", ignore = true)
+	@Mapping(target = "resetDate", ignore = true)
+	@Mapping(target = "password", ignore = true)
+	User userDTOToUser(UserDTO userDTO);
 
-    default User userFromId(Long id) {
-        if (id == null) {
-            return null;
-        }
-        User user = new User();
-        user.setId(id);
-        return user;
-    }
+	default User userFromId(Long id) {
+		if (id == null) {
+			return null;
+		}
 
-    default Set<String> stringsFromAuthorities (Set<Authority> authorities) {
-        return authorities.stream().map(Authority::getName)
-            .collect(Collectors.toSet());
-    }
+		User user = new User();
+		user.setId(id);
+		return user;
+	}
 
-    default Set<Authority> authoritiesFromStrings(Set<String> strings) {
-        return strings.stream().map(string -> {
-            Authority auth = new Authority();
-            auth.setName(string);
-            return auth;
-        }).collect(Collectors.toSet());
-    }
+	List<UserDTO> usersToUserDTOs(List<User> users);
+
+	UserDTO userToUserDTO(User user);
 }

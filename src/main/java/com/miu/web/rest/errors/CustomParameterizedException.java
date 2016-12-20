@@ -16,19 +16,20 @@ package com.miu.web.rest.errors;
  */
 public class CustomParameterizedException extends RuntimeException {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    private final String message;
-    private final String[] params;
+	private final String message;
 
-    public CustomParameterizedException(String message, String... params) {
-        super(message);
-        this.message = message;
-        this.params = params;
-    }
+	private final String[] params;
 
-    public ParameterizedErrorVM getErrorVM() {
-        return new ParameterizedErrorVM(message, params);
-    }
+	public CustomParameterizedException(String message, String... params) {
+		super(message);
+		this.message = message;
+		this.params = params;
+	}
+
+	public ParameterizedErrorVM getErrorVM() {
+		return new ParameterizedErrorVM(message, params);
+	}
 
 }

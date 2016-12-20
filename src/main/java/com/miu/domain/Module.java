@@ -1,12 +1,19 @@
 package com.miu.domain;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Objects;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A Module.
@@ -16,148 +23,143 @@ import java.util.Objects;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Module implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+	@ManyToOne
+	@NotNull
+	private Course course;
 
-    @Column(name = "description")
-    private String description;
+	@Column(name = "description")
+	private String description;
 
-    @Column(name = "module_order")
-    private Long moduleOrder;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
 
-    @NotNull
-    @Column(name = "module_code", nullable = false)
-    private String moduleCode;
+	@NotNull
+	@Column(name = "module_code", nullable = false)
+	private String moduleCode;
 
-    @NotNull
-    @Column(name = "title", nullable = false)
-    private String title;
+	@Column(name = "module_order")
+	private Long moduleOrder;
 
-    @ManyToOne
-    @NotNull
-    private ModuleType moduleType;
+	@ManyToOne
+	@NotNull
+	private ModuleType moduleType;
 
-    @ManyToOne
-    @NotNull
-    private Course course;
+	@NotNull
+	@Column(name = "title", nullable = false)
+	private String title;
 
-    public Long getId() {
-        return id;
-    }
+	public Module course(Course course) {
+		this.course = course;
+		return this;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public Module description(String description) {
+		this.description = description;
+		return this;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		Module module = (Module) o;
+		if (module.id == null || id == null) {
+			return false;
+		}
+		return Objects.equals(id, module.id);
+	}
 
-    public Module description(String description) {
-        this.description = description;
-        return this;
-    }
+	public Course getCourse() {
+		return course;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public Long getModuleOrder() {
-        return moduleOrder;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public Module moduleOrder(Long moduleOrder) {
-        this.moduleOrder = moduleOrder;
-        return this;
-    }
+	public String getModuleCode() {
+		return moduleCode;
+	}
 
-    public void setModuleOrder(Long moduleOrder) {
-        this.moduleOrder = moduleOrder;
-    }
+	public Long getModuleOrder() {
+		return moduleOrder;
+	}
 
-    public String getModuleCode() {
-        return moduleCode;
-    }
+	public ModuleType getModuleType() {
+		return moduleType;
+	}
 
-    public Module moduleCode(String moduleCode) {
-        this.moduleCode = moduleCode;
-        return this;
-    }
+	public String getTitle() {
+		return title;
+	}
 
-    public void setModuleCode(String moduleCode) {
-        this.moduleCode = moduleCode;
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(id);
+	}
 
-    public String getTitle() {
-        return title;
-    }
+	public Module moduleCode(String moduleCode) {
+		this.moduleCode = moduleCode;
+		return this;
+	}
 
-    public Module title(String title) {
-        this.title = title;
-        return this;
-    }
+	public Module moduleOrder(Long moduleOrder) {
+		this.moduleOrder = moduleOrder;
+		return this;
+	}
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+	public Module moduleType(ModuleType moduleType) {
+		this.moduleType = moduleType;
+		return this;
+	}
 
-    public ModuleType getModuleType() {
-        return moduleType;
-    }
+	public void setCourse(Course course) {
+		this.course = course;
+	}
 
-    public Module moduleType(ModuleType moduleType) {
-        this.moduleType = moduleType;
-        return this;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    public void setModuleType(ModuleType moduleType) {
-        this.moduleType = moduleType;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public Course getCourse() {
-        return course;
-    }
+	public void setModuleCode(String moduleCode) {
+		this.moduleCode = moduleCode;
+	}
 
-    public Module course(Course course) {
-        this.course = course;
-        return this;
-    }
+	public void setModuleOrder(Long moduleOrder) {
+		this.moduleOrder = moduleOrder;
+	}
 
-    public void setCourse(Course course) {
-        this.course = course;
-    }
+	public void setModuleType(ModuleType moduleType) {
+		this.moduleType = moduleType;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Module module = (Module) o;
-        if (module.id == null || id == null) {
-            return false;
-        }
-        return Objects.equals(id, module.id);
-    }
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
+	public Module title(String title) {
+		this.title = title;
+		return this;
+	}
 
-    @Override
-    public String toString() {
-        return "Module{" +
-            "id=" + id +
-            ", description='" + description + "'" +
-            ", moduleOrder='" + moduleOrder + "'" +
-            ", moduleCode='" + moduleCode + "'" +
-            ", title='" + title + "'" +
-            '}';
-    }
+	@Override
+	public String toString() {
+		return "Module{" + "id=" + id + ", description='" + description + "'" + ", moduleOrder='" + moduleOrder + "'"
+				+ ", moduleCode='" + moduleCode + "'" + ", title='" + title + "'" + '}';
+	}
 }

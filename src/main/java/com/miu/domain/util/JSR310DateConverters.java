@@ -1,73 +1,89 @@
 package com.miu.domain.util;
 
-import java.time.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Date;
 
 import org.springframework.core.convert.converter.Converter;
 
 public final class JSR310DateConverters {
 
-    private JSR310DateConverters() {}
+	public static class DateToLocalDateConverter implements Converter<Date, LocalDate> {
+		public static final DateToLocalDateConverter INSTANCE = new DateToLocalDateConverter();
 
-    public static class LocalDateToDateConverter implements Converter<LocalDate, Date> {
+		private DateToLocalDateConverter() {
+		}
 
-        public static final LocalDateToDateConverter INSTANCE = new LocalDateToDateConverter();
+		@Override
+		public LocalDate convert(Date source) {
+			return source == null ? null
+					: ZonedDateTime.ofInstant(source.toInstant(), ZoneId.systemDefault()).toLocalDate();
+		}
+	}
 
-        private LocalDateToDateConverter() {}
+	public static class DateToLocalDateTimeConverter implements Converter<Date, LocalDateTime> {
+		public static final DateToLocalDateTimeConverter INSTANCE = new DateToLocalDateTimeConverter();
 
-        @Override
-        public Date convert(LocalDate source) {
-            return source == null ? null : Date.from(source.atStartOfDay(ZoneId.systemDefault()).toInstant());
-        }
-    }
+		private DateToLocalDateTimeConverter() {
+		}
 
-    public static class DateToLocalDateConverter implements Converter<Date, LocalDate> {
-        public static final DateToLocalDateConverter INSTANCE = new DateToLocalDateConverter();
-        private DateToLocalDateConverter() {}
+		@Override
+		public LocalDateTime convert(Date source) {
+			return source == null ? null : LocalDateTime.ofInstant(source.toInstant(), ZoneId.systemDefault());
+		}
+	}
 
-        @Override
-        public LocalDate convert(Date source) {
-            return source == null ? null : ZonedDateTime.ofInstant(source.toInstant(), ZoneId.systemDefault()).toLocalDate();
-        }
-    }
+	public static class DateToZonedDateTimeConverter implements Converter<Date, ZonedDateTime> {
+		public static final DateToZonedDateTimeConverter INSTANCE = new DateToZonedDateTimeConverter();
 
-    public static class ZonedDateTimeToDateConverter implements Converter<ZonedDateTime, Date> {
-        public static final ZonedDateTimeToDateConverter INSTANCE = new ZonedDateTimeToDateConverter();
-        private ZonedDateTimeToDateConverter() {}
+		private DateToZonedDateTimeConverter() {
+		}
 
-        @Override
-        public Date convert(ZonedDateTime source) {
-            return source == null ? null : Date.from(source.toInstant());
-        }
-    }
+		@Override
+		public ZonedDateTime convert(Date source) {
+			return source == null ? null : ZonedDateTime.ofInstant(source.toInstant(), ZoneId.systemDefault());
+		}
+	}
 
-    public static class DateToZonedDateTimeConverter implements Converter<Date, ZonedDateTime> {
-        public static final DateToZonedDateTimeConverter INSTANCE = new DateToZonedDateTimeConverter();
-        private DateToZonedDateTimeConverter() {}
+	public static class LocalDateTimeToDateConverter implements Converter<LocalDateTime, Date> {
+		public static final LocalDateTimeToDateConverter INSTANCE = new LocalDateTimeToDateConverter();
 
-        @Override
-        public ZonedDateTime convert(Date source) {
-            return source == null ? null : ZonedDateTime.ofInstant(source.toInstant(), ZoneId.systemDefault());
-        }
-    }
+		private LocalDateTimeToDateConverter() {
+		}
 
-    public static class LocalDateTimeToDateConverter implements Converter<LocalDateTime, Date> {
-        public static final LocalDateTimeToDateConverter INSTANCE = new LocalDateTimeToDateConverter();
-        private LocalDateTimeToDateConverter() {}
+		@Override
+		public Date convert(LocalDateTime source) {
+			return source == null ? null : Date.from(source.atZone(ZoneId.systemDefault()).toInstant());
+		}
+	}
 
-        @Override
-        public Date convert(LocalDateTime source) {
-            return source == null ? null : Date.from(source.atZone(ZoneId.systemDefault()).toInstant());
-        }
-    }
+	public static class LocalDateToDateConverter implements Converter<LocalDate, Date> {
 
-    public static class DateToLocalDateTimeConverter implements Converter<Date, LocalDateTime> {
-        public static final DateToLocalDateTimeConverter INSTANCE = new DateToLocalDateTimeConverter();
-        private DateToLocalDateTimeConverter() {}
+		public static final LocalDateToDateConverter INSTANCE = new LocalDateToDateConverter();
 
-        @Override
-        public LocalDateTime convert(Date source) {
-            return source == null ? null : LocalDateTime.ofInstant(source.toInstant(), ZoneId.systemDefault());
-        }
-    }
+		private LocalDateToDateConverter() {
+		}
+
+		@Override
+		public Date convert(LocalDate source) {
+			return source == null ? null : Date.from(source.atStartOfDay(ZoneId.systemDefault()).toInstant());
+		}
+	}
+
+	public static class ZonedDateTimeToDateConverter implements Converter<ZonedDateTime, Date> {
+		public static final ZonedDateTimeToDateConverter INSTANCE = new ZonedDateTimeToDateConverter();
+
+		private ZonedDateTimeToDateConverter() {
+		}
+
+		@Override
+		public Date convert(ZonedDateTime source) {
+			return source == null ? null : Date.from(source.toInstant());
+		}
+	}
+
+	private JSR310DateConverters() {
+	}
 }
