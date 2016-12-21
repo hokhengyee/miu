@@ -59,7 +59,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             auth
                 .userDetailsService(userDetailsService)
                     .passwordEncoder(passwordEncoder());
-        } catch (Exception e) {
+        } 
+        
+        catch (Exception e) {
             throw new BeanInitializationException("Security configuration failed", e);
         }
     }
@@ -108,6 +110,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .disable()
         .and()
             .authorizeRequests()
+            .antMatchers("/api/public/**").permitAll()
             .antMatchers("/api/register").permitAll()
             .antMatchers("/api/activate").permitAll()
             .antMatchers("/api/authenticate").permitAll()
