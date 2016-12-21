@@ -20,27 +20,31 @@
 						class="glyphicon glyphicon-home"></span> <span class="hidden-sm">Home</span>
 				</a></li>
 				<!-- About Us -->
-				<li ng-class="{active: vm.$state.includes('public')}" uib-dropdown
+				<li ng-class="{active: vm.$state.includes('about-us')}" uib-dropdown
 					class="dropdown pointer"><a class="dropdown-toggle"
-					uib-dropdown-toggle href="" id="entity-menu"> <span> <span
+					uib-dropdown-toggle href="" id="about-us-menu"> <span> <span
 							class="glyphicon glyphicon-bookmark"></span> <span
 							class="hidden-sm"> About Us </span> <b class="caret"></b>
 					</span>
 				</a>
 					<ul class="dropdown-menu" uib-dropdown-menu>
-						<li ui-sref-active="active"><a ng-click="vm.collapseNavbar()">
-								<span class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Message
+						<li ui-sref-active="active"><a ui-sref="president-msg"
+							ng-click="vm.collapseNavbar()"> <span
+								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Message
 									from the President</span>
 						</a></li>
-						<li ui-sref-active="active"><a ng-click="vm.collapseNavbar()">
-								<span class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Governance</span>
+						<li ui-sref-active="active"><a ui-sref="governance"
+							ng-click="vm.collapseNavbar()"> <span
+								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Governance</span>
 						</a></li>
-						<li ui-sref-active="active"><a ng-click="vm.collapseNavbar()">
-								<span class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Statement
+						<li ui-sref-active="active"><a ui-sref="statement-of-faith"
+							ng-click="vm.collapseNavbar()"> <span
+								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Statement
 									Of Faith</span>
 						</a></li>
-						<li ui-sref-active="active"><a ng-click="vm.collapseNavbar()">
-								<span class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Accredited
+						<li ui-sref-active="active"><a ui-sref="accredited-centers"
+							ng-click="vm.collapseNavbar()"> <span
+								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Accredited
 									Centers</span>
 						</a></li>
 					</ul></li>
