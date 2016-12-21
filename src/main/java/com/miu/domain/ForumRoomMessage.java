@@ -1,13 +1,20 @@
 package com.miu.domain;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Objects;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A ForumRoomMessage.
@@ -17,114 +24,115 @@ import java.util.Objects;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ForumRoomMessage implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+	@ManyToOne
+	@NotNull
+	private ForumRoom forumRoom;
 
-    @NotNull
-    @Column(name = "message", nullable = false)
-    private String message;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
 
-    @NotNull
-    @Column(name = "message_datetime", nullable = false)
-    private ZonedDateTime messageDatetime;
+	@NotNull
+	@Column(name = "message", nullable = false)
+	private String message;
 
-    @ManyToOne
-    @NotNull
-    private ForumRoom forumRoom;
+	@NotNull
+	@Column(name = "message_datetime", nullable = false)
+	private ZonedDateTime messageDatetime;
 
-    @ManyToOne
-    @NotNull
-    private User user;
+	@ManyToOne
+	@NotNull
+	private User user;
 
-    public Long getId() {
-        return id;
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		
+		ForumRoomMessage forumRoomMessage = (ForumRoomMessage) o;
+		
+		if (forumRoomMessage.id == null || id == null) {
+			return false;
+		}
+		
+		return Objects.equals(id, forumRoomMessage.id);
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public ForumRoomMessage forumRoom(ForumRoom forumRoom) {
+		this.forumRoom = forumRoom;
+		return this;
+	}
 
-    public String getMessage() {
-        return message;
-    }
+	public ForumRoom getForumRoom() {
+		return forumRoom;
+	}
 
-    public ForumRoomMessage message(String message) {
-        this.message = message;
-        return this;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
+	public String getMessage() {
+		return message;
+	}
 
-    public ZonedDateTime getMessageDatetime() {
-        return messageDatetime;
-    }
+	public ZonedDateTime getMessageDatetime() {
+		return messageDatetime;
+	}
 
-    public ForumRoomMessage messageDatetime(ZonedDateTime messageDatetime) {
-        this.messageDatetime = messageDatetime;
-        return this;
-    }
+	public User getUser() {
+		return user;
+	}
 
-    public void setMessageDatetime(ZonedDateTime messageDatetime) {
-        this.messageDatetime = messageDatetime;
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(id);
+	}
 
-    public ForumRoom getForumRoom() {
-        return forumRoom;
-    }
+	public ForumRoomMessage message(String message) {
+		this.message = message;
+		return this;
+	}
 
-    public ForumRoomMessage forumRoom(ForumRoom forumRoom) {
-        this.forumRoom = forumRoom;
-        return this;
-    }
+	public ForumRoomMessage messageDatetime(ZonedDateTime messageDatetime) {
+		this.messageDatetime = messageDatetime;
+		return this;
+	}
 
-    public void setForumRoom(ForumRoom forumRoom) {
-        this.forumRoom = forumRoom;
-    }
+	public void setForumRoom(ForumRoom forumRoom) {
+		this.forumRoom = forumRoom;
+	}
 
-    public User getUser() {
-        return user;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public ForumRoomMessage user(User user) {
-        this.user = user;
-        return this;
-    }
+	public void setMessage(String message) {
+		this.message = message;
+	}
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+	public void setMessageDatetime(ZonedDateTime messageDatetime) {
+		this.messageDatetime = messageDatetime;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        ForumRoomMessage forumRoomMessage = (ForumRoomMessage) o;
-        if (forumRoomMessage.id == null || id == null) {
-            return false;
-        }
-        return Objects.equals(id, forumRoomMessage.id);
-    }
+	public void setUser(User user) {
+		this.user = user;
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
+	@Override
+	public String toString() {
+		return "ForumRoomMessage{" + "id=" + id + ", message='" + message + "'" + ", messageDatetime='"
+				+ messageDatetime + "'" + '}';
+	}
 
-    @Override
-    public String toString() {
-        return "ForumRoomMessage{" +
-            "id=" + id +
-            ", message='" + message + "'" +
-            ", messageDatetime='" + messageDatetime + "'" +
-            '}';
-    }
+	public ForumRoomMessage user(User user) {
+		this.user = user;
+		return this;
+	}
 }

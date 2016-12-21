@@ -1,12 +1,18 @@
 package com.miu.domain;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Objects;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A ForumRoom.
@@ -16,62 +22,63 @@ import java.util.Objects;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class ForumRoom implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+	@NotNull
+	@Column(name = "forum_room_name", nullable = false)
+	private String forumRoomName;
 
-    @NotNull
-    @Column(name = "forum_room_name", nullable = false)
-    private String forumRoomName;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
 
-    public Long getId() {
-        return id;
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
-    public String getForumRoomName() {
-        return forumRoomName;
-    }
+		ForumRoom forumRoom = (ForumRoom) o;
 
-    public ForumRoom forumRoomName(String forumRoomName) {
-        this.forumRoomName = forumRoomName;
-        return this;
-    }
+		if (forumRoom.id == null || id == null) {
+			return false;
+		}
 
-    public void setForumRoomName(String forumRoomName) {
-        this.forumRoomName = forumRoomName;
-    }
+		return Objects.equals(id, forumRoom.id);
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        ForumRoom forumRoom = (ForumRoom) o;
-        if (forumRoom.id == null || id == null) {
-            return false;
-        }
-        return Objects.equals(id, forumRoom.id);
-    }
+	public ForumRoom forumRoomName(String forumRoomName) {
+		this.forumRoomName = forumRoomName;
+		return this;
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
+	public String getForumRoomName() {
+		return forumRoomName;
+	}
 
-    @Override
-    public String toString() {
-        return "ForumRoom{" +
-            "id=" + id +
-            ", forumRoomName='" + forumRoomName + "'" +
-            '}';
-    }
+	public Long getId() {
+		return id;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(id);
+	}
+
+	public void setForumRoomName(String forumRoomName) {
+		this.forumRoomName = forumRoomName;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	@Override
+	public String toString() {
+		return "ForumRoom{" + "id=" + id + ", forumRoomName='" + forumRoomName + "'" + '}';
+	}
 }
