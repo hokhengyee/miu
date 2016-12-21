@@ -19,6 +19,73 @@
 					ng-click="vm.collapseNavbar()"> <span
 						class="glyphicon glyphicon-home"></span> <span class="hidden-sm">Home</span>
 				</a></li>
+				<!-- About Us -->
+				<li ng-class="{active: vm.$state.includes('account')}" uib-dropdown
+					class="dropdown pointer"><a class="dropdown-toggle"
+					uib-dropdown-toggle href="" id="entity-menu"> <span> <span
+							class="glyphicon glyphicon-bookmark"></span> <span
+							class="hidden-sm"> About Us </span> <b class="caret"></b>
+					</span>
+				</a>
+					<ul class="dropdown-menu" uib-dropdown-menu>
+						<li ui-sref-active="active"><a ui-sref="course"
+							ng-click="vm.collapseNavbar()"> <span
+								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Message
+									from the President</span>
+						</a></li>
+						<li ui-sref-active="active"><a ui-sref="module"
+							ng-click="vm.collapseNavbar()"> <span
+								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Governance</span>
+						</a></li>
+						<li ui-sref-active="active"><a ui-sref="module-type"
+							ng-click="vm.collapseNavbar()"> <span
+								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Statement
+									Of Faith</span>
+						</a></li>
+						<li ui-sref-active="active"><a ui-sref="forum-room"
+							ng-click="vm.collapseNavbar()"> <span
+								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Accredited
+									Centers</span>
+						</a></li>
+					</ul></li>
+				<!-- Study -->
+				<li ng-class="{active: vm.$state.includes('account')}" uib-dropdown
+					class="dropdown pointer"><a class="dropdown-toggle"
+					uib-dropdown-toggle href="" id="entity-menu"> <span> <span
+							class="glyphicon glyphicon-book"></span> <span class="hidden-sm">
+								Study </span> <b class="caret"></b>
+					</span>
+				</a>
+					<ul class="dropdown-menu" uib-dropdown-menu>
+						<li ui-sref-active="active"><a ui-sref=""
+							ng-click="vm.collapseNavbar()"> <span
+								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Courses
+									&amp; Fees</span>
+						</a></li>
+						<li ui-sref-active="active"><a ui-sref=""
+							ng-click="vm.collapseNavbar()"> <span
+								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Entry
+									Qualifications</span>
+						</a></li>
+						<li ui-sref-active="active"><a ui-sref=""
+							ng-click="vm.collapseNavbar()"> <span
+								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Refund
+									Policy</span>
+						</a></li>
+						<li ui-sref-active="active"><a ui-sref="forum-room"
+							ng-click="vm.collapseNavbar()"> <span
+								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Grading</span>
+						</a></li>
+						<li ui-sref-active="active"><a ui-sref=""
+							ng-click="vm.collapseNavbar()"> <span
+								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Application</span>
+						</a></li>
+						<li ui-sref-active="active"><a ui-sref=""
+							ng-click="vm.collapseNavbar()"> <span
+								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Faculty
+									&amp; Alumni</span>
+						</a></li>
+					</ul></li>
 				<!-- jhipster-needle-add-element-to-menu - JHipster will add new menu items here -->
 				<li ng-class="{active: vm.$state.includes('admin')}"
 					ng-switch-when="true" has-authority="ROLE_ADMIN" uib-dropdown
@@ -42,18 +109,16 @@
 								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Module
 									Type</span>
 						</a></li>
-<li ui-sref-active="active">
-                            <a ui-sref="forum-room" ng-click="vm.collapseNavbar()">
-                                <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
-                                <span >Forum Room</span>
-                            </a>
-                        </li>
-<li ui-sref-active="active">
-                            <a ui-sref="forum-room-message" ng-click="vm.collapseNavbar()">
-                                <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
-                                <span >Forum Room Message</span>
-                            </a>
-                        </li>
+						<li ui-sref-active="active"><a ui-sref="forum-room"
+							ng-click="vm.collapseNavbar()"> <span
+								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Forum
+									Room</span>
+						</a></li>
+						<li ui-sref-active="active"><a ui-sref="forum-room-message"
+							ng-click="vm.collapseNavbar()"> <span
+								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Forum
+									Room Message</span>
+						</a></li>
 						<!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
 					</ul></li>
 				<li ng-class="{active: vm.$state.includes('account')}" uib-dropdown
