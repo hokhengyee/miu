@@ -59,13 +59,13 @@ public class CourseResource {
 	@Timed
 	public ResponseEntity<Course> createCourse(@Valid @RequestBody Course course) throws URISyntaxException {
 		LOGGER.debug("REST request to save Course : {}", course);
-		
+
 		if (course.getId() != null) {
 			return ResponseEntity.badRequest().headers(
 					HeaderUtil.createFailureAlert("course", "idexists", "A new course cannot already have an ID"))
 					.body(null);
 		}
-		
+
 		Course result = courseRepository.save(course);
 		return ResponseEntity.created(new URI("/api/courses/" + result.getId()))
 				.headers(HeaderUtil.createEntityCreationAlert("course", result.getId().toString())).body(result);
@@ -104,7 +104,7 @@ public class CourseResource {
 		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/courses");
 		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/public/courses")
 	@Timed
 	public ResponseEntity<List<Course>> getAllCoursesPublic(@ApiParam Pageable pageable) throws URISyntaxException {
@@ -147,11 +147,11 @@ public class CourseResource {
 	@Timed
 	public ResponseEntity<Course> updateCourse(@Valid @RequestBody Course course) throws URISyntaxException {
 		LOGGER.debug("REST request to update Course : {}", course);
-		
+
 		if (course.getId() == null) {
 			return createCourse(course);
 		}
-		
+
 		Course result = courseRepository.save(course);
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert("course", course.getId().toString()))
 				.body(result);
