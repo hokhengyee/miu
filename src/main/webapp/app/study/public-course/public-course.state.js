@@ -11,7 +11,7 @@
         $stateProvider
         .state('public-course', {
             parent: 'study',
-            url: '/public/courses?page&sort&search',
+            url: '/study/courses-and-fees?page&sort&search',
             data: {
                 authorities: [],
                 pageTitle: 'Courses & Fees'

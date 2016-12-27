@@ -8,17 +8,17 @@
     stateConfig.$inject = ['$stateProvider'];
 
     function stateConfig($stateProvider) {
-        $stateProvider.state('entry-qualification', {
+        $stateProvider.state('public-entry-qualification', {
             parent: 'study',
-            url: '/entry-qualification',
+            url: '/study/entry-qualification',
             data: {
                 authorities: [],
                 pageTitle: 'Entry Qualification'
             },
             views: {
                 'content@': {
-                    templateUrl: 'app/study/entry-qualification/entry-qualification.html',
-                    controller: 'EntryQualificationController',
+                    templateUrl: 'app/study/public-entry-qualification/public-entry-qualification.html',
+                    controller: 'PublicEntryQualificationController',
                     controllerAs: 'vm'
                 }
             }
