@@ -1,0 +1,18 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "forumRoomName",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20161220115959",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "forum_room",
+    "pagination": "pager"
+}

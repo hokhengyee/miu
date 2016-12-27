@@ -1,0 +1,45 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "forumRoom",
+            "otherEntityName": "forumRoom",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "forumRoomName"
+        },
+        {
+            "relationshipName": "user",
+            "otherEntityName": "user",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "username",
+            "ownerSide": true
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "message",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "messageDatetime",
+            "fieldType": "ZonedDateTime",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20161220135503",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "forum_room_message",
+    "pagination": "pager"
+}
