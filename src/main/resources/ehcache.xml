@@ -30,5 +30,7 @@
 
     <cache alias="com.miu.domain.ForumRoomMessage" uses-template="simple"/>
 
+    <cache alias="com.miu.domain.EntryQualification" uses-template="simple"/>
+
     <!-- jhipster-needle-ehcache-add-entry -->
 </config>

@@ -46,6 +46,18 @@ public class CourseResourceIntTest {
     private static final String DEFAULT_TITLE = "AAAAAAAAAA";
     private static final String UPDATED_TITLE = "BBBBBBBBBB";
 
+    private static final Long DEFAULT_CREDIT_HOURS = 1L;
+    private static final Long UPDATED_CREDIT_HOURS = 2L;
+
+    private static final String DEFAULT_APPLICATION_FEE = "AAAAAAAAAA";
+    private static final String UPDATED_APPLICATION_FEE = "BBBBBBBBBB";
+
+    private static final String DEFAULT_REGISTRATION_FEE = "AAAAAAAAAA";
+    private static final String UPDATED_REGISTRATION_FEE = "BBBBBBBBBB";
+
+    private static final String DEFAULT_COURSE_FEE = "AAAAAAAAAA";
+    private static final String UPDATED_COURSE_FEE = "BBBBBBBBBB";
+
     @Inject
     private CourseRepository courseRepository;
 
@@ -82,7 +94,11 @@ public class CourseResourceIntTest {
         Course course = new Course()
                 .description(DEFAULT_DESCRIPTION)
                 .courseOrder(DEFAULT_COURSE_ORDER)
-                .title(DEFAULT_TITLE);
+                .title(DEFAULT_TITLE)
+                .creditHours(DEFAULT_CREDIT_HOURS)
+                .applicationFee(DEFAULT_APPLICATION_FEE)
+                .registrationFee(DEFAULT_REGISTRATION_FEE)
+                .courseFee(DEFAULT_COURSE_FEE);
         return course;
     }
 
@@ -110,6 +126,10 @@ public class CourseResourceIntTest {
         assertThat(testCourse.getDescription()).isEqualTo(DEFAULT_DESCRIPTION);
         assertThat(testCourse.getCourseOrder()).isEqualTo(DEFAULT_COURSE_ORDER);
         assertThat(testCourse.getTitle()).isEqualTo(DEFAULT_TITLE);
+        assertThat(testCourse.getCreditHours()).isEqualTo(DEFAULT_CREDIT_HOURS);
+        assertThat(testCourse.getApplicationFee()).isEqualTo(DEFAULT_APPLICATION_FEE);
+        assertThat(testCourse.getRegistrationFee()).isEqualTo(DEFAULT_REGISTRATION_FEE);
+        assertThat(testCourse.getCourseFee()).isEqualTo(DEFAULT_COURSE_FEE);
     }
 
     @Test
@@ -152,6 +172,78 @@ public class CourseResourceIntTest {
 
     @Test
     @Transactional
+    public void checkCreditHoursIsRequired() throws Exception {
+        int databaseSizeBeforeTest = courseRepository.findAll().size();
+        // set the field null
+        course.setCreditHours(null);
+
+        // Create the Course, which fails.
+
+        restCourseMockMvc.perform(post("/api/courses")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(course)))
+            .andExpect(status().isBadRequest());
+
+        List<Course> courseList = courseRepository.findAll();
+        assertThat(courseList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    public void checkApplicationFeeIsRequired() throws Exception {
+        int databaseSizeBeforeTest = courseRepository.findAll().size();
+        // set the field null
+        course.setApplicationFee(null);
+
+        // Create the Course, which fails.
+
+        restCourseMockMvc.perform(post("/api/courses")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(course)))
+            .andExpect(status().isBadRequest());
+
+        List<Course> courseList = courseRepository.findAll();
+        assertThat(courseList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    public void checkRegistrationFeeIsRequired() throws Exception {
+        int databaseSizeBeforeTest = courseRepository.findAll().size();
+        // set the field null
+        course.setRegistrationFee(null);
+
+        // Create the Course, which fails.
+
+        restCourseMockMvc.perform(post("/api/courses")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(course)))
+            .andExpect(status().isBadRequest());
+
+        List<Course> courseList = courseRepository.findAll();
+        assertThat(courseList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
+    public void checkCourseFeeIsRequired() throws Exception {
+        int databaseSizeBeforeTest = courseRepository.findAll().size();
+        // set the field null
+        course.setCourseFee(null);
+
+        // Create the Course, which fails.
+
+        restCourseMockMvc.perform(post("/api/courses")
+            .contentType(TestUtil.APPLICATION_JSON_UTF8)
+            .content(TestUtil.convertObjectToJsonBytes(course)))
+            .andExpect(status().isBadRequest());
+
+        List<Course> courseList = courseRepository.findAll();
+        assertThat(courseList).hasSize(databaseSizeBeforeTest);
+    }
+
+    @Test
+    @Transactional
     public void getAllCourses() throws Exception {
         // Initialize the database
         courseRepository.saveAndFlush(course);
@@ -163,7 +255,11 @@ public class CourseResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(course.getId().intValue())))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
             .andExpect(jsonPath("$.[*].courseOrder").value(hasItem(DEFAULT_COURSE_ORDER.intValue())))
-            .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE.toString())));
+            .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE.toString())))
+            .andExpect(jsonPath("$.[*].creditHours").value(hasItem(DEFAULT_CREDIT_HOURS.intValue())))
+            .andExpect(jsonPath("$.[*].applicationFee").value(hasItem(DEFAULT_APPLICATION_FEE.toString())))
+            .andExpect(jsonPath("$.[*].registrationFee").value(hasItem(DEFAULT_REGISTRATION_FEE.toString())))
+            .andExpect(jsonPath("$.[*].courseFee").value(hasItem(DEFAULT_COURSE_FEE.toString())));
     }
 
     @Test
@@ -179,7 +275,11 @@ public class CourseResourceIntTest {
             .andExpect(jsonPath("$.id").value(course.getId().intValue()))
             .andExpect(jsonPath("$.description").value(DEFAULT_DESCRIPTION.toString()))
             .andExpect(jsonPath("$.courseOrder").value(DEFAULT_COURSE_ORDER.intValue()))
-            .andExpect(jsonPath("$.title").value(DEFAULT_TITLE.toString()));
+            .andExpect(jsonPath("$.title").value(DEFAULT_TITLE.toString()))
+            .andExpect(jsonPath("$.creditHours").value(DEFAULT_CREDIT_HOURS.intValue()))
+            .andExpect(jsonPath("$.applicationFee").value(DEFAULT_APPLICATION_FEE.toString()))
+            .andExpect(jsonPath("$.registrationFee").value(DEFAULT_REGISTRATION_FEE.toString()))
+            .andExpect(jsonPath("$.courseFee").value(DEFAULT_COURSE_FEE.toString()));
     }
 
     @Test
@@ -202,7 +302,11 @@ public class CourseResourceIntTest {
         updatedCourse
                 .description(UPDATED_DESCRIPTION)
                 .courseOrder(UPDATED_COURSE_ORDER)
-                .title(UPDATED_TITLE);
+                .title(UPDATED_TITLE)
+                .creditHours(UPDATED_CREDIT_HOURS)
+                .applicationFee(UPDATED_APPLICATION_FEE)
+                .registrationFee(UPDATED_REGISTRATION_FEE)
+                .courseFee(UPDATED_COURSE_FEE);
 
         restCourseMockMvc.perform(put("/api/courses")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -216,6 +320,10 @@ public class CourseResourceIntTest {
         assertThat(testCourse.getDescription()).isEqualTo(UPDATED_DESCRIPTION);
         assertThat(testCourse.getCourseOrder()).isEqualTo(UPDATED_COURSE_ORDER);
         assertThat(testCourse.getTitle()).isEqualTo(UPDATED_TITLE);
+        assertThat(testCourse.getCreditHours()).isEqualTo(UPDATED_CREDIT_HOURS);
+        assertThat(testCourse.getApplicationFee()).isEqualTo(UPDATED_APPLICATION_FEE);
+        assertThat(testCourse.getRegistrationFee()).isEqualTo(UPDATED_REGISTRATION_FEE);
+        assertThat(testCourse.getCourseFee()).isEqualTo(UPDATED_COURSE_FEE);
     }
 
     @Test

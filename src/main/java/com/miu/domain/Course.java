@@ -1,18 +1,12 @@
 package com.miu.domain;
 
-import java.io.Serializable;
-import java.util.Objects;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+
+import javax.persistence.*;
+import javax.validation.constraints.*;
+import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * A Course.
@@ -22,92 +16,168 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Course implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	@Column(name = "course_order")
-	private Long courseOrder;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
-	@Column(name = "description")
-	private String description;
+    @Column(name = "description")
+    private String description;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
+    @Column(name = "course_order")
+    private Long courseOrder;
 
-	@NotNull
-	@Column(name = "title", nullable = false)
-	private String title;
+    @NotNull
+    @Column(name = "title", nullable = false)
+    private String title;
 
-	public Course courseOrder(Long courseOrder) {
-		this.courseOrder = courseOrder;
-		return this;
-	}
+    @NotNull
+    @Column(name = "credit_hours", nullable = false)
+    private Long creditHours;
 
-	public Course description(String description) {
-		this.description = description;
-		return this;
-	}
+    @NotNull
+    @Column(name = "application_fee", nullable = false)
+    private String applicationFee;
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		Course course = (Course) o;
-		if (course.id == null || id == null) {
-			return false;
-		}
-		return Objects.equals(id, course.id);
-	}
+    @NotNull
+    @Column(name = "registration_fee", nullable = false)
+    private String registrationFee;
 
-	public Long getCourseOrder() {
-		return courseOrder;
-	}
+    @NotNull
+    @Column(name = "course_fee", nullable = false)
+    private String courseFee;
 
-	public String getDescription() {
-		return description;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hashCode(id);
-	}
+    public Course description(String description) {
+        this.description = description;
+        return this;
+    }
 
-	public void setCourseOrder(Long courseOrder) {
-		this.courseOrder = courseOrder;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public Long getCourseOrder() {
+        return courseOrder;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public Course courseOrder(Long courseOrder) {
+        this.courseOrder = courseOrder;
+        return this;
+    }
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+    public void setCourseOrder(Long courseOrder) {
+        this.courseOrder = courseOrder;
+    }
 
-	public Course title(String title) {
-		this.title = title;
-		return this;
-	}
+    public String getTitle() {
+        return title;
+    }
 
-	@Override
-	public String toString() {
-		return "Course{" + "id=" + id + ", description='" + description + "'" + ", courseOrder='" + courseOrder + "'"
-				+ ", title='" + title + "'" + '}';
-	}
+    public Course title(String title) {
+        this.title = title;
+        return this;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Long getCreditHours() {
+        return creditHours;
+    }
+
+    public Course creditHours(Long creditHours) {
+        this.creditHours = creditHours;
+        return this;
+    }
+
+    public void setCreditHours(Long creditHours) {
+        this.creditHours = creditHours;
+    }
+
+    public String getApplicationFee() {
+        return applicationFee;
+    }
+
+    public Course applicationFee(String applicationFee) {
+        this.applicationFee = applicationFee;
+        return this;
+    }
+
+    public void setApplicationFee(String applicationFee) {
+        this.applicationFee = applicationFee;
+    }
+
+    public String getRegistrationFee() {
+        return registrationFee;
+    }
+
+    public Course registrationFee(String registrationFee) {
+        this.registrationFee = registrationFee;
+        return this;
+    }
+
+    public void setRegistrationFee(String registrationFee) {
+        this.registrationFee = registrationFee;
+    }
+
+    public String getCourseFee() {
+        return courseFee;
+    }
+
+    public Course courseFee(String courseFee) {
+        this.courseFee = courseFee;
+        return this;
+    }
+
+    public void setCourseFee(String courseFee) {
+        this.courseFee = courseFee;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Course course = (Course) o;
+        if (course.id == null || id == null) {
+            return false;
+        }
+        return Objects.equals(id, course.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Course{" +
+            "id=" + id +
+            ", description='" + description + "'" +
+            ", courseOrder='" + courseOrder + "'" +
+            ", title='" + title + "'" +
+            ", creditHours='" + creditHours + "'" +
+            ", applicationFee='" + applicationFee + "'" +
+            ", registrationFee='" + registrationFee + "'" +
+            ", courseFee='" + courseFee + "'" +
+            '}';
+    }
 }

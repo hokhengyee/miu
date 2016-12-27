@@ -3,11 +3,11 @@
 
     angular
         .module('miuApp')
-        .controller('CourseController', CourseController);
+        .controller('EntryQualificationController', EntryQualificationController);
 
-    CourseController.$inject = ['$scope', '$state', 'Course', 'ParseLinks', 'AlertService', 'paginationConstants', 'pagingParams'];
+    EntryQualificationController.$inject = ['$scope', '$state', 'EntryQualification', 'ParseLinks', 'AlertService', 'paginationConstants', 'pagingParams'];
 
-    function CourseController ($scope, $state, Course, ParseLinks, AlertService, paginationConstants, pagingParams) {
+    function EntryQualificationController ($scope, $state, EntryQualification, ParseLinks, AlertService, paginationConstants, pagingParams) {
         var vm = this;
 
         vm.loadPage = loadPage;
@@ -19,7 +19,7 @@
         loadAll();
 
         function loadAll () {
-            Course.query({
+            EntryQualification.query({
                 page: pagingParams.page - 1,
                 size: vm.itemsPerPage,
                 sort: sort()
@@ -35,7 +35,7 @@
                 vm.links = ParseLinks.parse(headers('link'));
                 vm.totalItems = headers('X-Total-Count');
                 vm.queryCount = vm.totalItems;
-                vm.courses = data;
+                vm.entryQualifications = data;
                 vm.page = pagingParams.page;
             }
             function onError(error) {

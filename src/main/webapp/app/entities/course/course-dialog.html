@@ -15,6 +15,11 @@
 				id="id" name="id" ng-model="vm.course.id" readonly />
 		</div>
 		<div class="form-group">
+			<label class="control-label" for="field_courseOrder">Course
+				Order</label> <input type="number" class="form-control" name="courseOrder"
+				id="field_courseOrder" ng-model="vm.course.courseOrder" />
+		</div>
+		<div class="form-group">
 			<label class="control-label" for="field_title">Title</label> <input
 				type="text" class="form-control" name="title" id="field_title"
 				ng-model="vm.course.title" required />
@@ -24,15 +29,53 @@
 			</div>
 		</div>
 		<div class="form-group">
-			<label class="control-label" for="field_courseOrder">Course
-				Order</label> <input type="number" class="form-control" name="courseOrder"
-				id="field_courseOrder" ng-model="vm.course.courseOrder" />
+			<label class="control-label" for="field_creditHours">Credit
+				Hours</label> <input type="number" class="form-control" name="creditHours"
+				id="field_creditHours" ng-model="vm.course.creditHours" required />
+			<div ng-show="editForm.creditHours.$invalid">
+				<p class="help-block" ng-show="editForm.creditHours.$error.required">
+					This field is required.</p>
+				<p class="help-block" ng-show="editForm.creditHours.$error.number">
+					This field should be a number.</p>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label" for="field_applicationFee">Application
+				Fee</label> <input type="text" class="form-control" name="applicationFee"
+				id="field_applicationFee" ng-model="vm.course.applicationFee"
+				required />
+			<div ng-show="editForm.applicationFee.$invalid">
+				<p class="help-block"
+					ng-show="editForm.applicationFee.$error.required">This field is
+					required.</p>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label" for="field_registrationFee">Registration
+				Fee</label> <input type="text" class="form-control" name="registrationFee"
+				id="field_registrationFee" ng-model="vm.course.registrationFee"
+				required />
+			<div ng-show="editForm.registrationFee.$invalid">
+				<p class="help-block"
+					ng-show="editForm.registrationFee.$error.required">This field
+					is required.</p>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label" for="field_courseFee">Course Fee</label>
+			<input type="text" class="form-control" name="courseFee"
+				id="field_courseFee" ng-model="vm.course.courseFee" required />
+			<div ng-show="editForm.courseFee.$invalid">
+				<p class="help-block" ng-show="editForm.courseFee.$error.required">
+					This field is required.</p>
+			</div>
 		</div>
 		<div class="form-group">
 			<label class="control-label" for="field_description">Description</label>
 			<input type="text" class="form-control" name="description"
 				id="field_description" ng-model="vm.course.description" />
 		</div>
+
 	</div>
 	<div class="modal-footer">
 		<button type="button" class="btn btn-default" data-dismiss="modal"

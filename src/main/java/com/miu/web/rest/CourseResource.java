@@ -105,15 +105,6 @@ public class CourseResource {
 		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
 	}
 
-	@GetMapping("/public/courses")
-	@Timed
-	public ResponseEntity<List<Course>> getAllCoursesPublic(@ApiParam Pageable pageable) throws URISyntaxException {
-		LOGGER.debug("REST request to get a page of Courses for public");
-		Page<Course> page = courseRepository.findAll(pageable);
-		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/public/courses");
-		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
-	}
-
 	/**
 	 * GET /courses/:id : get the "id" course.
 	 *

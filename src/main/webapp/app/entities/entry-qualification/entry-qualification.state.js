@@ -9,17 +9,17 @@
 
     function stateConfig($stateProvider) {
         $stateProvider
-        .state('course', {
+        .state('entry-qualification', {
             parent: 'entity',
-            url: '/course?page&sort&search',
+            url: '/entry-qualification?page&sort&search',
             data: {
                 authorities: ['ROLE_USER'],
-                pageTitle: 'Courses'
+                pageTitle: 'EntryQualifications'
             },
             views: {
                 'content@': {
-                    templateUrl: 'app/entities/course/courses.html',
-                    controller: 'CourseController',
+                    templateUrl: 'app/entities/entry-qualification/entry-qualifications.html',
+                    controller: 'EntryQualificationController',
                     controllerAs: 'vm'
                 }
             },
@@ -46,27 +46,27 @@
                 }]
             }
         })
-        .state('course-detail', {
+        .state('entry-qualification-detail', {
             parent: 'entity',
-            url: '/course/{id}',
+            url: '/entry-qualification/{id}',
             data: {
                 authorities: ['ROLE_USER'],
-                pageTitle: 'Course'
+                pageTitle: 'EntryQualification'
             },
             views: {
                 'content@': {
-                    templateUrl: 'app/entities/course/course-detail.html',
-                    controller: 'CourseDetailController',
+                    templateUrl: 'app/entities/entry-qualification/entry-qualification-detail.html',
+                    controller: 'EntryQualificationDetailController',
                     controllerAs: 'vm'
                 }
             },
             resolve: {
-                entity: ['$stateParams', 'Course', function($stateParams, Course) {
-                    return Course.get({id : $stateParams.id}).$promise;
+                entity: ['$stateParams', 'EntryQualification', function($stateParams, EntryQualification) {
+                    return EntryQualification.get({id : $stateParams.id}).$promise;
                 }],
                 previousState: ["$state", function ($state) {
                     var currentStateData = {
-                        name: $state.current.name || 'course',
+                        name: $state.current.name || 'entry-qualification',
                         params: $state.params,
                         url: $state.href($state.current.name, $state.params)
                     };
@@ -74,22 +74,22 @@
                 }]
             }
         })
-        .state('course-detail.edit', {
-            parent: 'course-detail',
+        .state('entry-qualification-detail.edit', {
+            parent: 'entry-qualification-detail',
             url: '/detail/edit',
             data: {
                 authorities: ['ROLE_USER']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
-                    templateUrl: 'app/entities/course/course-dialog.html',
-                    controller: 'CourseDialogController',
+                    templateUrl: 'app/entities/entry-qualification/entry-qualification-dialog.html',
+                    controller: 'EntryQualificationDialogController',
                     controllerAs: 'vm',
                     backdrop: 'static',
                     size: 'lg',
                     resolve: {
-                        entity: ['Course', function(Course) {
-                            return Course.get({id : $stateParams.id}).$promise;
+                        entity: ['EntryQualification', function(EntryQualification) {
+                            return EntryQualification.get({id : $stateParams.id}).$promise;
                         }]
                     }
                 }).result.then(function() {
@@ -99,84 +99,79 @@
                 });
             }]
         })
-        .state('course.new', {
-            parent: 'course',
+        .state('entry-qualification.new', {
+            parent: 'entry-qualification',
             url: '/new',
             data: {
                 authorities: ['ROLE_USER']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
-                    templateUrl: 'app/entities/course/course-dialog.html',
-                    controller: 'CourseDialogController',
+                    templateUrl: 'app/entities/entry-qualification/entry-qualification-dialog.html',
+                    controller: 'EntryQualificationDialogController',
                     controllerAs: 'vm',
                     backdrop: 'static',
                     size: 'lg',
                     resolve: {
                         entity: function () {
                             return {
-                                description: null,
-                                courseOrder: null,
-                                title: null,
-                                creditHours: null,
-                                applicationFee: null,
-                                registrationFee: null,
-                                courseFee: null,
+                                content: null,
+                                displayOrder: null,
                                 id: null
                             };
                         }
                     }
                 }).result.then(function() {
-                    $state.go('course', null, { reload: 'course' });
+                    $state.go('entry-qualification', null, { reload: 'entry-qualification' });
                 }, function() {
-                    $state.go('course');
+                    $state.go('entry-qualification');
                 });
             }]
         })
-        .state('course.edit', {
-            parent: 'course',
+        .state('entry-qualification.edit', {
+            parent: 'entry-qualification',
             url: '/{id}/edit',
             data: {
                 authorities: ['ROLE_USER']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
-                    templateUrl: 'app/entities/course/course-dialog.html',
-                    controller: 'CourseDialogController',
+                    templateUrl: 'app/entities/entry-qualification/entry-qualification-dialog.html',
+                    controller: 'EntryQualificationDialogController',
                     controllerAs: 'vm',
                     backdrop: 'static',
                     size: 'lg',
                     resolve: {
-                        entity: ['Course', function(Course) {
-                            return Course.get({id : $stateParams.id}).$promise;
+                        entity: ['EntryQualification', function(EntryQualification) {
+                            return EntryQualification.get({id : $stateParams.id}).$promise;
                         }]
                     }
                 }).result.then(function() {
-                    $state.go('course', null, { reload: 'course' });
+                    $state.go('entry-qualification', null, { reload: 'entry-qualification' });
                 }, function() {
                     $state.go('^');
                 });
             }]
         })
-        .state('course.delete', {
-            parent: 'course',
+        .state('entry-qualification.delete', {
+            parent: 'entry-qualification',
             url: '/{id}/delete',
             data: {
                 authorities: ['ROLE_USER']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
-                    templateUrl: 'app/entities/course/course-delete-dialog.html',
-                    controller: 'CourseDeleteController',
+                    templateUrl: 'app/entities/entry-qualification/entry-qualification-delete-dialog.html',
+                    controller: 'EntryQualificationDeleteController',
                     controllerAs: 'vm',
                     size: 'md',
                     resolve: {
-                        entity: ['Course', function(Course) {
-                            return Course.get({id : $stateParams.id}).$promise;
+                        entity: ['EntryQualification', function(EntryQualification) {
+                            return EntryQualification.get({id : $stateParams.id}).$promise;
                         }]
                     }
                 }).result.then(function() {
-                    $state.go('course', null, { reload: 'course' });
+                    $state.go('entry-qualification', null, { reload: 'entry-qualification' });
                 }, function() {
                     $state.go('^');
                 });
