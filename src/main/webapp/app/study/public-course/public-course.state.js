@@ -45,6 +45,34 @@
                     };
                 }]
             }
+        })
+        .state('public-course-detail', {
+            parent: 'study',
+            url: '/study/course/{id}',
+            data: {
+                authorities: [],
+                pageTitle: 'Course'
+            },
+            views: {
+                'content@': {
+                    templateUrl: 'app/study/public-course/public-course-detail.html',
+                    controller: 'PublicCourseDetailController',
+                    controllerAs: 'vm'
+                }
+            },
+            resolve: {
+                entity: ['$stateParams', 'PublicCourse', function($stateParams, PublicCourse) {
+                    return PublicCourse.get({id : $stateParams.id}).$promise;
+                }],
+                previousState: ["$state", function ($state) {
+                    var currentStateData = {
+                        name: $state.current.name || 'course',
+                        params: $state.params,
+                        url: $state.href($state.current.name, $state.params)
+                    };
+                    return currentStateData;
+                }]
+            }
         });
     }
 

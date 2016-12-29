@@ -2,6 +2,7 @@ package com.miu.web.rest;
 
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Optional;
 
 import javax.inject.Inject;
 
@@ -13,6 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -52,6 +54,23 @@ public class PublicResource {
 		Page<Course> page = courseRepository.findAll(pageable);
 		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/courses");
 		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+	}
+
+	/**
+	 * GET /courses/:id : get the "id" course.
+	 *
+	 * @param id
+	 *            the id of the course to retrieve
+	 * @return the ResponseEntity with status 200 (OK) and with body the course,
+	 *         or with status 404 (Not Found)
+	 */
+	@GetMapping("/courses/{id}")
+	@Timed
+	public ResponseEntity<Course> getCourse(@PathVariable Long id) {
+		LOGGER.debug("REST request to get Course : {}", id);
+		Course course = courseRepository.findOne(id);
+		return Optional.ofNullable(course).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
 
 }
