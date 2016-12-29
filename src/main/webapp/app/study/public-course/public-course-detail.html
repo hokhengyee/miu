@@ -1,7 +1,7 @@
 <div>
 	<h2>{{vm.course.title}} ({{vm.course.creditHours}} Hours)</h2>
-	<br />Description: {{ vm.course.description }} <br />
-	<hr>
+	<br />Description: {{ vm.course.description }} <br /> <br />
+
 	<jhi-alert-error></jhi-alert-error>
 
 	<table class="jh-table table">
@@ -26,9 +26,40 @@
 			</tr>
 		</tbody>
 	</table>
+	<ul>
+		<li>Course Fee includes course materials which are issued by MIU.</li>
+		<li>Excludes textbooks and workbook not from MIU.</li>
+		<li>E-Library fee : USD $70.00 (one time)</li>
+	</ul>
+
+	<br />
+	<h3>Course Modules</h3>
+
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<h3 class="panel-title">Theological Module</h3>
+		</div>
+		<div class="panel-body">
+			<ul ng-repeat="module in vm.theological track by module.moduleOrder">
+				<li>{{ module.moduleCode }} - {{ module.title }}</li>
+			</ul>
+		</div>
+	</div>
+
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<h3 class="panel-title">Practicle Ministry Module</h3>
+		</div>
+		<div class="panel-body">
+			<ul
+				ng-repeat="module in vm.practicalMinistry track by module.moduleOrder">
+				<li>{{ module.moduleCode }} - {{ module.title }}</li>
+			</ul>
+		</div>
+	</div>
 
 	<button type="submit" ui-sref="{{ vm.previousState }}"
-		class="btn btn-info">
+		class="btn btn-primary">
 		<span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span>
 			Back</span>
 	</button>

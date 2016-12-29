@@ -5,20 +5,18 @@
 			PublicCourseDetailController);
 
 	PublicCourseDetailController.$inject = [ '$scope', '$stateParams',
-			'previousState', 'entity', 'PublicCourse' ];
+			'previousState', 'entity', 'PublicCourse',
+			'PublicModuleTheological', 'PublicModulePracticalMinistry' ];
 
 	function PublicCourseDetailController($scope, $stateParams, previousState,
-			entity, PublicCourse) {
+			entity, PublicCourse, PublicModuleTheological,
+			PublicModulePracticalMinistry) {
 		var vm = this;
 
 		vm.course = entity;
 		vm.previousState = previousState.name;
+		vm.theological = PublicModuleTheological.get(entity);
+		vm.practicalMinistry = PublicModulePracticalMinistry.get(entity);
 
-		// var unsubscribe = $rootScope.$on('miuApp:courseUpdate',
-		// function(event,
-		// result) {
-		// vm.course = result;
-		// });
-//		$scope.$on('$destroy', unsubscribe);
 	}
 })();

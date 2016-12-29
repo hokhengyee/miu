@@ -1,21 +1,27 @@
 (function() {
-    'use strict';
+	'use strict';
 
-    angular
-        .module('miuApp')
-        .controller('EntryQualificationDetailController', EntryQualificationDetailController);
+	angular.module('miuApp').controller('EntryQualificationDetailController',
+			EntryQualificationDetailController);
 
-    EntryQualificationDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'entity', 'EntryQualification', 'Course'];
+	EntryQualificationDetailController.$inject = [ '$scope', '$rootScope',
+			'$stateParams', 'previousState', 'entity', 'EntryQualification',
+			'Course', '$sce' ];
 
-    function EntryQualificationDetailController($scope, $rootScope, $stateParams, previousState, entity, EntryQualification, Course) {
-        var vm = this;
+	function EntryQualificationDetailController($scope, $rootScope,
+			$stateParams, previousState, entity, EntryQualification, Course,
+			$sce) {
+		var vm = this;
 
-        vm.entryQualification = entity;
-        vm.previousState = previousState.name;
+		vm.entryQualification = entity;
+		vm.previousState = previousState.name;
 
-        var unsubscribe = $rootScope.$on('miuApp:entryQualificationUpdate', function(event, result) {
-            vm.entryQualification = result;
-        });
-        $scope.$on('$destroy', unsubscribe);
-    }
+		vm.htmlComment = $sce.trustAsHtml(vm.entryQualification.content);
+
+		var unsubscribe = $rootScope.$on('miuApp:entryQualificationUpdate',
+				function(event, result) {
+					vm.entryQualification = result;
+				});
+		$scope.$on('$destroy', unsubscribe);
+	}
 })();

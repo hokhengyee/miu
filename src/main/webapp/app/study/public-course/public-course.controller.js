@@ -25,6 +25,7 @@
 				size : vm.itemsPerPage,
 				sort : sort()
 			}, onSuccess, onError);
+
 			function sort() {
 				var result = [ vm.predicate + ','
 						+ (vm.reverse ? 'asc' : 'desc') ];
@@ -33,6 +34,7 @@
 				}
 				return result;
 			}
+
 			function onSuccess(data, headers) {
 				vm.links = ParseLinks.parse(headers('link'));
 				vm.totalItems = headers('X-Total-Count');
@@ -40,6 +42,7 @@
 				vm.courses = data;
 				vm.page = pagingParams.page;
 			}
+
 			function onError(error) {
 				AlertService.error(error.data.message);
 			}

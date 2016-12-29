@@ -20,7 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 import com.miu.domain.Course;
+import com.miu.domain.Module;
 import com.miu.repository.CourseRepository;
+import com.miu.repository.ModuleRepository;
 import com.miu.web.rest.util.PaginationUtil;
 
 import io.swagger.annotations.ApiParam;
@@ -36,6 +38,9 @@ public class PublicResource {
 	private CourseRepository courseRepository;
 
 	private final Logger LOGGER = LoggerFactory.getLogger(PublicResource.class);
+
+	@Inject
+	private ModuleRepository moduleRepository;
 
 	/**
 	 * GET /courses : get all the courses.
@@ -71,6 +76,42 @@ public class PublicResource {
 		Course course = courseRepository.findOne(id);
 		return Optional.ofNullable(course).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+	}
+
+	/**
+	 * GET /modules/:id : get the "id" module.
+	 *
+	 * @param id
+	 *            the id of the module to retrieve
+	 * @return the ResponseEntity with status 200 (OK) and with body the module,
+	 *         or with status 404 (Not Found)
+	 */
+	@GetMapping("/course/{id}/practical-ministry")
+	@Timed
+	public ResponseEntity<List<Module>> getPracticalMinistryModule(@PathVariable Long id) {
+		LOGGER.debug("REST request to get Modules from course : {}", id);
+		Course course = courseRepository.findOne(id);
+		List<Module> page = moduleRepository.getPracticalMinistry(course);
+		HttpHeaders headers = new HttpHeaders();
+		return new ResponseEntity<>(page, headers, HttpStatus.OK);
+	}
+
+	/**
+	 * GET /modules/:id : get the "id" module.
+	 *
+	 * @param id
+	 *            the id of the module to retrieve
+	 * @return the ResponseEntity with status 200 (OK) and with body the module,
+	 *         or with status 404 (Not Found)
+	 */
+	@GetMapping("/course/{id}/theological")
+	@Timed
+	public ResponseEntity<List<Module>> getTheologicalModule(@PathVariable Long id) {
+		LOGGER.debug("REST request to get Modules from course : {}", id);
+		Course course = courseRepository.findOne(id);
+		List<Module> page = moduleRepository.getTheological(course);
+		HttpHeaders headers = new HttpHeaders();
+		return new ResponseEntity<>(page, headers, HttpStatus.OK);
 	}
 
 }
