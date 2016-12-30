@@ -11,10 +11,13 @@
     <include file="classpath:config/liquibase/changelog/20161220115959_added_entity_ForumRoom.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20161220135503_added_entity_ForumRoomMessage.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20161224162045_added_entity_EntryQualification.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20161230020222_added_entity_StaticPageType.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20161230023003_added_entity_StaticPage.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="classpath:config/liquibase/changelog/20161219050608_added_entity_constraints_Module.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20161219064046_added_entity_constraints_ModuleType.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20161220135503_added_entity_constraints_ForumRoomMessage.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20161224162045_added_entity_constraints_EntryQualification.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20161230023003_added_entity_constraints_StaticPage.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
 </databaseChangeLog>

@@ -32,5 +32,9 @@
 
     <cache alias="com.miu.domain.EntryQualification" uses-template="simple"/>
 
+    <cache alias="com.miu.domain.StaticPageType" uses-template="simple"/>
+
+    <cache alias="com.miu.domain.StaticPage" uses-template="simple"/>
+
     <!-- jhipster-needle-ehcache-add-entry -->
 </config>
