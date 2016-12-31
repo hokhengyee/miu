@@ -21,8 +21,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.codahale.metrics.annotation.Timed;
 import com.miu.domain.Course;
 import com.miu.domain.Module;
+import com.miu.domain.StaticPage;
+import com.miu.domain.StaticPageType;
 import com.miu.repository.CourseRepository;
 import com.miu.repository.ModuleRepository;
+import com.miu.repository.StaticPageRepository;
+import com.miu.repository.StaticPageTypeRepository;
 import com.miu.web.rest.util.PaginationUtil;
 
 import io.swagger.annotations.ApiParam;
@@ -41,6 +45,12 @@ public class PublicResource {
 
 	@Inject
 	private ModuleRepository moduleRepository;
+
+	@Inject
+	private StaticPageRepository staticPageRepository;
+
+	@Inject
+	private StaticPageTypeRepository sptRepository;
 
 	/**
 	 * GET /courses : get all the courses.
@@ -114,4 +124,23 @@ public class PublicResource {
 		return new ResponseEntity<>(page, headers, HttpStatus.OK);
 	}
 
+	@GetMapping("/message-from-president")
+	@Timed
+	public ResponseEntity<StaticPage> getMessageFromPresident() {
+		LOGGER.debug("REST request to get Message From President");
+		StaticPageType staticPageType = sptRepository.findOne(1L);
+		StaticPage staticPage = staticPageRepository.getByStaticPageType(staticPageType);
+		return Optional.ofNullable(staticPage).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+	}
+
+	@GetMapping("/governance")
+	@Timed
+	public ResponseEntity<StaticPage> getGovernance() {
+		LOGGER.debug("REST request to get Governance");
+		StaticPageType staticPageType = sptRepository.findOne(2L);
+		StaticPage staticPage = staticPageRepository.getByStaticPageType(staticPageType);
+		return Optional.ofNullable(staticPage).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+	}
 }

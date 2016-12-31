@@ -1,12 +1,20 @@
 package com.miu.domain;
 
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
-import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.Objects;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * A StaticPage.
@@ -16,80 +24,80 @@ import java.util.Objects;
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class StaticPage implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+	@NotNull
+	@Size(max = 10000)
+	@Column(name = "content", length = 10000, nullable = false)
+	private String content;
 
-    @NotNull
-    @Size(max = 10000)
-    @Column(name = "content", length = 10000, nullable = false)
-    private String content;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
 
-    @ManyToOne
-    @NotNull
-    private StaticPageType staticPageType;
+	@ManyToOne
+	@NotNull
+	private StaticPageType staticPageType;
 
-    public Long getId() {
-        return id;
-    }
+	public StaticPage content(String content) {
+		this.content = content;
+		return this;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
 
-    public String getContent() {
-        return content;
-    }
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
 
-    public StaticPage content(String content) {
-        this.content = content;
-        return this;
-    }
+		StaticPage staticPage = (StaticPage) o;
+		if (staticPage.id == null || id == null) {
+			return false;
+		}
 
-    public void setContent(String content) {
-        this.content = content;
-    }
+		return Objects.equals(id, staticPage.id);
+	}
 
-    public StaticPageType getStaticPageType() {
-        return staticPageType;
-    }
+	public String getContent() {
+		return content;
+	}
 
-    public StaticPage staticPageType(StaticPageType staticPageType) {
-        this.staticPageType = staticPageType;
-        return this;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setStaticPageType(StaticPageType staticPageType) {
-        this.staticPageType = staticPageType;
-    }
+	public StaticPageType getStaticPageType() {
+		return staticPageType;
+	}
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        StaticPage staticPage = (StaticPage) o;
-        if (staticPage.id == null || id == null) {
-            return false;
-        }
-        return Objects.equals(id, staticPage.id);
-    }
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(id);
+	}
 
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(id);
-    }
+	public void setContent(String content) {
+		this.content = content;
+	}
 
-    @Override
-    public String toString() {
-        return "StaticPage{" +
-            "id=" + id +
-            ", content='" + content + "'" +
-            '}';
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+	public void setStaticPageType(StaticPageType staticPageType) {
+		this.staticPageType = staticPageType;
+	}
+
+	public StaticPage staticPageType(StaticPageType staticPageType) {
+		this.staticPageType = staticPageType;
+		return this;
+	}
+
+	@Override
+	public String toString() {
+		return "StaticPage{" + "id=" + id + ", content='" + content + "'" + '}';
+	}
 }

@@ -1,8 +1,15 @@
+
 <div>
-	<div class="row">
-		<div class="col-md-8 col-md-offset-2">
-			<h1>Message from the President</h1>
-		</div>
-		<div class="col-md-8 col-md-offset-2"></div>
-	</div>
+	<h2>{{ vm.staticPage.staticPageType.title}}</h2>
+	<hr>
+	<jhi-alert-error></jhi-alert-error>
+	<dl class="dl-horizontal jh-entity-details">
+		<dd>
+			<!-- <span ng-bind-html="htmlComment"></span> -->
+			{{ vm.htmlContent }}
+		</dd>
+	</dl>
+
+	<pre>{{ vm | json }}</pre>
+
 </div>
