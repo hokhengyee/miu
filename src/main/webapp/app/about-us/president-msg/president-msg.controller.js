@@ -5,22 +5,14 @@
 			PresidentMsgController);
 
 	PresidentMsgController.$inject = [ '$scope', '$rootScope', '$stateParams',
-			'$sce', 'StaticPage', 'PresidentMsg' ];
+			'entity', 'PresidentMsg', '$sce' ];
 
-	function PresidentMsgController($scope, $rootScope, $stateParams, $sce,
-			StaticPage, PresidentMsg) {
+	function PresidentMsgController($scope, $rootScope, $stateParams, entity,
+			PresidentMsg, $sce) {
 		var vm = this;
 
-		vm.staticPage = PresidentMsg.get();
-		console.log(vm.staticPage['staticPage']);
-		var key;
-		for (key in vm.staticPage) {
-			if (key == 'content') {
-				console.log("out: " + vm.staticPage[key]);
-			}
-		}
-
-		vm.htmlComment = $sce.trustAsHtml(vm.staticPage.content);
+		vm.staticPage = entity;
+		vm.staticHtml = $sce.trustAsHtml(vm.staticPage.content);
 
 	}
 })();

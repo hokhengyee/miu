@@ -1,13 +1,18 @@
 (function() {
 	'use strict';
 
-	angular.module('miuApp').controller('GovernanceController',
-			GovernanceController);
+	angular.module('miuApp').controller('GovernanceMsgController',
+			GovernanceMsgController);
 
-	GovernanceController.$inject = [ '$scope', '$state' ];
+	GovernanceMsgController.$inject = [ '$scope', '$rootScope', '$stateParams',
+			'entity', 'GovernanceMsg', '$sce' ];
 
-	function GovernanceController($scope, $state) {
+	function GovernanceMsgController($scope, $rootScope, $stateParams, entity,
+			GovernanceMsg, $sce) {
 		var vm = this;
+
+		vm.staticPage = entity;
+		vm.staticHtml = $sce.trustAsHtml(vm.staticPage.content);
 
 	}
 })();

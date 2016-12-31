@@ -1,11 +1,11 @@
 (function() {
 	'use strict';
-	angular.module('miuApp').factory('PresidentMsg', PresidentMsg);
+	angular.module('miuApp').factory('GovernanceMsg', GovernanceMsg);
 
-	PresidentMsg.$inject = [ '$resource' ];
+	GovernanceMsg.$inject = [ '$resource' ];
 
-	function PresidentMsg($resource) {
-		var resourceUrl = 'api/public/message-from-president';
+	function GovernanceMsg($resource) {
+		var resourceUrl = 'api/public/governance';
 
 		return $resource(resourceUrl, {}, {
 			'get' : {

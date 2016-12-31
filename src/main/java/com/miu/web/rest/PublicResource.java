@@ -47,10 +47,10 @@ public class PublicResource {
 	private ModuleRepository moduleRepository;
 
 	@Inject
-	private StaticPageRepository staticPageRepository;
+	private StaticPageTypeRepository sptRepository;
 
 	@Inject
-	private StaticPageTypeRepository sptRepository;
+	private StaticPageRepository staticPageRepository;
 
 	/**
 	 * GET /courses : get all the courses.
@@ -88,6 +88,26 @@ public class PublicResource {
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
 
+	@GetMapping("/governance")
+	@Timed
+	public ResponseEntity<StaticPage> getGovernance() throws URISyntaxException {
+		LOGGER.debug("REST request to get Governance");
+		StaticPageType staticPageType = sptRepository.findOne(2L);
+		StaticPage staticPage = staticPageRepository.getByStaticPageType(staticPageType);
+		return Optional.ofNullable(staticPage).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+	}
+
+	@GetMapping("/message-from-president")
+	@Timed
+	public ResponseEntity<StaticPage> getMessageFromPresident() throws URISyntaxException {
+		LOGGER.debug("REST request to get a page of Courses");
+		StaticPageType staticPageType = sptRepository.findOne(1L);
+		StaticPage staticPage = staticPageRepository.getByStaticPageType(staticPageType);
+		return Optional.ofNullable(staticPage).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+	}
+
 	/**
 	 * GET /modules/:id : get the "id" module.
 	 *
@@ -122,25 +142,5 @@ public class PublicResource {
 		List<Module> page = moduleRepository.getTheological(course);
 		HttpHeaders headers = new HttpHeaders();
 		return new ResponseEntity<>(page, headers, HttpStatus.OK);
-	}
-
-	@GetMapping("/message-from-president")
-	@Timed
-	public ResponseEntity<StaticPage> getMessageFromPresident() {
-		LOGGER.debug("REST request to get Message From President");
-		StaticPageType staticPageType = sptRepository.findOne(1L);
-		StaticPage staticPage = staticPageRepository.getByStaticPageType(staticPageType);
-		return Optional.ofNullable(staticPage).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-	}
-
-	@GetMapping("/governance")
-	@Timed
-	public ResponseEntity<StaticPage> getGovernance() {
-		LOGGER.debug("REST request to get Governance");
-		StaticPageType staticPageType = sptRepository.findOne(2L);
-		StaticPage staticPage = staticPageRepository.getByStaticPageType(staticPageType);
-		return Optional.ofNullable(staticPage).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
 }

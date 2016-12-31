@@ -33,7 +33,7 @@
 								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Message
 									from the President</span>
 						</a></li>
-						<li ui-sref-active="active"><a ui-sref="governance"
+						<li ui-sref-active="active"><a ui-sref="governance-msg"
 							ng-click="vm.collapseNavbar()"> <span
 								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Governance</span>
 						</a></li>
@@ -62,7 +62,8 @@
 								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Courses
 									&amp; Fees</span>
 						</a></li>
-						<li ui-sref-active="active"><a ui-sref="public-entry-qualification"
+						<li ui-sref-active="active"><a
+							ui-sref="public-entry-qualification"
 							ng-click="vm.collapseNavbar()"> <span
 								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Entry
 									Qualifications</span>
@@ -120,36 +121,29 @@
 								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Forum
 									Room Message</span>
 						</a></li>
-<li ui-sref-active="active">
-                            <a ui-sref="course" ng-click="vm.collapseNavbar()">
-                                <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
-                                <span >Course</span>
-                            </a>
-                        </li>
-<li ui-sref-active="active">
-                            <a ui-sref="entry-qualification" ng-click="vm.collapseNavbar()">
-                                <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
-                                <span >Entry Qualification</span>
-                            </a>
-                        </li>
-<li ui-sref-active="active">
-                            <a ui-sref="module" ng-click="vm.collapseNavbar()">
-                                <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
-                                <span >Module</span>
-                            </a>
-                        </li>
-<li ui-sref-active="active">
-                            <a ui-sref="static-page-type" ng-click="vm.collapseNavbar()">
-                                <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
-                                <span >Static Page Type</span>
-                            </a>
-                        </li>
-<li ui-sref-active="active">
-                            <a ui-sref="static-page" ng-click="vm.collapseNavbar()">
-                                <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
-                                <span >Static Page</span>
-                            </a>
-                        </li>
+						<li ui-sref-active="active"><a ui-sref="course"
+							ng-click="vm.collapseNavbar()"> <span
+								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Course</span>
+						</a></li>
+						<li ui-sref-active="active"><a ui-sref="entry-qualification"
+							ng-click="vm.collapseNavbar()"> <span
+								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Entry
+									Qualification</span>
+						</a></li>
+						<li ui-sref-active="active"><a ui-sref="module"
+							ng-click="vm.collapseNavbar()"> <span
+								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Module</span>
+						</a></li>
+						<li ui-sref-active="active"><a ui-sref="static-page-type"
+							ng-click="vm.collapseNavbar()"> <span
+								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Static
+									Page Type</span>
+						</a></li>
+						<li ui-sref-active="active"><a ui-sref="static-page"
+							ng-click="vm.collapseNavbar()"> <span
+								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Static
+									Page</span>
+						</a></li>
 						<!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
 					</ul></li>
 				<li ng-class="{active: vm.$state.includes('account')}" uib-dropdown
