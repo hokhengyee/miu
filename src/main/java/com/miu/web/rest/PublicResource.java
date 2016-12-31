@@ -101,7 +101,7 @@ public class PublicResource {
 	@GetMapping("/message-from-president")
 	@Timed
 	public ResponseEntity<StaticPage> getMessageFromPresident() throws URISyntaxException {
-		LOGGER.debug("REST request to get a page of Courses");
+		LOGGER.debug("REST request to get Message From President");
 		StaticPageType staticPageType = sptRepository.findOne(1L);
 		StaticPage staticPage = staticPageRepository.getByStaticPageType(staticPageType);
 		return Optional.ofNullable(staticPage).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
@@ -124,6 +124,16 @@ public class PublicResource {
 		List<Module> page = moduleRepository.getPracticalMinistry(course);
 		HttpHeaders headers = new HttpHeaders();
 		return new ResponseEntity<>(page, headers, HttpStatus.OK);
+	}
+
+	@GetMapping("/statement-of-faith")
+	@Timed
+	public ResponseEntity<StaticPage> getStatementOfFaith() throws URISyntaxException {
+		LOGGER.debug("REST request to get Statement Of Faith");
+		StaticPageType staticPageType = sptRepository.findOne(3L);
+		StaticPage staticPage = staticPageRepository.getByStaticPageType(staticPageType);
+		return Optional.ofNullable(staticPage).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
 
 	/**
