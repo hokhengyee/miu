@@ -20,10 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 import com.miu.domain.Course;
+import com.miu.domain.EntryQualification;
 import com.miu.domain.Module;
 import com.miu.domain.StaticPage;
 import com.miu.domain.StaticPageType;
 import com.miu.repository.CourseRepository;
+import com.miu.repository.EntryQualificationRepository;
 import com.miu.repository.ModuleRepository;
 import com.miu.repository.StaticPageRepository;
 import com.miu.repository.StaticPageTypeRepository;
@@ -40,6 +42,9 @@ public class PublicResource {
 
 	@Inject
 	private CourseRepository courseRepository;
+
+	@Inject
+	private EntryQualificationRepository entryQualificationRepository;
 
 	private final Logger LOGGER = LoggerFactory.getLogger(PublicResource.class);
 
@@ -95,6 +100,24 @@ public class PublicResource {
 		LOGGER.debug("REST request to get Course : {}", id);
 		Course course = courseRepository.findOne(id);
 		return Optional.ofNullable(course).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+	}
+
+	/**
+	 * GET /entry-qualifications/:id : get the "id" entryQualification.
+	 *
+	 * @param id
+	 *            the id of the entryQualification to retrieve
+	 * @return the ResponseEntity with status 200 (OK) and with body the
+	 *         entryQualification, or with status 404 (Not Found)
+	 */
+	@GetMapping("/course/{id}/entry-qualifications")
+	@Timed
+	public ResponseEntity<EntryQualification> getEntryQualification(@PathVariable Long id) {
+		LOGGER.debug("REST request to get EntryQualification : {}", id);
+		Course course = courseRepository.findOne(id);
+		EntryQualification entryQualification = entryQualificationRepository.getCourseEntryQualifications(course);
+		return Optional.ofNullable(entryQualification).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
 

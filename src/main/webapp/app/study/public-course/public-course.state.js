@@ -64,6 +64,18 @@
                 entity: ['$stateParams', 'PublicCourse', function($stateParams, PublicCourse) {
                     return PublicCourse.get({id : $stateParams.id}).$promise;
                 }],
+                entity2: ['$stateParams', 'PublicEntryQualification', 
+                	function($stateParams, PublicEntryQualification) {
+                    return PublicEntryQualification.get({id : $stateParams.id}).$promise;
+                }],
+                entity3: ['$stateParams', 'PublicModuleTheological', 
+                	function($stateParams, PublicModuleTheological) {
+                    return PublicModuleTheological.get({id : $stateParams.id}).$promise;
+                }],
+                entity4: ['$stateParams', 'PublicModulePracticalMinistry', 
+                	function($stateParams, PublicModulePracticalMinistry) {
+                    return PublicModulePracticalMinistry.get({id : $stateParams.id}).$promise;
+                }],
                 previousState: ["$state", function ($state) {
                     var currentStateData = {
                         name: $state.current.name || 'course',
@@ -77,4 +89,3 @@
     }
 
 })();
-

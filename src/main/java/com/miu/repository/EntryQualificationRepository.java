@@ -1,15 +1,17 @@
 package com.miu.repository;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import com.miu.domain.Course;
 import com.miu.domain.EntryQualification;
-
-import org.springframework.data.jpa.repository.*;
-
-import java.util.List;
 
 /**
  * Spring Data JPA repository for the EntryQualification entity.
  */
-@SuppressWarnings("unused")
-public interface EntryQualificationRepository extends JpaRepository<EntryQualification,Long> {
+public interface EntryQualificationRepository extends JpaRepository<EntryQualification, Long> {
+
+	@Query("SELECT e FROM EntryQualification e WHERE e.course= ?1")
+	EntryQualification getCourseEntryQualifications(Course courseID);
 
 }
