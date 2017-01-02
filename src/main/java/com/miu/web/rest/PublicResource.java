@@ -136,6 +136,16 @@ public class PublicResource {
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
 
+	@GetMapping("/accredited-centers")
+	@Timed
+	public ResponseEntity<StaticPage> getAccreditedCenters() throws URISyntaxException {
+		LOGGER.debug("REST request to get Accredited Centers");
+		StaticPageType staticPageType = sptRepository.findOne(4L);
+		StaticPage staticPage = staticPageRepository.getByStaticPageType(staticPageType);
+		return Optional.ofNullable(staticPage).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+	}
+
 	/**
 	 * GET /modules/:id : get the "id" module.
 	 *

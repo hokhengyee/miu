@@ -4,10 +4,15 @@
 	angular.module('miuApp').controller('AccreditedCentersController',
 			AccreditedCentersController);
 
-	AccreditedCentersController.$inject = [ '$scope', '$state' ];
+	AccreditedCentersController.$inject = [ '$scope', '$rootScope',
+			'$stateParams', 'entity', 'AccreditedCentersMsg', '$sce' ];
 
-	function AccreditedCentersController($scope, $state) {
+	function AccreditedCentersController($scope, $rootScope, $stateParams,
+			entity, AccreditedCentersMsg, $sce) {
 		var vm = this;
+
+		vm.staticPage = entity;
+		vm.staticHtml = $sce.trustAsHtml(vm.staticPage.content);
 
 	}
 })();
