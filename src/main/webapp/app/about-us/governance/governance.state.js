@@ -15,7 +15,7 @@
 			},
 			views : {
 				'content@' : {
-					templateUrl : 'app/about-us/about-us.html',
+					templateUrl : 'app/static/public-static-page.html',
 					controller : 'GovernanceMsgController',
 					controllerAs : 'vm'
 				}

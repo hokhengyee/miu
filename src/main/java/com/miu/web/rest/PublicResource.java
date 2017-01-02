@@ -52,6 +52,16 @@ public class PublicResource {
 	@Inject
 	private StaticPageRepository staticPageRepository;
 
+	@GetMapping("/accredited-centers")
+	@Timed
+	public ResponseEntity<StaticPage> getAccreditedCenters() throws URISyntaxException {
+		LOGGER.debug("REST request to get Accredited Centers");
+		StaticPageType staticPageType = sptRepository.findOne(4L);
+		StaticPage staticPage = staticPageRepository.getByStaticPageType(staticPageType);
+		return Optional.ofNullable(staticPage).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+	}
+
 	/**
 	 * GET /courses : get all the courses.
 	 *
@@ -88,11 +98,31 @@ public class PublicResource {
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
 
+	@GetMapping("/faculty-and-alumni")
+	@Timed
+	public ResponseEntity<StaticPage> getFacultyAndAlumni() throws URISyntaxException {
+		LOGGER.debug("REST request to get Faculty And Alumni");
+		StaticPageType staticPageType = sptRepository.findOne(7L);
+		StaticPage staticPage = staticPageRepository.getByStaticPageType(staticPageType);
+		return Optional.ofNullable(staticPage).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+	}
+
 	@GetMapping("/governance")
 	@Timed
 	public ResponseEntity<StaticPage> getGovernance() throws URISyntaxException {
 		LOGGER.debug("REST request to get Governance");
 		StaticPageType staticPageType = sptRepository.findOne(2L);
+		StaticPage staticPage = staticPageRepository.getByStaticPageType(staticPageType);
+		return Optional.ofNullable(staticPage).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+	}
+
+	@GetMapping("/grading")
+	@Timed
+	public ResponseEntity<StaticPage> getGrading() throws URISyntaxException {
+		LOGGER.debug("REST request to get Grading");
+		StaticPageType staticPageType = sptRepository.findOne(6L);
 		StaticPage staticPage = staticPageRepository.getByStaticPageType(staticPageType);
 		return Optional.ofNullable(staticPage).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -126,21 +156,21 @@ public class PublicResource {
 		return new ResponseEntity<>(page, headers, HttpStatus.OK);
 	}
 
-	@GetMapping("/statement-of-faith")
+	@GetMapping("/refund-policy")
 	@Timed
-	public ResponseEntity<StaticPage> getStatementOfFaith() throws URISyntaxException {
-		LOGGER.debug("REST request to get Statement Of Faith");
-		StaticPageType staticPageType = sptRepository.findOne(3L);
+	public ResponseEntity<StaticPage> getRefundPolicy() throws URISyntaxException {
+		LOGGER.debug("REST request to get Accredited Centers");
+		StaticPageType staticPageType = sptRepository.findOne(5L);
 		StaticPage staticPage = staticPageRepository.getByStaticPageType(staticPageType);
 		return Optional.ofNullable(staticPage).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
 
-	@GetMapping("/accredited-centers")
+	@GetMapping("/statement-of-faith")
 	@Timed
-	public ResponseEntity<StaticPage> getAccreditedCenters() throws URISyntaxException {
-		LOGGER.debug("REST request to get Accredited Centers");
-		StaticPageType staticPageType = sptRepository.findOne(4L);
+	public ResponseEntity<StaticPage> getStatementOfFaith() throws URISyntaxException {
+		LOGGER.debug("REST request to get Statement Of Faith");
+		StaticPageType staticPageType = sptRepository.findOne(3L);
 		StaticPage staticPage = staticPageRepository.getByStaticPageType(staticPageType);
 		return Optional.ofNullable(staticPage).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));

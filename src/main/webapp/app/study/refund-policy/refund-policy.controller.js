@@ -4,10 +4,15 @@
 	angular.module('miuApp').controller('RefundPolicyController',
 			RefundPolicyController);
 
-	RefundPolicyController.$inject = [ '$scope', '$state' ];
+	RefundPolicyController.$inject = [ '$scope', '$rootScope', '$stateParams',
+			'entity', 'RefundPolicyMsg', '$sce' ];
 
-	function RefundPolicyController($scope, $state) {
+	function RefundPolicyController($scope, $rootScope, $stateParams, entity,
+			RefundPolicyMsg, $sce) {
 		var vm = this;
+
+		vm.staticPage = entity;
+		vm.staticHtml = $sce.trustAsHtml(vm.staticPage.content);
 
 	}
 })();

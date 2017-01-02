@@ -6,24 +6,24 @@
 	stateConfig.$inject = [ '$stateProvider' ];
 
 	function stateConfig($stateProvider) {
-		$stateProvider.state('refund-policy-msg', {
+		$stateProvider.state('faculty-alumni-msg', {
 			parent : 'study',
-			url : '/refund-policy',
+			url : '/faculty-and-alumni',
 			data : {
 				authorities : [],
-				pageTitle : 'Refund Policy'
+				pageTitle : 'Faculty & Alumni'
 			},
 			views : {
 				'content@' : {
 					templateUrl : 'app/static/public-static-page.html',
-					controller : 'RefundPolicyController',
+					controller : 'FacultyAlumniController',
 					controllerAs : 'vm'
 				}
 			},
 			resolve : {
-				entity : [ '$stateParams', 'RefundPolicyMsg',
-						function($stateParams, RefundPolicyMsg) {
-							return RefundPolicyMsg.get({
+				entity : [ '$stateParams', 'FacultyAlumniMsg',
+						function($stateParams, FacultyAlumniMsg) {
+							return FacultyAlumniMsg.get({
 								id : $stateParams.id
 							}).$promise;
 						} ]
