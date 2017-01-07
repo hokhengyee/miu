@@ -22,11 +22,13 @@ import com.codahale.metrics.annotation.Timed;
 import com.miu.domain.Course;
 import com.miu.domain.EntryQualification;
 import com.miu.domain.Module;
+import com.miu.domain.ResearchPaper;
 import com.miu.domain.StaticPage;
 import com.miu.domain.StaticPageType;
 import com.miu.repository.CourseRepository;
 import com.miu.repository.EntryQualificationRepository;
 import com.miu.repository.ModuleRepository;
+import com.miu.repository.ResearchPaperRepository;
 import com.miu.repository.StaticPageRepository;
 import com.miu.repository.StaticPageTypeRepository;
 import com.miu.web.rest.util.PaginationUtil;
@@ -50,6 +52,9 @@ public class PublicResource {
 
 	@Inject
 	private ModuleRepository moduleRepository;
+
+	@Inject
+	private ResearchPaperRepository researchPaperRepository;
 
 	@Inject
 	private StaticPageTypeRepository sptRepository;
@@ -187,6 +192,16 @@ public class PublicResource {
 		StaticPage staticPage = staticPageRepository.getByStaticPageType(staticPageType);
 		return Optional.ofNullable(staticPage).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+	}
+
+	@GetMapping("/course/{id}/research-papers")
+	@Timed
+	public ResponseEntity<List<ResearchPaper>> getResearchPaperList(@PathVariable Long id) {
+		LOGGER.debug("REST request to get Research Papers from course : {}", id);
+		Course course = courseRepository.findOne(id);
+		List<ResearchPaper> page = researchPaperRepository.getByCourse(course);
+		HttpHeaders headers = new HttpHeaders();
+		return new ResponseEntity<>(page, headers, HttpStatus.OK);
 	}
 
 	@GetMapping("/statement-of-faith")

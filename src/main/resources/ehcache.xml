@@ -36,5 +36,7 @@
 
     <cache alias="com.miu.domain.StaticPage" uses-template="simple"/>
 
+    <cache alias="com.miu.domain.ResearchPaper" uses-template="simple"/>
+
     <!-- jhipster-needle-ehcache-add-entry -->
 </config>

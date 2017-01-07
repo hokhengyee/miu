@@ -5,30 +5,41 @@
 	<jhi-alert-error></jhi-alert-error>
 
 	<h3>Entry Qualifications</h3>
-	<br /> <span ng-bind-html="vm.htmlContent"></span><br />
+
+	<div class="panel panel-primary">
+		<div class="panel-body">
+			<span ng-bind-html="vm.htmlContent"></span>
+		</div>
+	</div>
 
 	<h3>Course Fees</h3>
-	<table class="table table-bordered">
-		<tr>
-			<th width="25%">Application Fee:&nbsp;</th>
-			<td>{{ vm.course.applicationFee }}</td>
-		</tr>
-		<tr>
-			<th>Registration Fee:&nbsp;</th>
-			<td>{{ vm.course.registrationFee }}</td>
-		</tr>
-		<tr>
-			<th>Course Fee *:&nbsp;</th>
-			<td>{{ vm.course.courseFee }}</td>
-		</tr>
-	</table>
-	<ul>
-		<li>Course Fee includes course materials which are issued by MIU.</li>
-		<li>Excludes textbooks and workbook not from MIU.</li>
-		<li>E-Library fee : USD $70.00 (one time)</li>
-	</ul>
 
-	<br />
+	<div class="panel panel-primary">
+		<div class="panel-body">
+			<table class="table table-bordered" style="background-color: white">
+				<tr>
+					<th width="25%">Application Fee:&nbsp;</th>
+					<td>{{ vm.course.applicationFee }}</td>
+				</tr>
+				<tr>
+					<th>Registration Fee:&nbsp;</th>
+					<td>{{ vm.course.registrationFee }}</td>
+				</tr>
+				<tr>
+					<th>Course Fee *:&nbsp;</th>
+					<td>{{ vm.course.courseFee }}</td>
+				</tr>
+			</table>
+
+			<ul>
+				<li>Course Fee includes course materials which are issued by
+					MIU.</li>
+				<li>Excludes textbooks and workbook not from MIU.</li>
+				<li>E-Library fee : USD $70.00 (one time)</li>
+			</ul>
+		</div>
+	</div>
+
 	<h3>Course Modules</h3>
 
 	<div class="panel panel-primary">
@@ -52,6 +63,37 @@
 				<li>{{ module.moduleCode }} - {{ module.title }}</li>
 			</ul>
 		</div>
+	</div>
+
+	<h3>Research Papers</h3>
+
+	<div class="panel panel-primary">
+		<div class="panel-body">
+			<ul ng-repeat="rp in vm.researchPapers track by rp.showOrder">
+				<li>{{ rp.code }} - {{ rp.title }}</li>
+			</ul>
+		</div>
+	</div>
+
+	<h3>Book Reviews</h3>
+
+	<div class="panel panel-primary">
+		<div class="panel-body">Information is available in the student
+			program manual which will be issued to all registered students.</div>
+	</div>
+
+	<h3>Writing Articles</h3>
+
+	<div class="panel panel-primary">
+		<div class="panel-body">Students are to submit titles of
+			articles for the approval of course supervisor.</div>
+	</div>
+
+	<h3>Dissertation</h3>
+
+	<div class="panel panel-primary">
+		<div class="panel-body">Students are to submit titles of
+			dissertation for the approval of course supervisor.</div>
 	</div>
 
 	<button type="submit" ui-sref="{{ vm.previousState }}"

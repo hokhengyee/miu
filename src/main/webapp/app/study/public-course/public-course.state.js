@@ -76,6 +76,10 @@
                 	function($stateParams, PublicModulePracticalMinistry) {
                     return PublicModulePracticalMinistry.get({id : $stateParams.id}).$promise;
                 }],
+                entity5: ['$stateParams', 'PublicResearchPaper', 
+                	function($stateParams, PublicResearchPaper) {
+                    return PublicResearchPaper.get({id : $stateParams.id}).$promise;
+                }],
                 previousState: ["$state", function ($state) {
                     var currentStateData = {
                         name: $state.current.name || 'course',
