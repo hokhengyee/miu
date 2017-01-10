@@ -70,6 +70,7 @@ public class OnlineApplicationResource {
 			return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("onlineApplication", "idexists",
 					"A new onlineApplication cannot already have an ID")).body(null);
 		}
+		
 		OnlineApplication result = onlineApplicationRepository.save(onlineApplication);
 		return ResponseEntity.created(new URI("/api/online-applications/" + result.getId()))
 				.headers(HeaderUtil.createEntityCreationAlert("onlineApplication", result.getId().toString()))
