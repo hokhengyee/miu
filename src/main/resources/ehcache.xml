@@ -40,5 +40,7 @@
 
     <cache alias="com.miu.domain.OnlineApplication" uses-template="simple"/>
 
+    <cache alias="com.miu.domain.PaymentType" uses-template="simple"/>
+
     <!-- jhipster-needle-ehcache-add-entry -->
 </config>

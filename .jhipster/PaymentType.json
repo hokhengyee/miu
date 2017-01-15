@@ -1,0 +1,18 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "title",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20170115134917",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "payment_type",
+    "pagination": "pager"
+}
