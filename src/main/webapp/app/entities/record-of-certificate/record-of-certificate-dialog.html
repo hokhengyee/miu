@@ -1,0 +1,114 @@
+
+<form name="editForm" role="form" novalidate ng-submit="vm.save()" show-validation>
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                ng-click="vm.clear()">&times;</button>
+        <h4 class="modal-title" id="myRecordOfCertificateLabel">Create or edit a Record Of Certificate</h4>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group" ng-show="vm.recordOfCertificate.id">
+            <label for="id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                    ng-model="vm.recordOfCertificate.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_name">Name</label>
+            <input type="text" class="form-control" name="name" id="field_name"
+                    ng-model="vm.recordOfCertificate.name"
+                    required ng-minlength="3" ng-maxlength="1000" />
+            <div ng-show="editForm.name.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.name.$error.required">
+                    This field is required.
+                </p>
+                <p class="help-block"
+                    ng-show="editForm.name.$error.minlength" translate-value-min="3">
+                    This field is required to be at least 3 characters.
+                </p>
+                <p class="help-block"
+                    ng-show="editForm.name.$error.maxlength">
+                    This field cannot be longer than 1000 characters.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_degree">Degree</label>
+            <input type="text" class="form-control" name="degree" id="field_degree"
+                    ng-model="vm.recordOfCertificate.degree"
+                    required />
+            <div ng-show="editForm.degree.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.degree.$error.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_studentNo">Student No</label>
+            <input type="text" class="form-control" name="studentNo" id="field_studentNo"
+                    ng-model="vm.recordOfCertificate.studentNo"
+                    required />
+            <div ng-show="editForm.studentNo.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.studentNo.$error.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_certNumber">Cert Number</label>
+            <input type="text" class="form-control" name="certNumber" id="field_certNumber"
+                    ng-model="vm.recordOfCertificate.certNumber"
+                    required />
+            <div ng-show="editForm.certNumber.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.certNumber.$error.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+        <div class="form-group" ngf-drop ngf-change="vm.setCertScanFile($file, vm.recordOfCertificate)">
+            <label class="control-label" for="field_certScanFile">Cert Scan File</label>
+            <div>
+                <div ng-if="vm.recordOfCertificate.certScanFile" class="help-block clearfix">
+                    <a class="pull-left" ng-click="vm.openFile(vm.recordOfCertificate.certScanFileContentType, vm.recordOfCertificate.certScanFile)">open</a><br>
+                    <span class="pull-left">{{vm.recordOfCertificate.certScanFileContentType}}, {{vm.byteSize(vm.recordOfCertificate.certScanFile)}}</span>
+                    <button type="button" ng-click="vm.recordOfCertificate.certScanFile=null;vm.recordOfCertificate.certScanFileContentType=null;"
+                            class="btn btn-default btn-xs pull-right">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+                </div>
+                <button type="button" ngf-select class="btn btn-default btn-block"
+                        ngf-change="vm.setCertScanFile($file, vm.recordOfCertificate)">
+                    Add blob
+                </button>
+            </div>
+            <input type="hidden" class="form-control" name="certScanFile" id="field_certScanFile"
+                    ng-model="vm.recordOfCertificate.certScanFile"
+                     />
+            <input type="hidden" class="form-control" name="certScanFileContentType" id="field_certScanFileContentType"
+                    ng-model="vm.recordOfCertificate.certScanFileContentType" />
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_certDate">Cert Date</label>
+                <div class="input-group">
+                    <input id="field_certDate" type="text" class="form-control" name="certDate" uib-datepicker-popup="{{dateformat}}" ng-model="vm.recordOfCertificate.certDate" is-open="vm.datePickerOpenStatus.certDate"
+                    />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('certDate')"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                </div>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.clear()">
+            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span>
+        </button>
+        <button type="submit" ng-disabled="editForm.$invalid || vm.isSaving" class="btn btn-primary">
+            <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Save</span>
+        </button>
+    </div>
+</form>
