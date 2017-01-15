@@ -1,10 +1,13 @@
 package com.miu.web.rest;
 
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,15 +27,18 @@ import com.codahale.metrics.annotation.Timed;
 import com.miu.domain.Course;
 import com.miu.domain.EntryQualification;
 import com.miu.domain.Module;
+import com.miu.domain.OnlineApplication;
 import com.miu.domain.ResearchPaper;
 import com.miu.domain.StaticPage;
 import com.miu.domain.StaticPageType;
 import com.miu.repository.CourseRepository;
 import com.miu.repository.EntryQualificationRepository;
 import com.miu.repository.ModuleRepository;
+import com.miu.repository.OnlineApplicationRepository;
 import com.miu.repository.ResearchPaperRepository;
 import com.miu.repository.StaticPageRepository;
 import com.miu.repository.StaticPageTypeRepository;
+import com.miu.web.rest.util.HeaderUtil;
 import com.miu.web.rest.util.PaginationUtil;
 
 import io.swagger.annotations.ApiParam;
@@ -54,6 +62,9 @@ public class PublicResource {
 	private ModuleRepository moduleRepository;
 
 	@Inject
+	private OnlineApplicationRepository onlineApplicationRepository;
+
+	@Inject
 	private ResearchPaperRepository researchPaperRepository;
 
 	@Inject
@@ -61,6 +72,38 @@ public class PublicResource {
 
 	@Inject
 	private StaticPageRepository staticPageRepository;
+
+	/**
+	 * POST /online-applications : Create a new onlineApplication.
+	 *
+	 * @param onlineApplication
+	 *            the onlineApplication to create
+	 * @return the ResponseEntity with status 201 (Created) and with body the
+	 *         new onlineApplication, or with status 400 (Bad Request) if the
+	 *         onlineApplication has already an ID
+	 * @throws URISyntaxException
+	 *             if the Location URI syntax is incorrect
+	 */
+	@PostMapping("/online-applications")
+	@Timed
+	public ResponseEntity<OnlineApplication> createOnlineApplication(
+			@Valid @RequestBody OnlineApplication onlineApplication) throws URISyntaxException {
+		LOGGER.debug("REST request to save OnlineApplication : {}", onlineApplication);
+
+		if (onlineApplication.getRegistrationDatetime() == null) {
+			onlineApplication.setRegistrationDatetime(ZonedDateTime.now());
+		}
+
+		if (onlineApplication.getId() != null) {
+			return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("onlineApplication", "idexists",
+					"A new onlineApplication cannot already have an ID")).body(null);
+		}
+
+		OnlineApplication result = onlineApplicationRepository.save(onlineApplication);
+		return ResponseEntity.created(new URI("/api/online-applications/" + result.getId()))
+				.headers(HeaderUtil.createEntityCreationAlert("onlineApplication", result.getId().toString()))
+				.body(result);
+	}
 
 	@GetMapping("/accredited-centers")
 	@Timed
