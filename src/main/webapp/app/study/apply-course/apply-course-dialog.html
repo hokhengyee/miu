@@ -6,7 +6,7 @@
 		<button type="button" class="close" data-dismiss="modal"
 			aria-hidden="true" ng-click="vm.clear()">&times;</button>
 		<h4 class="modal-title" id="myOnlineApplicationLabel">Online
-			Application</h4>
+			Registration</h4>
 	</div>
 	<div class="modal-body">
 		<jhi-alert-error></jhi-alert-error>
@@ -202,7 +202,7 @@
 				</div>
 				<button type="button" ngf-select class="btn btn-default btn-block"
 					ngf-change="vm.setApplicationForm($file, vm.onlineApplication)">
-					Add blob</button>
+					Upload registration form details</button>
 			</div>
 			<input type="hidden" class="form-control" name="applicationForm"
 				id="field_applicationForm"
@@ -215,6 +215,13 @@
 					ng-show="editForm.applicationForm.$error.required">This field
 					is required.</p>
 			</div>
+
+			<p>
+				Please download the following <a
+					href="/content/registration-form/MIU-Application-Details-Form.xls"
+					target="_blank">form</a> and complete the necessary registration
+				details.
+			</p>
 		</div>
 
 	</div>
