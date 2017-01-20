@@ -11,7 +11,8 @@
 			entity, User) {
 		var vm = this;
 
-		vm.authorities = [ 'ROLE_USER', 'ROLE_ADMIN', 'ROLE_LECTURER' ];
+		vm.authorities = [ 'ROLE_USER', 'ROLE_ADMIN', 'ROLE_LECTURER',
+				'ROLE_STUDENT' ];
 		vm.clear = clear;
 		vm.languages = null;
 		vm.save = save;
@@ -34,7 +35,9 @@
 			vm.isSaving = true;
 			if (vm.user.id !== null) {
 				User.update(vm.user, onSaveSuccess, onSaveError);
-			} else {
+			}
+
+			else {
 				vm.user.langKey = 'en';
 				User.save(vm.user, onSaveSuccess, onSaveError);
 			}

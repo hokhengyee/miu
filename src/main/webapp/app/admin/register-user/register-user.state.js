@@ -6,17 +6,17 @@
 	stateConfig.$inject = [ '$stateProvider' ];
 
 	function stateConfig($stateProvider) {
-		$stateProvider.state('register', {
-			parent : 'account',
-			url : '/register',
+		$stateProvider.state('register-user', {
+			parent : 'admin',
+			url : '/register-user',
 			data : {
-				authorities : [],
+				authorities : [ 'ROLE_ADMIN' ],
 				pageTitle : 'Registration'
 			},
 			views : {
 				'content@' : {
-					templateUrl : 'app/account/register/register.html',
-					controller : 'RegisterController',
+					templateUrl : 'app/admin/register-user/register-user.html',
+					controller : 'RegisterUserController',
 					controllerAs : 'vm'
 				}
 			}

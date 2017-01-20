@@ -3,11 +3,11 @@
 
     angular
         .module('miuApp')
-        .controller('RegisterController', RegisterController);
+        .controller('RegisterUserController', RegisterUserController);
 
-    RegisterController.$inject = [ '$timeout', 'Auth', 'LoginService'];
+    RegisterUserController.$inject = [ '$timeout', 'Auth', 'LoginService'];
 
-    function RegisterController ($timeout, Auth, LoginService) {
+    function RegisterUserController ($timeout, Auth, LoginService) {
         var vm = this;
 
         vm.doNotMatch = null;
