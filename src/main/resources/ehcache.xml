@@ -46,5 +46,7 @@
 
     <cache alias="com.miu.domain.StudentPayment" uses-template="simple"/>
 
+    <cache alias="com.miu.domain.Salutation" uses-template="simple"/>
+
     <!-- jhipster-needle-ehcache-add-entry -->
 </config>
