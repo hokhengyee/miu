@@ -32,9 +32,9 @@
 
 		<div class="form-group">
 			<label class="control-label" for="field_content">Content</label>
-			<textarea type="text" class="form-control" name="content"
-				id="field_content" ng-model="vm.staticPage.content" required
-				ng-maxlength="10000" row="20" />
+			<textarea class="form-control" name="content" id="field_content"
+				ng-model="vm.staticPage.content" required ng-maxlength="10000"
+				rows="10" cols="50" style="resize: none" />
 			<div ng-show="editForm.content.$invalid">
 				<p class="help-block" ng-show="editForm.content.$error.required">
 					This field is required.</p>

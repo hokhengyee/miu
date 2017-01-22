@@ -27,12 +27,14 @@ import com.codahale.metrics.annotation.Timed;
 import com.miu.domain.Course;
 import com.miu.domain.EntryQualification;
 import com.miu.domain.Module;
+import com.miu.domain.NewsAndEvent;
 import com.miu.domain.OnlineApplication;
 import com.miu.domain.ResearchPaper;
 import com.miu.domain.StaticPage;
 import com.miu.repository.CourseRepository;
 import com.miu.repository.EntryQualificationRepository;
 import com.miu.repository.ModuleRepository;
+import com.miu.repository.NewsAndEventRepository;
 import com.miu.repository.OnlineApplicationRepository;
 import com.miu.repository.ResearchPaperRepository;
 import com.miu.repository.StaticPageRepository;
@@ -68,6 +70,9 @@ public class PublicResource {
 	@Inject
 	private StaticPageRepository staticPageRepository;
 
+	@Inject
+	private NewsAndEventRepository newsAndEventRepository;
+
 	/**
 	 * POST /online-applications : Create a new onlineApplication.
 	 *
@@ -98,6 +103,26 @@ public class PublicResource {
 		return ResponseEntity.created(new URI("/api/online-applications/" + result.getId()))
 				.headers(HeaderUtil.createEntityCreationAlert("onlineApplication", result.getId().toString()))
 				.body(result);
+	}
+
+	/**
+	 * GET /news-and-events : get latest 3 newsAndEvents.
+	 *
+	 * @param pageable
+	 *            the pagination information
+	 * @return the ResponseEntity with status 200 (OK) and the list of
+	 *         newsAndEvents in body
+	 * @throws URISyntaxException
+	 *             if there is an error to generate the pagination HTTP headers
+	 */
+	@GetMapping("/news-and-events")
+	@Timed
+	public ResponseEntity<List<NewsAndEvent>> getAllNewsAndEvents(@ApiParam Pageable pageable)
+			throws URISyntaxException {
+		LOGGER.debug("REST request to get a page of NewsAndEvents");
+		Page<NewsAndEvent> page = newsAndEventRepository.findAll(pageable);
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/news-and-events");
+		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
 	}
 
 	@GetMapping("/accredited-centers")

@@ -31,7 +31,7 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class NewsAndEventResource {
 
-    private final Logger log = LoggerFactory.getLogger(NewsAndEventResource.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(NewsAndEventResource.class);
         
     @Inject
     private NewsAndEventRepository newsAndEventRepository;
@@ -46,10 +46,12 @@ public class NewsAndEventResource {
     @PostMapping("/news-and-events")
     @Timed
     public ResponseEntity<NewsAndEvent> createNewsAndEvent(@Valid @RequestBody NewsAndEvent newsAndEvent) throws URISyntaxException {
-        log.debug("REST request to save NewsAndEvent : {}", newsAndEvent);
+        LOGGER.debug("REST request to save NewsAndEvent : {}", newsAndEvent);
+        
         if (newsAndEvent.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("newsAndEvent", "idexists", "A new newsAndEvent cannot already have an ID")).body(null);
         }
+        
         NewsAndEvent result = newsAndEventRepository.save(newsAndEvent);
         return ResponseEntity.created(new URI("/api/news-and-events/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert("newsAndEvent", result.getId().toString()))
@@ -68,10 +70,12 @@ public class NewsAndEventResource {
     @PutMapping("/news-and-events")
     @Timed
     public ResponseEntity<NewsAndEvent> updateNewsAndEvent(@Valid @RequestBody NewsAndEvent newsAndEvent) throws URISyntaxException {
-        log.debug("REST request to update NewsAndEvent : {}", newsAndEvent);
+        LOGGER.debug("REST request to update NewsAndEvent : {}", newsAndEvent);
+        
         if (newsAndEvent.getId() == null) {
             return createNewsAndEvent(newsAndEvent);
         }
+        
         NewsAndEvent result = newsAndEventRepository.save(newsAndEvent);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert("newsAndEvent", newsAndEvent.getId().toString()))
@@ -89,7 +93,7 @@ public class NewsAndEventResource {
     @Timed
     public ResponseEntity<List<NewsAndEvent>> getAllNewsAndEvents(@ApiParam Pageable pageable)
         throws URISyntaxException {
-        log.debug("REST request to get a page of NewsAndEvents");
+        LOGGER.debug("REST request to get a page of NewsAndEvents");
         Page<NewsAndEvent> page = newsAndEventRepository.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/news-and-events");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
@@ -104,7 +108,7 @@ public class NewsAndEventResource {
     @GetMapping("/news-and-events/{id}")
     @Timed
     public ResponseEntity<NewsAndEvent> getNewsAndEvent(@PathVariable Long id) {
-        log.debug("REST request to get NewsAndEvent : {}", id);
+        LOGGER.debug("REST request to get NewsAndEvent : {}", id);
         NewsAndEvent newsAndEvent = newsAndEventRepository.findOne(id);
         return Optional.ofNullable(newsAndEvent)
             .map(result -> new ResponseEntity<>(
@@ -122,7 +126,7 @@ public class NewsAndEventResource {
     @DeleteMapping("/news-and-events/{id}")
     @Timed
     public ResponseEntity<Void> deleteNewsAndEvent(@PathVariable Long id) {
-        log.debug("REST request to delete NewsAndEvent : {}", id);
+        LOGGER.debug("REST request to delete NewsAndEvent : {}", id);
         newsAndEventRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("newsAndEvent", id.toString())).build();
     }
