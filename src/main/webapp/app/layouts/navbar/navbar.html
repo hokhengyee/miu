@@ -8,8 +8,8 @@
 					class="icon-bar"></span>
 			</button>
 			<a class="navbar-brand logo" href="#/" ng-click="vm.collapseNavbar()">
-				<img class="logo-img" src="content/images/logo-miu.png"
-				alt="logo" /> <span>MIU</span>
+				<img class="logo-img" src="content/images/logo-miu.png" alt="logo" />
+				<span>Millennium International University</span>
 			</a>
 		</div>
 		<div class="navbar-collapse" uib-collapse="vm.isNavbarCollapsed"
@@ -150,18 +150,15 @@
 								<span class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Record
 									Of Certificate</span>
 						</a></li>
-<li ui-sref-active="active">
-                            <a ui-sref="student-payment" ng-click="vm.collapseNavbar()">
-                                <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
-                                <span >Student Payment</span>
-                            </a>
-                        </li>
-<li ui-sref-active="active">
-                            <a ui-sref="salutation" ng-click="vm.collapseNavbar()">
-                                <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
-                                <span >Salutation</span>
-                            </a>
-                        </li>
+						<li ui-sref-active="active"><a ui-sref="student-payment"
+							ng-click="vm.collapseNavbar()"> <span
+								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Student
+									Payment</span>
+						</a></li>
+						<li ui-sref-active="active"><a ui-sref="salutation"
+							ng-click="vm.collapseNavbar()"> <span
+								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Salutation</span>
+						</a></li>
 						<!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
 					</ul></li>
 				<li ng-class="{active: vm.$state.includes('account')}" uib-dropdown
