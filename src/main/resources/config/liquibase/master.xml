@@ -19,6 +19,7 @@
     <include file="classpath:config/liquibase/changelog/20170115142129_added_entity_RecordOfCertificate.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20170121013450_added_entity_StudentPayment.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20170121021501_added_entity_Salutation.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170122092316_added_entity_Gender.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="classpath:config/liquibase/changelog/20161219050608_added_entity_constraints_Module.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20161219064046_added_entity_constraints_ModuleType.xml" relativeToChangelogFile="false"/>
