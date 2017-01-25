@@ -159,24 +159,20 @@
 							ng-click="vm.collapseNavbar()"> <span
 								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Salutation</span>
 						</a></li>
-<li ui-sref-active="active">
-                            <a ui-sref="gender" ng-click="vm.collapseNavbar()">
-                                <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
-                                <span >Gender</span>
-                            </a>
-                        </li>
-<li ui-sref-active="active">
-                            <a ui-sref="news-and-event" ng-click="vm.collapseNavbar()">
-                                <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
-                                <span >News And Event</span>
-                            </a>
-                        </li>
-<li ui-sref-active="active">
-                            <a ui-sref="student-profile" ng-click="vm.collapseNavbar()">
-                                <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
-                                <span >Student Profile</span>
-                            </a>
-                        </li>
+						<li ui-sref-active="active"><a ui-sref="gender"
+							ng-click="vm.collapseNavbar()"> <span
+								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Gender</span>
+						</a></li>
+						<li ui-sref-active="active"><a ui-sref="news-and-event"
+							ng-click="vm.collapseNavbar()"> <span
+								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>News
+									And Event</span>
+						</a></li>
+						<li ui-sref-active="active"><a ui-sref="student-profile"
+							ng-click="vm.collapseNavbar()"> <span
+								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Student
+									Profile</span>
+						</a></li>
 						<!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
 					</ul></li>
 				<li ng-class="{active: vm.$state.includes('account')}" uib-dropdown
@@ -187,6 +183,11 @@
 					</span>
 				</a>
 					<ul class="dropdown-menu" uib-dropdown-menu>
+						<li ui-sref-active="active" ng-switch-when="true"><a
+							ui-sref="my-profile" ng-click="vm.collapseNavbar()"> <span
+								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>My
+									Profile</span>
+						</a></li>
 						<li ui-sref-active="active" ng-switch-when="true"><a
 							ui-sref="settings" ng-click="vm.collapseNavbar()"> <span
 								class="glyphicon glyphicon-wrench"></span>&nbsp; <span>Settings</span>
