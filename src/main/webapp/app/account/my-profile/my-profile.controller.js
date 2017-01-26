@@ -13,22 +13,29 @@
 
 		vm.load = load;
 		vm.user = {};
+		vm.studentProfile = null;
 
 		Principal.identity().then(function(account) {
 			vm.account = account;
 			vm.load(account.login);
 		});
 
+		vm.roles = [];
+
 		function load(login) {
 			MyProfileUser.get({
 				login : login
 			}, function(result) {
 				vm.user = result;
+				vm.roles = result.authorities;
 			});
 
-			MyStudentProfile.get({}, function(result) {
-				vm.studentProfile = result;
-			});
+			if (vm.roles.indexOf("ROLE_STUDENT")) {
+				MyStudentProfile.get({}, function(result) {
+					vm.studentProfile = result;
+				});
+			}
+
 		}
 	}
 })();

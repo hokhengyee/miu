@@ -14,7 +14,14 @@
 			'get' : {
 				method : 'GET',
 				transformResponse : function(data) {
-					data = angular.fromJson(data);
+					if (data) {
+						data = angular.fromJson(data);
+					}
+
+					else {
+						data = null;
+					}
+
 					return data;
 				}
 			}
