@@ -1,8 +1,83 @@
 <div ng-cloak>
 	<div class="row">
-		<div class="col-md-12">
+		<div class="col-md-6">
 			<span ng-bind-html="vm.staticHtml"></span>
 		</div>
-		<br />
+		<div class="col-md-6">
+
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<b>Certification</b>
+				</div>
+				<div class="panel-body">
+
+					<div class="row">
+						<div class="col-md-3">
+							<img src="/content/images/logo-APS.png" width="100px"
+								height="95px" border="none" /> <br /> <br /> <img
+								src="/content/images/logo-AJA.png" width="100px" height="75px"
+								border="none" />
+						</div>
+						<div class="col-md-9">
+							"MIU in collaboration with Asia Pacific Seminary" is Certified
+							ISO 9001:2008 Organization since 2005 for its quality management
+							system in distance and online learning for higher education by
+							Anglo Japanese American (AJA), a certification body of United
+							Kingdom Accreditation Services (UKAS). Below are some information
+							about our ISO accreditation.<br /> <br />
+
+							<ul style="padding-left: 15px">
+								<li><a href="/content/certificates/02_AJA_Certificate2.jpg"
+									target="_blank">Registration Certificate</a></li>
+								<li><a href="/content/certificates/03_AJA_Certificate3.jpg"
+									target="_blank">Registration Schedule</a></li>
+								<li><a
+									href="/content/certificates/01_LetterOfGoodStanding.pdf"
+									target="_blank">Certificate of Good Standing</a></li>
+								<li><a href="/content/certificates/accreditation.pdf"
+									target="_blank">Accreditation Information</a></li>
+							</ul>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<b>News & Events</b>
+				</div>
+
+				<table class="jh-table table table-striped">
+					<tbody>
+						<tr
+							ng-repeat="newsAndEvent in vm.newsAndEvents track by newsAndEvent.id">
+							<td><a ui-sref="news-and-event-detail({id:newsAndEvent.id})">{{newsAndEvent.title}}</a></td>
+						</tr>
+					</tbody>
+				</table>
+
+			</div>
+
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<b>Support &amp; Donations</b>
+				</div>
+				<div class="panel-body">
+					Millennium International University is a not-for-profit
+					organization hosting who are dedicated to keeping religious faith
+					and experience in dialogue with higher education on the online
+					campus of MIU. The University receives no funding and is funded by
+					believers, Christians organization and Churches. With your
+					assistance, we can continue to train more laborers into the harvest
+					field to fulfill the Great Commission and Great Commandment. Kindly
+					donate generously. <br /> <br />
+					<center>
+						<a href="mailto:studentaffairs@miuedu.us" target="_blank"
+							class="btn btn-primary">Donate</a>
+					</center>
+				</div>
+			</div>
+
+		</div>
 	</div>
-</div>
