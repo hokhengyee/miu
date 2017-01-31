@@ -1,0 +1,60 @@
+
+<form name="editForm" role="form" novalidate ng-submit="vm.save()" show-validation>
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                ng-click="vm.clear()">&times;</button>
+        <h4 class="modal-title" id="myGalleryLabel">Create or edit a Gallery</h4>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group" ng-show="vm.gallery.id">
+            <label for="id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                    ng-model="vm.gallery.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_imageTitle">Image Title</label>
+            <input type="text" class="form-control" name="imageTitle" id="field_imageTitle"
+                    ng-model="vm.gallery.imageTitle"
+                     />
+        </div>
+        <div class="form-group" ngf-drop ngf-change="vm.setGalleryPhoto($file, vm.gallery)" ngf-pattern="'image/*'">
+            <label class="control-label" for="field_galleryPhoto">Gallery Photo</label>
+            <div>
+                <img data-ng-src="{{'data:' + vm.gallery.galleryPhotoContentType + ';base64,' + vm.gallery.galleryPhoto}}" style="max-height: 100px;" ng-if="vm.gallery.galleryPhoto" alt="gallery image"/>
+                <div ng-if="vm.gallery.galleryPhoto" class="help-block clearfix">
+                    <span class="pull-left">{{vm.gallery.galleryPhotoContentType}}, {{vm.byteSize(vm.gallery.galleryPhoto)}}</span>
+                    <button type="button" ng-click="vm.gallery.galleryPhoto=null;vm.gallery.galleryPhotoContentType=null;"
+                            class="btn btn-default btn-xs pull-right">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+                </div>
+                <button type="button" ngf-select class="btn btn-default btn-block"
+                        ngf-change="vm.setGalleryPhoto($file, vm.gallery)" accept="image/*">
+                    Add image
+                </button>
+            </div>
+            <input type="hidden" class="form-control" name="galleryPhoto" id="field_galleryPhoto"
+                    ng-model="vm.gallery.galleryPhoto"
+                    required />
+            <input type="hidden" class="form-control" name="galleryPhotoContentType" id="field_galleryPhotoContentType"
+                    ng-model="vm.gallery.galleryPhotoContentType" />
+            <div ng-show="editForm.galleryPhoto.$invalid">
+                <p class="help-block"
+                    ng-show="editForm.galleryPhoto.$error.required">
+                    This field is required.
+                </p>
+            </div>
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.clear()">
+            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span>
+        </button>
+        <button type="submit" ng-disabled="editForm.$invalid || vm.isSaving" class="btn btn-primary">
+            <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Save</span>
+        </button>
+    </div>
+</form>
