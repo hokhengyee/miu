@@ -1,11 +1,13 @@
 package com.miu.web.rest;
 
+import java.util.List;
 import java.util.Optional;
 
 import javax.inject.Inject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 import com.miu.config.Constants;
+import com.miu.domain.StudentPayment;
 import com.miu.domain.StudentProfile;
+import com.miu.repository.StudentPaymentRepository;
 import com.miu.repository.StudentProfileRepository;
 import com.miu.service.UserService;
 import com.miu.web.rest.vm.ManagedUserVM;
@@ -66,6 +70,9 @@ public class MyProfileResource {
 	@Inject
 	private UserService userService;
 
+	@Inject
+	private StudentPaymentRepository studentPaymentRepository;
+
 	/**
 	 * GET /student-profiles/:id : get the "id" studentProfile.
 	 *
@@ -80,6 +87,14 @@ public class MyProfileResource {
 		StudentProfile studentProfile = studentProfileRepository.findByUserIsCurrentUser();
 		return Optional.ofNullable(studentProfile).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+	}
+
+	@GetMapping("/my-payments")
+	@Timed
+	public ResponseEntity<List<StudentPayment>> getStudentPayments() {
+		List<StudentPayment> paymentList = studentPaymentRepository.findByUserIsCurrentUser();
+		HttpHeaders headers = new HttpHeaders();
+		return new ResponseEntity<>(paymentList, headers, HttpStatus.OK);
 	}
 
 	/**
