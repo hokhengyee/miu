@@ -4,10 +4,10 @@
 	angular.module('miuApp').controller('HomeController', HomeController);
 
 	HomeController.$inject = [ '$scope', 'Principal', 'LoginService', '$state',
-			'entity', 'HomeMsg', '$sce' ];
+			'entity', 'HomeMsg', 'HomeNewsAndEvents', '$sce' ];
 
 	function HomeController($scope, Principal, LoginService, $state, entity,
-			HomeMsg, $sce) {
+			HomeMsg, HomeNewsAndEvents, $sce) {
 		var vm = this;
 
 		vm.staticPage = entity;
@@ -22,12 +22,17 @@
 		});
 
 		getAccount();
+		getNewsAndEvents();
 
 		function getAccount() {
 			Principal.identity().then(function(account) {
 				vm.account = account;
 				vm.isAuthenticated = Principal.isAuthenticated;
 			});
+		}
+
+		function getNewsAndEvents() {
+			vm.newsAndEvents = HomeNewsAndEvents.get();
 		}
 
 		function register() {

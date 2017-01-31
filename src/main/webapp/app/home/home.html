@@ -48,11 +48,19 @@
 					<b>News & Events</b>
 				</div>
 
-				<table class="jh-table table table-striped">
+				<table class="table table-bordered">
 					<tbody>
-						<tr
-							ng-repeat="newsAndEvent in vm.newsAndEvents track by newsAndEvent.id">
-							<td><a ui-sref="news-and-event-detail({id:newsAndEvent.id})">{{newsAndEvent.title}}</a></td>
+						<tr ng-repeat="newsAndEvent in vm.newsAndEvents">
+							<td>
+								<div>
+									<h3>
+										<a ng-show="newsAndEvent.websiteLink != null"
+											href="{{ newsAndEvent.websiteLink }}" target="_blank">{{newsAndEvent.title}}</a>
+										<div ng-show="newsAndEvent.websiteLink == null">{{newsAndEvent.title}}</div>
+									</h3>
+								</div>{{ newsAndEvent.startDate | date:'mediumDate' }} - {{
+								newsAndEvent.endDate | date:'mediumDate' }}
+							</td>
 						</tr>
 					</tbody>
 				</table>
