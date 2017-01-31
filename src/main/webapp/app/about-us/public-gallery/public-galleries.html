@@ -1,0 +1,30 @@
+<div>
+	<jhi-alert></jhi-alert>
+
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<b>Gallery</b>
+		</div>
+		<table class="table table-striped">
+			<tbody>
+				<tr ng-repeat="gallery in vm.galleries track by gallery.id">
+					<td width="200px"><a ng-if="gallery.galleryPhoto"
+						ui-sref="public-gallery-detail({id:gallery.id})"> <img
+							data-ng-src="{{'data:' + gallery.galleryPhotoContentType + ';base64,' + gallery.galleryPhoto}}"
+							style="max-height: 100px; max-width: 100px;" alt="gallery image" />
+					</a></td>
+					<td style="text-align: left; vertical-align: middle">{{gallery.imageTitle}}</td>
+				</tr>
+			</tbody>
+		</table>
+		<div class="panel-body">
+			<div class="text-center">
+				<jhi-item-count page="vm.page" total="vm.queryCount"
+					items-per-page="vm.itemsPerPage"></jhi-item-count>
+			</div>
+			<uib-pager total-items="vm.totalItems" ng-model="vm.page"
+				ng-change="vm.transition()"></uib-pager>
+		</div>
+	</div>
+
+</div>

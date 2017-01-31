@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.codahale.metrics.annotation.Timed;
 import com.miu.domain.Course;
 import com.miu.domain.EntryQualification;
+import com.miu.domain.Gallery;
 import com.miu.domain.Module;
 import com.miu.domain.NewsAndEvent;
 import com.miu.domain.OnlineApplication;
@@ -33,6 +34,7 @@ import com.miu.domain.ResearchPaper;
 import com.miu.domain.StaticPage;
 import com.miu.repository.CourseRepository;
 import com.miu.repository.EntryQualificationRepository;
+import com.miu.repository.GalleryRepository;
 import com.miu.repository.ModuleRepository;
 import com.miu.repository.NewsAndEventRepository;
 import com.miu.repository.OnlineApplicationRepository;
@@ -55,6 +57,9 @@ public class PublicResource {
 
 	@Inject
 	private EntryQualificationRepository entryQualificationRepository;
+
+	@Inject
+	private GalleryRepository galleryRepository;
 
 	private final Logger LOGGER = LoggerFactory.getLogger(PublicResource.class);
 
@@ -134,6 +139,25 @@ public class PublicResource {
 	}
 
 	/**
+	 * GET /galleries : get all the galleries.
+	 *
+	 * @param pageable
+	 *            the pagination information
+	 * @return the ResponseEntity with status 200 (OK) and the list of galleries
+	 *         in body
+	 * @throws URISyntaxException
+	 *             if there is an error to generate the pagination HTTP headers
+	 */
+	@GetMapping("/galleries")
+	@Timed
+	public ResponseEntity<List<Gallery>> getAllGalleries(@ApiParam Pageable pageable) throws URISyntaxException {
+		LOGGER.debug("REST request to get a page of Galleries");
+		Page<Gallery> page = galleryRepository.findAll(pageable);
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/galleries");
+		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+	}
+
+	/**
 	 * GET /news-and-events : get latest 3 newsAndEvents.
 	 *
 	 * @param pageable
@@ -193,6 +217,23 @@ public class PublicResource {
 		LOGGER.debug("REST request to get Faculty And Alumni");
 		StaticPage staticPage = staticPageRepository.getStaticPageByTitle("Faculty & Alumni");
 		return Optional.ofNullable(staticPage).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+	}
+
+	/**
+	 * GET /galleries/:id : get the "id" gallery.
+	 *
+	 * @param id
+	 *            the id of the gallery to retrieve
+	 * @return the ResponseEntity with status 200 (OK) and with body the
+	 *         gallery, or with status 404 (Not Found)
+	 */
+	@GetMapping("/galleries/{id}")
+	@Timed
+	public ResponseEntity<Gallery> getGallery(@PathVariable Long id) {
+		LOGGER.debug("REST request to get Gallery : {}", id);
+		Gallery gallery = galleryRepository.findOne(id);
+		return Optional.ofNullable(gallery).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
 

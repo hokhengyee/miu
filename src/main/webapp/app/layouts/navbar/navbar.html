@@ -47,6 +47,10 @@
 								<span class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Accredited
 									Centers</span>
 						</a></li>
+						<li ui-sref-active="active"><a ui-sref="public-gallery"
+							ng-click="vm.collapseNavbar()"> <span
+								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Gallery</span>
+						</a></li>
 					</ul></li>
 				<!-- Study -->
 				<li ng-class="{active: vm.$state.includes('study')}" uib-dropdown
@@ -173,12 +177,10 @@
 								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Student
 									Profile</span>
 						</a></li>
-<li ui-sref-active="active">
-                            <a ui-sref="gallery" ng-click="vm.collapseNavbar()">
-                                <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
-                                <span >Gallery</span>
-                            </a>
-                        </li>
+						<li ui-sref-active="active"><a ui-sref="gallery"
+							ng-click="vm.collapseNavbar()"> <span
+								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Gallery</span>
+						</a></li>
 						<!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
 					</ul></li>
 				<li ng-class="{active: vm.$state.includes('account')}" uib-dropdown

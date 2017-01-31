@@ -1,0 +1,22 @@
+<div>
+
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<b>Gallery Photo</b>
+		</div>
+		<div class="panel-body">
+			<center>
+				<img
+					data-ng-src="{{'data:' + vm.gallery.galleryPhotoContentType + ';base64,' + vm.gallery.galleryPhoto}}"
+					style="max-width: 100%;" alt="gallery image" /> <br /> <br />
+				{{vm.gallery.imageTitle}}
+			</center>
+		</div>
+	</div>
+
+	<button type="submit" ui-sref="{{ vm.previousState }}"
+		class="btn btn-info">
+		<span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span>
+			Back</span>
+	</button>
+</div>
