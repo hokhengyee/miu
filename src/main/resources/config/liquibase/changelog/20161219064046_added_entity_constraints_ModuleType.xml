@@ -7,8 +7,11 @@
         Added the constraints for entity ModuleType.
     -->
     <changeSet id="20161219064046-2" author="jhipster">
-        
-        <addForeignKeyConstraint baseColumnNames="course_id"
+
+	<!-- <addForeignKeyConstraint baseColumnNames="course_id" baseTableName="module_type" 
+		constraintName="fk_module_type_course_id" referencedColumnNames="id" referencedTableName="course"/> -->
+
+        <addForeignKeyConstraint baseColumnNames="id"
                                  baseTableName="module_type"
                                  constraintName="fk_module_type_course_id"
                                  referencedColumnNames="id"

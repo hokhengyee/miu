@@ -23,6 +23,7 @@
     <include file="classpath:config/liquibase/changelog/20170122100726_added_entity_NewsAndEvent.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20170123141936_added_entity_StudentProfile.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20170131063231_added_entity_Gallery.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170201094401_added_entity_CourseAccess.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="classpath:config/liquibase/changelog/20161219050608_added_entity_constraints_Module.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20161219064046_added_entity_constraints_ModuleType.xml" relativeToChangelogFile="false"/>
@@ -33,5 +34,6 @@
     <include file="classpath:config/liquibase/changelog/20170108055311_added_entity_constraints_OnlineApplication.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20170121013450_added_entity_constraints_StudentPayment.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20170123141936_added_entity_constraints_StudentProfile.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170201094401_added_entity_constraints_CourseAccess.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
 </databaseChangeLog>

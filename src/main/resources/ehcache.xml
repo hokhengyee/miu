@@ -56,5 +56,7 @@
 
     <cache alias="com.miu.domain.Gallery" uses-template="simple"/>
 
+    <cache alias="com.miu.domain.CourseAccess" uses-template="simple"/>
+
     <!-- jhipster-needle-ehcache-add-entry -->
 </config>
