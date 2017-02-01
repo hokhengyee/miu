@@ -21,8 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 import com.miu.config.Constants;
+import com.miu.domain.CourseAccess;
 import com.miu.domain.StudentPayment;
 import com.miu.domain.StudentProfile;
+import com.miu.repository.CourseAccessRepository;
 import com.miu.repository.StudentPaymentRepository;
 import com.miu.repository.StudentProfileRepository;
 import com.miu.service.UserService;
@@ -67,7 +69,13 @@ import com.miu.web.rest.vm.ManagedUserVM;
 @RequestMapping("/api")
 public class MyProfileResource {
 
+	@Inject
+	private CourseAccessRepository courseAccessRepository;
+
 	private final Logger LOGGER = LoggerFactory.getLogger(MyProfileResource.class);
+
+	@Inject
+	private StudentPaymentRepository studentPaymentRepository;
 
 	@Inject
 	private StudentProfileRepository studentProfileRepository;
@@ -75,8 +83,21 @@ public class MyProfileResource {
 	@Inject
 	private UserService userService;
 
-	@Inject
-	private StudentPaymentRepository studentPaymentRepository;
+	@GetMapping("/my-courses")
+	@Timed
+	public ResponseEntity<List<CourseAccess>> getStudentCourses() {
+		List<CourseAccess> courseList = courseAccessRepository.findByUserIsCurrentUser();
+		HttpHeaders headers = new HttpHeaders();
+		return new ResponseEntity<>(courseList, headers, HttpStatus.OK);
+	}
+
+	@GetMapping("/my-payments")
+	@Timed
+	public ResponseEntity<List<StudentPayment>> getStudentPayments() {
+		List<StudentPayment> paymentList = studentPaymentRepository.findByUserIsCurrentUser();
+		HttpHeaders headers = new HttpHeaders();
+		return new ResponseEntity<>(paymentList, headers, HttpStatus.OK);
+	}
 
 	/**
 	 * GET /student-profiles/:id : get the "id" studentProfile.
@@ -95,33 +116,6 @@ public class MyProfileResource {
 	}
 
 	/**
-     * PUT  /student-profiles : Updates an existing studentProfile.
-     *
-     * @param studentProfile the studentProfile to update
-     * @return the ResponseEntity with status 200 (OK) and with body the updated studentProfile,
-     * or with status 400 (Bad Request) if the studentProfile is not valid,
-     * or with status 500 (Internal Server Error) if the studentProfile couldnt be updated
-     * @throws URISyntaxException if the Location URI syntax is incorrect
-     */
-    @PutMapping("/my-student-profiles")
-    @Timed
-    public ResponseEntity<StudentProfile> updateStudentProfile(@Valid @RequestBody StudentProfile studentProfile) throws URISyntaxException {
-        LOGGER.debug("REST request to update StudentProfile : {}", studentProfile);
-        StudentProfile result = studentProfileRepository.save(studentProfile);
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert("studentProfile", studentProfile.getId().toString()))
-            .body(result);
-    }
-	
-	@GetMapping("/my-payments")
-	@Timed
-	public ResponseEntity<List<StudentPayment>> getStudentPayments() {
-		List<StudentPayment> paymentList = studentPaymentRepository.findByUserIsCurrentUser();
-		HttpHeaders headers = new HttpHeaders();
-		return new ResponseEntity<>(paymentList, headers, HttpStatus.OK);
-	}
-
-	/**
 	 * GET /users/:login : get the "login" user.
 	 *
 	 * @param login
@@ -136,5 +130,28 @@ public class MyProfileResource {
 		return userService.getUserWithAuthoritiesByLogin(login).map(ManagedUserVM::new)
 				.map(managedUserVM -> new ResponseEntity<>(managedUserVM, HttpStatus.OK))
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+	}
+
+	/**
+	 * PUT /student-profiles : Updates an existing studentProfile.
+	 *
+	 * @param studentProfile
+	 *            the studentProfile to update
+	 * @return the ResponseEntity with status 200 (OK) and with body the updated
+	 *         studentProfile, or with status 400 (Bad Request) if the
+	 *         studentProfile is not valid, or with status 500 (Internal Server
+	 *         Error) if the studentProfile couldnt be updated
+	 * @throws URISyntaxException
+	 *             if the Location URI syntax is incorrect
+	 */
+	@PutMapping("/my-student-profiles")
+	@Timed
+	public ResponseEntity<StudentProfile> updateStudentProfile(@Valid @RequestBody StudentProfile studentProfile)
+			throws URISyntaxException {
+		LOGGER.debug("REST request to update StudentProfile : {}", studentProfile);
+		StudentProfile result = studentProfileRepository.save(studentProfile);
+		return ResponseEntity.ok()
+				.headers(HeaderUtil.createEntityUpdateAlert("studentProfile", studentProfile.getId().toString()))
+				.body(result);
 	}
 }

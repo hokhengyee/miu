@@ -5,15 +5,16 @@
 			MyProfileController);
 
 	MyProfileController.$inject = [ '$stateParams', 'MyProfileUser',
-			'MyStudentProfile', 'Auth', 'Principal' ];
+			'MyStudentProfile', 'MyCourseAccess', 'Auth', 'Principal' ];
 
 	function MyProfileController($stateParams, MyProfileUser, MyStudentProfile,
-			Auth, Principal) {
+			MyCourseAccess, Auth, Principal) {
 		var vm = this;
 
 		vm.load = load;
 		vm.user = {};
 		vm.studentProfile = null;
+		vm.courseAccess = null;
 
 		Principal.identity().then(function(account) {
 			vm.account = account;
@@ -35,6 +36,10 @@
 					vm.studentProfile = result;
 				});
 			}
+
+			MyCourseAccess.get({}, function(result) {
+				vm.courseAccess = result;
+			});
 
 		}
 	}
