@@ -1,9 +1,11 @@
 package com.miu.web.rest;
 
+import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -22,6 +26,7 @@ import com.miu.domain.StudentProfile;
 import com.miu.repository.StudentPaymentRepository;
 import com.miu.repository.StudentProfileRepository;
 import com.miu.service.UserService;
+import com.miu.web.rest.util.HeaderUtil;
 import com.miu.web.rest.vm.ManagedUserVM;
 
 /**
@@ -89,6 +94,25 @@ public class MyProfileResource {
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
 
+	/**
+     * PUT  /student-profiles : Updates an existing studentProfile.
+     *
+     * @param studentProfile the studentProfile to update
+     * @return the ResponseEntity with status 200 (OK) and with body the updated studentProfile,
+     * or with status 400 (Bad Request) if the studentProfile is not valid,
+     * or with status 500 (Internal Server Error) if the studentProfile couldnt be updated
+     * @throws URISyntaxException if the Location URI syntax is incorrect
+     */
+    @PutMapping("/my-student-profiles")
+    @Timed
+    public ResponseEntity<StudentProfile> updateStudentProfile(@Valid @RequestBody StudentProfile studentProfile) throws URISyntaxException {
+        LOGGER.debug("REST request to update StudentProfile : {}", studentProfile);
+        StudentProfile result = studentProfileRepository.save(studentProfile);
+        return ResponseEntity.ok()
+            .headers(HeaderUtil.createEntityUpdateAlert("studentProfile", studentProfile.getId().toString()))
+            .body(result);
+    }
+	
 	@GetMapping("/my-payments")
 	@Timed
 	public ResponseEntity<List<StudentPayment>> getStudentPayments() {

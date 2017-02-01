@@ -61,8 +61,8 @@
                 }
             },
             resolve: {
-                entity: ['$stateParams', 'StudentProfile', function($stateParams, StudentProfile) {
-                    return StudentProfile.get({id : $stateParams.id}).$promise;
+                entity: ['$stateParams', 'MyStudentProfile', function($stateParams, MyStudentProfile) {
+                    return MyStudentProfile.get({id : $stateParams.id}).$promise;
                 }],
                 previousState: ["$state", function ($state) {
                     var currentStateData = {

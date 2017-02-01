@@ -1,7 +1,5 @@
 <div>
 
-	<!-- <pre>{{ vm.user | json }}</pre> -->
-
 	<div class="panel panel-primary">
 		<div class="panel-heading">
 			<h3 class="panel-title">My Profile</h3>
@@ -56,7 +54,7 @@
 						</tr>
 						<tr ng-show="vm.studentProfile != null">
 							<th>Mailing Address</th>
-							<td>{{vm.studentProfile.phone}}</td>
+							<td>{{vm.studentProfile.mailingAddress}}</td>
 						</tr>
 						<tr ng-show="vm.studentProfile != null">
 							<th>Supervisor</th>
@@ -82,4 +80,14 @@
 			</tr>
 		</table>
 	</div>
+
+	<div ng-show="vm.studentProfile != null">
+		<button type="button"
+			ui-sref="my-profile.edit({id:vm.studentProfile.id})"
+			class="btn btn-primary">
+			<span class="glyphicon glyphicon-pencil"></span> <span
+				class="hidden-xs hidden-sm"> Edit</span>
+		</button>
+	</div>
+
 </div>
