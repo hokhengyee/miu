@@ -1,0 +1,22 @@
+<div>
+
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<h3 class="panel-title">My Dashboard</h3>
+		</div>
+		<table class="table">
+			<tr>
+				<td>
+					<table class="table table-bordered">
+						<tr ng-show="vm.courseAccess.length > 0">
+							<th width="130px">Courses</th>
+							<td><div ng-repeat="ca in vm.courseAccess">{{
+									ca.course.title }}</div></td>
+						</tr>						
+					</table>
+				</td>
+			</tr>
+		</table>
+	</div>
+
+</div>
