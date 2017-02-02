@@ -13,7 +13,7 @@
             url: '/my-profile',
             data: {
                 authorities: ['ROLE_USER'],
-                pageTitle: 'miu'
+                pageTitle: 'My Profile'
             },
             views: {
                 'content@': {

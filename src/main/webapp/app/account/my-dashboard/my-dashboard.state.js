@@ -13,7 +13,7 @@
             url: '/my-dashboard',
             data: {
                 authorities: ['ROLE_USER'],
-                pageTitle: 'miu'
+                pageTitle: 'My Dashboard'
             },
             views: {
                 'content@': {

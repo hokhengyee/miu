@@ -1,25 +1,47 @@
 <div>
 
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<h3 class="panel-title">My Dashboard</h3>
+	<!-- section 1 -->
+	<div class="row">
+		<!-- External Online Resources -->
+		<div class="col-md-6">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">My Dashboard</h3>
+				</div>
+
+				<table class="table table-bordered">
+					<tbody>
+						<tr ng-show="vm.courseAccess.length > 0">
+							<th width="130px">Courses</th>
+							<td><div ng-repeat="ca in vm.courseAccess">{{
+									ca.course.title }}</div></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">External Online Resources</h3>
+				</div>
+				<table class="table table-bordered">
+					<tbody>
+						<tr ng-repeat="onlineResource in vm.onlineResource">
+							<td>
+								<div>
+									<a ng-show="onlineResource.websiteLink != null"
+										href="{{ onlineResource.websiteLink  }}" target="_blank">{{onlineResource.title}}</a>
+									<div ng-show="onlineResource.websiteLink == null">{{onlineResource.title}}</div>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
 		</div>
 
-		<table class="table table-bordered">
-			<tbody>
-				<tr ng-show="vm.courseAccess.length > 0">
-					<th width="130px">Courses</th>
-					<td><div ng-repeat="ca in vm.courseAccess">{{
-							ca.course.title }}</div></td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-
-	<!-- section 2 -->
-	<div class="row">
+		<!-- News & Events -->
 		<div class="col-md-6">
-			<!-- News & Events -->
 			<div class="panel panel-primary">
 				<div class="panel-heading">
 					<h3 class="panel-title">News & Events</h3>
@@ -43,31 +65,9 @@
 				</table>
 			</div>
 		</div>
-
-		<!-- External Online Resources -->
-		<div class="col-md-6">
-			<div class="panel panel-primary">
-				<div class="panel-heading">
-					<h3 class="panel-title">External Online Resources</h3>
-				</div>
-				<table class="table table-bordered">
-					<tbody>
-						<tr ng-repeat="onlineResource in vm.onlineResource">
-							<td>
-								<div>
-									<a ng-show="onlineResource.websiteLink != null"
-										href="{{ onlineResource.websiteLink  }}" target="_blank">{{onlineResource.title}}</a>
-									<div ng-show="onlineResource.websiteLink == null">{{onlineResource.title}}</div>
-								</div>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
 	</div>
 
-	<!-- section 3 -->
+	<!-- section 2 -->
 
 	<!-- News & Events -->
 	<div class="panel panel-primary">
@@ -80,7 +80,7 @@
 	</div>
 
 
-	<!-- section 4 -->
+	<!-- section 3 -->
 	<div class="panel panel-primary">
 		<div class="panel-heading">
 			<h3 class="panel-title">Course Materials</h3>

@@ -11,7 +11,7 @@
 			url : '/my-payments',
 			data : {
 				authorities : [ 'ROLE_USER', 'ROLE_STUDENT' ],
-				pageTitle : 'StudentPayments'
+				pageTitle : 'My Payments'
 			},
 			views : {
 				'content@' : {
