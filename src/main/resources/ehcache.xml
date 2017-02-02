@@ -60,5 +60,7 @@
 
     <cache alias="com.miu.domain.ExternalOnlineResource" uses-template="simple"/>
 
+    <cache alias="com.miu.domain.CommonResources" uses-template="simple"/>
+
     <!-- jhipster-needle-ehcache-add-entry -->
 </config>

@@ -18,6 +18,10 @@
 						</tr>
 					</tbody>
 				</table>
+
+				<div class="panel-body" ng-show="vm.courseAccess.length == 0">
+					<center>No course assigned.</center>
+				</div>
 			</div>
 
 			<div class="panel panel-primary">
@@ -74,6 +78,24 @@
 		<div class="panel-heading">
 			<h3 class="panel-title">Common Resources</h3>
 		</div>
+		<table class="table table-bordered">
+			<tbody>
+				<tr
+					ng-repeat="commonResources in vm.commonResources track by commonResources.id">
+					<td><b>{{commonResources.title}}</b><br />{{commonResources.description}}</td>
+					<td ng-show="commonResources.content"><a alt="Download"
+						title="Download" ng-if="commonResources.content"
+						class="btn btn-primary"
+						ng-click="vm.openFile(commonResources.contentContentType, commonResources.content)"><i
+							class="glyphicon glyphicon-download" /></a> <span
+						ng-if="commonResources.content"></span></td>
+					<td ng-show="commonResources.websiteLink"><a alt="Preview"
+						title="Preview" class="btn btn-primary"
+						href="{{commonResources.websiteLink}}" target="_blank"><i
+							class="glyphicon glyphicon-music" /> </a></td>
+				</tr>
+			</tbody>
+		</table>
 		<div class="panel-body" ng-show="vm.commonResources.length == 0">
 			<center>No resources currently available.</center>
 		</div>

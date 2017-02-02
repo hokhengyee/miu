@@ -5,10 +5,12 @@
 			MyDashboardController);
 
 	MyDashboardController.$inject = [ '$stateParams', 'MyCourseAccess', 'Auth',
-			'Principal', 'HomeNewsAndEvents', 'MyExternalOnlineResource' ];
+			'Principal', 'HomeNewsAndEvents', 'MyExternalOnlineResource',
+			'MyCommonResources', 'DataUtils' ];
 
 	function MyDashboardController($stateParams, MyCourseAccess, Auth,
-			Principal, HomeNewsAndEvents, MyExternalOnlineResource) {
+			Principal, HomeNewsAndEvents, MyExternalOnlineResource,
+			MyCommonResources, DataUtils) {
 		var vm = this;
 
 		vm.load = load;
@@ -16,9 +18,11 @@
 		vm.courseAccess = null;
 		vm.commonResources = [];
 		vm.courseMaterials = [];
+		vm.openFile = DataUtils.openFile;
 
 		getNewsAndEvents();
 		getOnlineResource();
+		getCommonResources();
 
 		Principal.identity().then(function(account) {
 			vm.account = account;
@@ -37,6 +41,10 @@
 
 		function getOnlineResource() {
 			vm.onlineResource = MyExternalOnlineResource.get();
+		}
+
+		function getCommonResources() {
+			vm.commonResources = MyCommonResources.get();
 		}
 	}
 })();
