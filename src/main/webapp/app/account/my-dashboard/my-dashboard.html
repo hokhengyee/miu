@@ -4,19 +4,91 @@
 		<div class="panel-heading">
 			<h3 class="panel-title">My Dashboard</h3>
 		</div>
-		<table class="table">
-			<tr>
-				<td>
-					<table class="table table-bordered">
-						<tr ng-show="vm.courseAccess.length > 0">
-							<th width="130px">Courses</th>
-							<td><div ng-repeat="ca in vm.courseAccess">{{
-									ca.course.title }}</div></td>
-						</tr>						
-					</table>
-				</td>
-			</tr>
+
+		<table class="table table-bordered">
+			<tbody>
+				<tr ng-show="vm.courseAccess.length > 0">
+					<th width="130px">Courses</th>
+					<td><div ng-repeat="ca in vm.courseAccess">{{
+							ca.course.title }}</div></td>
+				</tr>
+			</tbody>
 		</table>
 	</div>
+
+	<!-- section 2 -->
+	<div class="row">
+		<div class="col-md-6">
+			<!-- News & Events -->
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">News & Events</h3>
+				</div>
+				<table class="table table-bordered">
+					<tbody>
+						<tr ng-repeat="newsAndEvent in vm.newsAndEvents">
+							<td>
+								<div>
+									<h4>
+										<b> <a ng-show="newsAndEvent.websiteLink != null"
+											href="{{ newsAndEvent.websiteLink }}" target="_blank">{{newsAndEvent.title}}</a>
+											<div ng-show="newsAndEvent.websiteLink == null">{{newsAndEvent.title}}</div>
+										</b>
+									</h4>
+								</div>{{ newsAndEvent.startDate | date:'mediumDate' }} - {{
+								newsAndEvent.endDate | date:'mediumDate' }}
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<!-- External Online Resources -->
+		<div class="col-md-6">
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">External Online Resources</h3>
+				</div>
+				<table class="table table-bordered">
+					<tbody>
+						<tr ng-repeat="onlineResource in vm.onlineResource">
+							<td>
+								<div>
+									<a ng-show="onlineResource.websiteLink != null"
+										href="{{ onlineResource.websiteLink  }}" target="_blank">{{onlineResource.title}}</a>
+									<div ng-show="onlineResource.websiteLink == null">{{onlineResource.title}}</div>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+
+	<!-- section 3 -->
+
+	<!-- News & Events -->
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<h3 class="panel-title">Common Resources</h3>
+		</div>
+		<div class="panel-body" ng-show="vm.commonResources.length == 0">
+			<center>No resources currently available.</center>
+		</div>
+	</div>
+
+
+	<!-- section 4 -->
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<h3 class="panel-title">Course Materials</h3>
+		</div>
+		<div class="panel-body" ng-show="vm.courseMaterials.length == 0">
+			<center>No materials currently available.</center>
+		</div>
+	</div>
+
 
 </div>
