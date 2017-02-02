@@ -58,5 +58,7 @@
 
     <cache alias="com.miu.domain.CourseAccess" uses-template="simple"/>
 
+    <cache alias="com.miu.domain.ExternalOnlineResource" uses-template="simple"/>
+
     <!-- jhipster-needle-ehcache-add-entry -->
 </config>
