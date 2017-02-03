@@ -10,9 +10,6 @@ import com.miu.domain.StaticPage;
  */
 public interface StaticPageRepository extends JpaRepository<StaticPage, Long> {
 
-	// @Query("SELECT sp FROM StaticPage sp WHERE sp.staticPageType= ?1")
-	// StaticPage getByStaticPageType(StaticPageType staticPageType);
-
 	@Query("SELECT sp FROM StaticPage sp WHERE sp.staticPageType.title= ?1")
 	StaticPage getStaticPageByTitle(String title);
 

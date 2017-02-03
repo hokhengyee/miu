@@ -31,7 +31,7 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class CourseMaterialResource {
 
-    private final Logger log = LoggerFactory.getLogger(CourseMaterialResource.class);
+    private final Logger LOGGER = LoggerFactory.getLogger(CourseMaterialResource.class);
         
     @Inject
     private CourseMaterialRepository courseMaterialRepository;
@@ -46,7 +46,7 @@ public class CourseMaterialResource {
     @PostMapping("/course-materials")
     @Timed
     public ResponseEntity<CourseMaterial> createCourseMaterial(@Valid @RequestBody CourseMaterial courseMaterial) throws URISyntaxException {
-        log.debug("REST request to save CourseMaterial : {}", courseMaterial);
+        LOGGER.debug("REST request to save CourseMaterial : {}", courseMaterial);
         if (courseMaterial.getId() != null) {
             return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("courseMaterial", "idexists", "A new courseMaterial cannot already have an ID")).body(null);
         }
@@ -68,7 +68,7 @@ public class CourseMaterialResource {
     @PutMapping("/course-materials")
     @Timed
     public ResponseEntity<CourseMaterial> updateCourseMaterial(@Valid @RequestBody CourseMaterial courseMaterial) throws URISyntaxException {
-        log.debug("REST request to update CourseMaterial : {}", courseMaterial);
+        LOGGER.debug("REST request to update CourseMaterial : {}", courseMaterial);
         if (courseMaterial.getId() == null) {
             return createCourseMaterial(courseMaterial);
         }
@@ -89,7 +89,7 @@ public class CourseMaterialResource {
     @Timed
     public ResponseEntity<List<CourseMaterial>> getAllCourseMaterials(@ApiParam Pageable pageable)
         throws URISyntaxException {
-        log.debug("REST request to get a page of CourseMaterials");
+        LOGGER.debug("REST request to get a page of CourseMaterials");
         Page<CourseMaterial> page = courseMaterialRepository.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/course-materials");
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
@@ -104,7 +104,7 @@ public class CourseMaterialResource {
     @GetMapping("/course-materials/{id}")
     @Timed
     public ResponseEntity<CourseMaterial> getCourseMaterial(@PathVariable Long id) {
-        log.debug("REST request to get CourseMaterial : {}", id);
+        LOGGER.debug("REST request to get CourseMaterial : {}", id);
         CourseMaterial courseMaterial = courseMaterialRepository.findOne(id);
         return Optional.ofNullable(courseMaterial)
             .map(result -> new ResponseEntity<>(
@@ -122,7 +122,7 @@ public class CourseMaterialResource {
     @DeleteMapping("/course-materials/{id}")
     @Timed
     public ResponseEntity<Void> deleteCourseMaterial(@PathVariable Long id) {
-        log.debug("REST request to delete CourseMaterial : {}", id);
+        LOGGER.debug("REST request to delete CourseMaterial : {}", id);
         courseMaterialRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("courseMaterial", id.toString())).build();
     }

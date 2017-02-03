@@ -78,21 +78,20 @@
 		<div class="panel-heading">
 			<h3 class="panel-title">Common Resources</h3>
 		</div>
-		<table class="table table-bordered">
+		<table class="table table-bordered"
+			ng-show="vm.commonResources.length > 0">
 			<tbody>
 				<tr
 					ng-repeat="commonResources in vm.commonResources track by commonResources.id">
 					<td><b>{{commonResources.title}}</b><br />{{commonResources.description}}</td>
-					<td ng-show="commonResources.content"><a alt="Download"
-						title="Download" ng-if="commonResources.content"
+					<td width="50px"><a alt="Download" title="Download"
+						ng-if="commonResources.content" ng-show="commonResources.content"
 						class="btn btn-primary"
 						ng-click="vm.openFile(commonResources.contentContentType, commonResources.content)"><i
-							class="glyphicon glyphicon-download" /></a> <span
-						ng-if="commonResources.content"></span></td>
-					<td ng-show="commonResources.websiteLink"><a alt="Preview"
-						title="Preview" class="btn btn-primary"
-						href="{{commonResources.websiteLink}}" target="_blank"><i
-							class="glyphicon glyphicon-music" /> </a></td>
+							class="glyphicon glyphicon-download" /></a> <a alt="Preview"
+						ng-show="commonResources.websiteLink" title="Preview"
+						class="btn btn-primary" href="{{commonResources.websiteLink}}"
+						target="_blank"><i class="glyphicon glyphicon-music" /> </a></td>
 				</tr>
 			</tbody>
 		</table>
@@ -107,10 +106,29 @@
 		<div class="panel-heading">
 			<h3 class="panel-title">Course Materials</h3>
 		</div>
+
+		<table class="table table-bordered"
+			ng-show="vm.courseMaterials.length > 0">
+			<tbody>
+				<tr
+					ng-repeat="courseMaterial in vm.courseMaterials track by courseMaterial.displayOrder">
+					<td><b>{{courseMaterial.title}}</b><br />{{courseMaterial.description}}</td>
+					<td width="50px"><a ng-show="courseMaterial.content"
+						class="btn btn-primary" alt="Download" title="Download"
+						ng-if="courseMaterial.content"
+						ng-click="vm.openFile(courseMaterial.contentContentType, courseMaterial.content)"><i
+							class="glyphicon glyphicon-download" /> </a> <a alt="Download"
+						ng-show="courseMaterial.websiteLink" title="Download"
+						href="{{courseMaterial.websiteLink}}" target="_blank"
+						class="btn btn-primary"><i
+							class="glyphicon glyphicon-download" /></a></td>
+				</tr>
+			</tbody>
+		</table>
+
 		<div class="panel-body" ng-show="vm.courseMaterials.length == 0">
 			<center>No materials currently available.</center>
 		</div>
 	</div>
-
 
 </div>

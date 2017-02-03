@@ -21,10 +21,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 import com.miu.config.Constants;
+import com.miu.domain.Course;
 import com.miu.domain.CourseAccess;
+import com.miu.domain.CourseMaterial;
 import com.miu.domain.StudentPayment;
 import com.miu.domain.StudentProfile;
 import com.miu.repository.CourseAccessRepository;
+import com.miu.repository.CourseMaterialRepository;
+import com.miu.repository.CourseRepository;
 import com.miu.repository.StudentPaymentRepository;
 import com.miu.repository.StudentProfileRepository;
 import com.miu.service.UserService;
@@ -72,6 +76,12 @@ public class MyProfileResource {
 	@Inject
 	private CourseAccessRepository courseAccessRepository;
 
+	@Inject
+	private CourseMaterialRepository courseMaterialRepository;
+
+	@Inject
+	private CourseRepository courseRepository;
+
 	private final Logger LOGGER = LoggerFactory.getLogger(MyProfileResource.class);
 
 	@Inject
@@ -82,6 +92,16 @@ public class MyProfileResource {
 
 	@Inject
 	private UserService userService;
+
+	@GetMapping("/course/{id}/course-materials")
+	@Timed
+	public ResponseEntity<List<CourseMaterial>> getCourseMaterials(@PathVariable Long id) throws URISyntaxException {
+		LOGGER.debug("REST request to get Course Materials");
+		Course course = courseRepository.findOne(id);
+		List<CourseMaterial> courseMaterialList = courseMaterialRepository.getCourseMaterialByCourseTitle(course);
+		HttpHeaders headers = new HttpHeaders();
+		return new ResponseEntity<>(courseMaterialList, headers, HttpStatus.OK);
+	}
 
 	@GetMapping("/my-courses")
 	@Timed
