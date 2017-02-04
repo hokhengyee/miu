@@ -75,6 +75,12 @@
             	entity: ['$stateParams', 'MyForumRoom', function($stateParams, MyForumRoom) {
                     return MyForumRoom.get({id : $stateParams.id}).$promise;
                 }],
+                entity2: function () {
+                    return {
+                        message: null,
+                        id: null
+                    };
+                },
                 previousState: ["$state", function ($state) {
                     var currentStateData = {
                         name: $state.current.name || 'my-forum',

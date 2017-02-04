@@ -1,6 +1,8 @@
 package com.miu.web.rest;
 
+import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +33,7 @@ import com.miu.domain.ForumRoom;
 import com.miu.domain.ForumRoomMessage;
 import com.miu.domain.StudentPayment;
 import com.miu.domain.StudentProfile;
+import com.miu.domain.User;
 import com.miu.repository.CourseAccessRepository;
 import com.miu.repository.CourseMaterialRepository;
 import com.miu.repository.CourseRepository;
@@ -37,7 +41,9 @@ import com.miu.repository.ForumRoomMessageRepository;
 import com.miu.repository.ForumRoomRepository;
 import com.miu.repository.StudentPaymentRepository;
 import com.miu.repository.StudentProfileRepository;
+import com.miu.repository.UserRepository;
 import com.miu.service.UserService;
+import com.miu.service.dto.ForumMessageDto;
 import com.miu.web.rest.util.HeaderUtil;
 import com.miu.web.rest.util.PaginationUtil;
 import com.miu.web.rest.vm.ManagedUserVM;
@@ -108,6 +114,9 @@ public class MyProfileResource {
 	@Inject
 	private UserService userService;
 
+	@Inject
+	private UserRepository userRepository;
+
 	@GetMapping("/forum/{id}/messages")
 	@Timed
 	public ResponseEntity<List<ForumRoomMessage>> getAllForumRoomMessages(@PathVariable Long id,
@@ -117,6 +126,49 @@ public class MyProfileResource {
 		Page<ForumRoomMessage> page = forumRoomMessageRepository.findForumRoomMessagesByForumRoom(forumRoom, pageable);
 		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/forum/{id}/messages");
 		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+	}
+
+	/**
+	 * POST /forum-room-messages : Create a new forumRoomMessage.
+	 *
+	 * @param forumRoomMessage
+	 *            the forumRoomMessage to create
+	 * @return the ResponseEntity with status 201 (Created) and with body the
+	 *         new forumRoomMessage, or with status 400 (Bad Request) if the
+	 *         forumRoomMessage has already an ID
+	 * @throws URISyntaxException
+	 *             if the Location URI syntax is incorrect
+	 */
+	@PostMapping("/forum/messages")
+	@Timed
+	public ResponseEntity<ForumRoomMessage> createForumRoomMessage(@Valid @RequestBody ForumMessageDto fm)
+			throws URISyntaxException {
+		LOGGER.debug("REST request to save ForumRoomMessage : {}");
+
+		ForumRoomMessage forumRoomMessage = new ForumRoomMessage();
+		forumRoomMessage.setMessage(fm.getMessage());
+
+		if (forumRoomMessage.getId() != null) {
+			return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("forumRoomMessage", "idexists",
+					"A new forumRoomMessage cannot already have an ID")).body(null);
+		}
+
+		if (forumRoomMessage.getMessageDatetime() == null) {
+			forumRoomMessage.setMessageDatetime(ZonedDateTime.now());
+		}
+
+		if (forumRoomMessage.getUser() == null) {
+			User user = userRepository.findByUserIsCurrentUser();
+			forumRoomMessage.setUser(user);
+		}
+
+		ForumRoom forumRoom = forumRoomRepository.findOne(fm.getCourseID());
+		forumRoomMessage.setForumRoom(forumRoom);
+
+		ForumRoomMessage result = forumRoomMessageRepository.save(forumRoomMessage);
+		return ResponseEntity.created(new URI("/api/forum-room-messages/" + result.getId()))
+				.headers(HeaderUtil.createEntityCreationAlert("forumRoomMessage", result.getId().toString()))
+				.body(result);
 	}
 
 	@GetMapping("/course/{id}/course-materials")

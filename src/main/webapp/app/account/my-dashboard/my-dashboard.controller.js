@@ -45,7 +45,6 @@
 					});
 				}
 			});
-
 		}
 
 		function getNewsAndEvents() {

@@ -5,19 +5,13 @@
             "relationshipName": "forumRoom",
             "otherEntityName": "forumRoom",
             "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
             "otherEntityField": "forumRoomName"
         },
         {
             "relationshipName": "user",
             "otherEntityName": "user",
             "relationshipType": "many-to-one",
-            "relationshipValidateRules": [
-                "required"
-            ],
-            "otherEntityField": "username",
+            "otherEntityField": "login",
             "ownerSide": true
         }
     ],
@@ -31,10 +25,7 @@
         },
         {
             "fieldName": "messageDatetime",
-            "fieldType": "ZonedDateTime",
-            "fieldValidateRules": [
-                "required"
-            ]
+            "fieldType": "ZonedDateTime"
         }
     ],
     "changelogDate": "20161220135503",

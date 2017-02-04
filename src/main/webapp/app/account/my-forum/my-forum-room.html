@@ -3,6 +3,39 @@
 		<div class="panel-heading">
 			<b>Forum - {{vm.forumRoom.forumRoomName}}</b>
 		</div>
+		<div class="panel-content">
+			<form name="editForm" role="form" novalidate
+				ng-submit="vm.save({id:forumRoom.id})" show-validation>
+
+				<div class="modal-body">
+					<jhi-alert-error></jhi-alert-error>
+					<div class="form-group">
+						<label class="control-label" for="field_message">Message</label> <input
+							type="text" class="form-control" name="message"
+							id="field_message" ng-model="vm.forumRoomMessage.message"
+							required />
+						<div ng-show="editForm.message.$invalid">
+							<p class="help-block" ng-show="editForm.message.$error.required">
+								This field is required.</p>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="submit"
+						ng-disabled="editForm.$invalid || vm.isSaving"
+						class="btn btn-primary">
+						<span class="glyphicon glyphicon-save"></span>&nbsp;<span>Post</span>
+					</button>
+				</div>
+			</form>
+		</div>
+
+	</div>
+
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<b>Messages</b>
+		</div>
 		<!-- <pre>{{ vm.forumRoomMessages | json }}</pre> -->
 
 		<div class="table-responsive">

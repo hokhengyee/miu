@@ -6,11 +6,13 @@
 
 	MyForumRoomController.$inject = [ '$scope', '$rootScope', '$stateParams',
 			'previousState', 'entity', 'MyForumRoom', 'MyForumRoomMsg',
-			'ParseLinks', 'AlertService', 'paginationConstants', 'pagingParams' ];
+			'ParseLinks', 'AlertService', 'paginationConstants',
+			'pagingParams', 'entity2', '$timeout', 'ForumRoomMessage' ];
 
 	function MyForumRoomController($scope, $rootScope, $stateParams,
 			previousState, entity, MyForumRoom, MyForumRoomMsg, ParseLinks,
-			AlertService, paginationConstants, pagingParams) {
+			AlertService, paginationConstants, pagingParams, entity2, $timeout,
+			ForumRoomMessage) {
 		var vm = this;
 
 		vm.forumRoom = entity;
@@ -33,7 +35,7 @@
 
 		function loadAll() {
 			MyForumRoomMsg.query({
-				id	 : vm.forumRoom.id,
+				id : vm.forumRoom.id,
 				page : pagingParams.page - 1,
 				size : vm.itemsPerPage,
 				sort : sort()
@@ -73,6 +75,50 @@
 				search : vm.currentSearch
 			});
 		}
+
+		/* Add new message */
+		vm.forumRoomMessage = entity2;
+		// vm.forumRoomMessage.id = vm.forumRoom.id;
+		// vm.clear = clear;
+		// vm.datePickerOpenStatus = {};
+		// vm.openCalendar = openCalendar;
+		vm.save = save;
+		// vm.forumrooms = ForumRoom.query();
+		// vm.users = User.query();
+
+		$timeout(function() {
+			angular.element('.form-group:eq(1)>input').focus();
+		});
+
+		// function clear() {
+		// $uibModalInstance.dismiss('cancel');
+		// }
+
+		function save() {
+			vm.isSaving = true;
+			MyForumRoomMsg.save({
+				courseID : vm.forumRoom.id,
+				message : vm.forumRoomMessage.message
+			}, onSaveSuccess, onSaveError);
+		}
+
+		function onSaveSuccess(result) {
+			$scope.$emit('miuApp:forumRoomMessageUpdate', result);
+			// $uibModalInstance.close(result);
+			vm.isSaving = false;
+			vm.forumRoomMessage = entity2;
+			loadAll();
+		}
+
+		function onSaveError() {
+			vm.isSaving = false;
+		}
+
+		// vm.datePickerOpenStatus.messageDatetime = false;
+
+		// function openCalendar(date) {
+		// vm.datePickerOpenStatus[date] = true;
+		// }
 
 	}
 })();

@@ -22,8 +22,8 @@
 					return data;
 				}
 			},
-			'update' : {
-				method : 'PUT'
+			'save' : {
+				method : 'POST'
 			}
 		});
 	}

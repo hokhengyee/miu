@@ -3,8 +3,6 @@ package com.miu.web.rest;
 import com.miu.MiuApp;
 
 import com.miu.domain.ForumRoomMessage;
-import com.miu.domain.ForumRoom;
-import com.miu.domain.User;
 import com.miu.repository.ForumRoomMessageRepository;
 
 import org.junit.Before;
@@ -86,16 +84,6 @@ public class ForumRoomMessageResourceIntTest {
         ForumRoomMessage forumRoomMessage = new ForumRoomMessage()
                 .message(DEFAULT_MESSAGE)
                 .messageDatetime(DEFAULT_MESSAGE_DATETIME);
-        // Add required entity
-        ForumRoom forumRoom = ForumRoomResourceIntTest.createEntity(em);
-        em.persist(forumRoom);
-        em.flush();
-        forumRoomMessage.setForumRoom(forumRoom);
-        // Add required entity
-        User user = UserResourceIntTest.createEntity(em);
-        em.persist(user);
-        em.flush();
-        forumRoomMessage.setUser(user);
         return forumRoomMessage;
     }
 
@@ -150,24 +138,6 @@ public class ForumRoomMessageResourceIntTest {
         int databaseSizeBeforeTest = forumRoomMessageRepository.findAll().size();
         // set the field null
         forumRoomMessage.setMessage(null);
-
-        // Create the ForumRoomMessage, which fails.
-
-        restForumRoomMessageMockMvc.perform(post("/api/forum-room-messages")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(forumRoomMessage)))
-            .andExpect(status().isBadRequest());
-
-        List<ForumRoomMessage> forumRoomMessageList = forumRoomMessageRepository.findAll();
-        assertThat(forumRoomMessageList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    public void checkMessageDatetimeIsRequired() throws Exception {
-        int databaseSizeBeforeTest = forumRoomMessageRepository.findAll().size();
-        // set the field null
-        forumRoomMessage.setMessageDatetime(null);
 
         // Create the ForumRoomMessage, which fails.
 
