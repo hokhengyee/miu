@@ -3,7 +3,31 @@
 		<div class="panel-heading">
 			<b>Forum - {{vm.forumRoom.forumRoomName}}</b>
 		</div>
-		<div class="panel-body" ng-show="vm.messages.length == 0">
+		<!-- <pre>{{ vm.forumRoomMessages | json }}</pre> -->
+
+		<div class="table-responsive">
+			<table class="jh-table table table-bordered"
+				ng-show="vm.forumRoomMessages.length > 0">
+				<tbody>
+					<tr
+						ng-repeat="forumRoomMessage in vm.forumRoomMessages track by forumRoomMessage.id">
+						<td><h5>{{forumRoomMessage.message}}</h5> <span><i>{{forumRoomMessage.user.firstName}}
+									{{forumRoomMessage.user.lastName}} on
+									{{forumRoomMessage.messageDatetime | date:'medium'}}</i></span></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="panel-body" ng-show="vm.forumRoomMessages.length > 0">
+			<div class="text-center">
+				<jhi-item-count page="vm.page" total="vm.queryCount"
+					items-per-page="vm.itemsPerPage"></jhi-item-count>
+			</div>
+			<uib-pager total-items="vm.totalItems" ng-model="vm.page"
+				ng-change="vm.transition()"></uib-pager>
+		</div>
+
+		<div class="panel-body" ng-show="vm.forumRoomMessages.length == 0">
 			<center>No messages found.</center>
 		</div>
 	</div>
