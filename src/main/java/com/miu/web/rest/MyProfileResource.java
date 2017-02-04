@@ -9,6 +9,8 @@ import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,16 +26,23 @@ import com.miu.config.Constants;
 import com.miu.domain.Course;
 import com.miu.domain.CourseAccess;
 import com.miu.domain.CourseMaterial;
+import com.miu.domain.ForumRoom;
+import com.miu.domain.ForumRoomMessage;
 import com.miu.domain.StudentPayment;
 import com.miu.domain.StudentProfile;
 import com.miu.repository.CourseAccessRepository;
 import com.miu.repository.CourseMaterialRepository;
 import com.miu.repository.CourseRepository;
+import com.miu.repository.ForumRoomMessageRepository;
+import com.miu.repository.ForumRoomRepository;
 import com.miu.repository.StudentPaymentRepository;
 import com.miu.repository.StudentProfileRepository;
 import com.miu.service.UserService;
 import com.miu.web.rest.util.HeaderUtil;
+import com.miu.web.rest.util.PaginationUtil;
 import com.miu.web.rest.vm.ManagedUserVM;
+
+import io.swagger.annotations.ApiParam;
 
 /**
  * REST controller for managing users.
@@ -82,6 +91,12 @@ public class MyProfileResource {
 	@Inject
 	private CourseRepository courseRepository;
 
+	@Inject
+	private ForumRoomRepository forumRoomRepository;
+
+	@Inject
+	private ForumRoomMessageRepository forumRoomMessageRepository;
+
 	private final Logger LOGGER = LoggerFactory.getLogger(MyProfileResource.class);
 
 	@Inject
@@ -92,6 +107,17 @@ public class MyProfileResource {
 
 	@Inject
 	private UserService userService;
+
+	@GetMapping("/forum/{id}/messages")
+	@Timed
+	public ResponseEntity<List<ForumRoomMessage>> getAllForumRoomMessages(@PathVariable Long id,
+			@ApiParam Pageable pageable) throws URISyntaxException {
+		LOGGER.debug("REST request to get a page of ForumRoomMessages");
+		ForumRoom forumRoom = forumRoomRepository.findOne(id);
+		Page<ForumRoomMessage> page = forumRoomMessageRepository.findForumRoomMessagesByForumRoom(forumRoom, pageable);
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/forum/{id}/messages");
+		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+	}
 
 	@GetMapping("/course/{id}/course-materials")
 	@Timed

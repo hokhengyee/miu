@@ -2,9 +2,12 @@ package com.miu.repository;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import com.miu.domain.ForumRoom;
 import com.miu.domain.ForumRoomMessage;
 
 /**
@@ -14,5 +17,8 @@ public interface ForumRoomMessageRepository extends JpaRepository<ForumRoomMessa
 
 	@Query("select forumRoomMessage from ForumRoomMessage forumRoomMessage where forumRoomMessage.user.login = ?#{principal.username}")
 	List<ForumRoomMessage> findByUserIsCurrentUser();
+
+	@Query("SELECT m FROM ForumRoomMessage m WHERE m.forumRoom= ?1 ORDER BY m.messageDatetime DESC")
+	Page<ForumRoomMessage> findForumRoomMessagesByForumRoom(ForumRoom forumRoom, Pageable pageable);
 
 }
