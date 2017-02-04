@@ -1,0 +1,17 @@
+<div>
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<b>Forum - {{vm.forumRoom.forumRoomName}}</b>
+		</div>
+		<div class="panel-body" ng-show="vm.messages.length == 0">
+			<center>No messages found.</center>
+		</div>
+	</div>
+
+	<button type="submit" ui-sref="{{ vm.previousState }}"
+		class="btn btn-info">
+		<span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span>
+			Back</span>
+	</button>
+
+</div>

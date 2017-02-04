@@ -11,7 +11,8 @@
 				<tr ng-repeat="forumRoom in vm.forumRooms track by forumRoom.id">
 					<!--<td><a ui-sref="forum-room-detail({id:forumRoom.id})">{{forumRoom.id}}</a></td>  -->
 					<td>{{forumRoom.forumRoomName}}</td>
-					<td width="50px"><a class="btn btn-primary">Enter</a></td>
+					<td width="50px"><a class="btn btn-primary"
+						ui-sref="my-forum-room({id:forumRoom.id})">Enter</a></td>
 				</tr>
 			</tbody>
 		</table>

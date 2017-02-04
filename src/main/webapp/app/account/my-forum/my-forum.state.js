@@ -45,6 +45,34 @@
                     };
                 }]
             }
+        })
+        .state('my-forum-room', {
+            parent: 'account',
+            url: '/forum/{id}',
+            data: {
+                authorities: ['ROLE_USER'],
+                pageTitle: 'Forum'
+            },
+            views: {
+                'content@': {
+                    templateUrl: 'app/account/my-forum/my-forum-room.html',
+                    controller: 'MyForumRoomController',
+                    controllerAs: 'vm'
+                }
+            },
+            resolve: {
+                entity: ['$stateParams', 'MyForumRoom', function($stateParams, MyForumRoom) {
+                    return MyForumRoom.get({id : $stateParams.id}).$promise;
+                }],
+                previousState: ["$state", function ($state) {
+                    var currentStateData = {
+                        name: $state.current.name || 'forum-room',
+                        params: $state.params,
+                        url: $state.href($state.current.name, $state.params)
+                    };
+                    return currentStateData;
+                }]
+            }
         });
     }
 
