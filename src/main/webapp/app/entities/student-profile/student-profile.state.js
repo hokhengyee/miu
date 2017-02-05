@@ -50,7 +50,7 @@
             parent: 'entity',
             url: '/student-profile/{id}',
             data: {
-                authorities: ['ROLE_ADMIN'],
+                authorities: ['ROLE_USER'],
                 pageTitle: 'StudentProfile'
             },
             views: {
@@ -61,8 +61,8 @@
                 }
             },
             resolve: {
-                entity: ['$stateParams', 'MyStudentProfile', function($stateParams, MyStudentProfile) {
-                    return MyStudentProfile.get({id : $stateParams.id}).$promise;
+                entity: ['$stateParams', 'StudentProfile', function($stateParams, StudentProfile) {
+                    return StudentProfile.get({id : $stateParams.id}).$promise;
                 }],
                 previousState: ["$state", function ($state) {
                     var currentStateData = {
