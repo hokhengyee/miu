@@ -47,6 +47,16 @@
 						<td><h5>{{forumRoomMessage.message}}</h5> <span><i>{{forumRoomMessage.user.firstName}}
 									{{forumRoomMessage.user.lastName}} on
 									{{forumRoomMessage.messageDatetime | date:'medium'}}</i></span></td>
+						<td class="text-right" width="50px">
+							<div class="btn-group flex-btn-group-container">
+								<button type="submit" has-authority="ROLE_ADMIN"
+									ui-sref="my-forum-message.delete({id:forumRoomMessage.id})"
+									class="btn btn-danger btn-sm">
+									<span class="glyphicon glyphicon-remove-circle"></span> <span
+										class="hidden-xs hidden-sm"></span>
+								</button>
+							</div>
+						</td>
 					</tr>
 				</tbody>
 			</table>

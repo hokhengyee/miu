@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -98,10 +99,10 @@ public class MyProfileResource {
 	private CourseRepository courseRepository;
 
 	@Inject
-	private ForumRoomRepository forumRoomRepository;
+	private ForumRoomMessageRepository forumRoomMessageRepository;
 
 	@Inject
-	private ForumRoomMessageRepository forumRoomMessageRepository;
+	private ForumRoomRepository forumRoomRepository;
 
 	private final Logger LOGGER = LoggerFactory.getLogger(MyProfileResource.class);
 
@@ -112,21 +113,10 @@ public class MyProfileResource {
 	private StudentProfileRepository studentProfileRepository;
 
 	@Inject
-	private UserService userService;
-
-	@Inject
 	private UserRepository userRepository;
 
-	@GetMapping("/forum/{id}/messages")
-	@Timed
-	public ResponseEntity<List<ForumRoomMessage>> getAllForumRoomMessages(@PathVariable Long id,
-			@ApiParam Pageable pageable) throws URISyntaxException {
-		LOGGER.debug("REST request to get a page of ForumRoomMessages");
-		ForumRoom forumRoom = forumRoomRepository.findOne(id);
-		Page<ForumRoomMessage> page = forumRoomMessageRepository.findForumRoomMessagesByForumRoom(forumRoom, pageable);
-		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/forum/{id}/messages");
-		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
-	}
+	@Inject
+	private UserService userService;
 
 	/**
 	 * POST /forum-room-messages : Create a new forumRoomMessage.
@@ -168,6 +158,33 @@ public class MyProfileResource {
 		ForumRoomMessage result = forumRoomMessageRepository.save(forumRoomMessage);
 		return ResponseEntity.created(new URI("/api/forum-room-messages/" + result.getId()))
 				.headers(HeaderUtil.createEntityCreationAlert("forumRoom", result.getId().toString())).body(result);
+	}
+
+	/**
+	 * DELETE /forum-room-messages/:id : delete the "id" forumRoomMessage.
+	 *
+	 * @param id
+	 *            the id of the forumRoomMessage to delete
+	 * @return the ResponseEntity with status 200 (OK)
+	 */
+	@DeleteMapping("/forum-rooms/{id}/delete")
+	@Timed
+	public ResponseEntity<Void> deleteForumRoomMessage(@PathVariable Long id) {
+		LOGGER.debug("REST request to delete ForumRoomMessage : {}", id);
+		forumRoomMessageRepository.delete(id);
+		return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("forumRoomMessage", id.toString()))
+				.build();
+	}
+
+	@GetMapping("/forum/{id}/messages")
+	@Timed
+	public ResponseEntity<List<ForumRoomMessage>> getAllForumRoomMessages(@PathVariable Long id,
+			@ApiParam Pageable pageable) throws URISyntaxException {
+		LOGGER.debug("REST request to get a page of ForumRoomMessages");
+		ForumRoom forumRoom = forumRoomRepository.findOne(id);
+		Page<ForumRoomMessage> page = forumRoomMessageRepository.findForumRoomMessagesByForumRoom(forumRoom, pageable);
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/forum/{id}/messages");
+		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
 	}
 
 	@GetMapping("/course/{id}/course-materials")
