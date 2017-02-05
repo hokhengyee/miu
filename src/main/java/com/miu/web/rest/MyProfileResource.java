@@ -167,8 +167,7 @@ public class MyProfileResource {
 
 		ForumRoomMessage result = forumRoomMessageRepository.save(forumRoomMessage);
 		return ResponseEntity.created(new URI("/api/forum-room-messages/" + result.getId()))
-				.headers(HeaderUtil.createEntityCreationAlert("forumRoomMessage", result.getId().toString()))
-				.body(result);
+				.headers(HeaderUtil.createEntityCreationAlert("forumRoom", result.getId().toString())).body(result);
 	}
 
 	@GetMapping("/course/{id}/course-materials")
