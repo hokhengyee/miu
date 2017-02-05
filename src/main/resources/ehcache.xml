@@ -64,5 +64,7 @@
 
     <cache alias="com.miu.domain.CourseMaterial" uses-template="simple"/>
 
+    <cache alias="com.miu.domain.LecturerProfile" uses-template="simple"/>
+
     <!-- jhipster-needle-ehcache-add-entry -->
 </config>

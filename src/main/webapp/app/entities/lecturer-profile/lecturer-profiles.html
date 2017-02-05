@@ -1,0 +1,91 @@
+<div>
+    <h2>Lecturer Profiles</h2>
+    <jhi-alert></jhi-alert>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-4 no-padding-left">
+                <button class="btn btn-primary" ui-sref="lecturer-profile.new" >
+                    <span class="glyphicon glyphicon-plus"></span>
+                    <span >
+                        Create new Lecturer Profile
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive">
+        <table class="jh-table table table-striped">
+            <thead>
+                <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.transition()">
+                    <th jh-sort-by="id"><span>ID</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="otherTitles"><span>Other Titles</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="age"><span>Age</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="ordination"><span>Ordination</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="academicHistory"><span>Academic History</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="professionalHistory"><span>Professional History</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="pastAndCurrentMinistry"><span>Past And Current Ministry</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="publications"><span>Publications</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="familyDetails"><span>Family Details</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="reference"><span>Reference</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="profilePhoto"><span>Profile Photo</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="user.login"><span>User</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="salutation.title"><span>Salutation</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="lecturerProfile in vm.lecturerProfiles track by lecturerProfile.id">
+                    <td><a ui-sref="lecturer-profile-detail({id:lecturerProfile.id})">{{lecturerProfile.id}}</a></td>
+                    <td>{{lecturerProfile.otherTitles}}</td>
+                    <td>{{lecturerProfile.age}}</td>
+                    <td>{{lecturerProfile.ordination}}</td>
+                    <td>{{lecturerProfile.academicHistory}}</td>
+                    <td>{{lecturerProfile.professionalHistory}}</td>
+                    <td>{{lecturerProfile.pastAndCurrentMinistry}}</td>
+                    <td>{{lecturerProfile.publications}}</td>
+                    <td>{{lecturerProfile.familyDetails}}</td>
+                    <td>{{lecturerProfile.reference}}</td>
+                    <td>
+                        <a ng-if="lecturerProfile.profilePhoto" ng-click="vm.openFile(lecturerProfile.profilePhotoContentType, lecturerProfile.profilePhoto)">
+                            <img data-ng-src="{{'data:' + lecturerProfile.profilePhotoContentType + ';base64,' + lecturerProfile.profilePhoto}}" style="max-height: 30px;" alt="lecturerProfile image"/>
+                        </a>
+                        <span ng-if="lecturerProfile.profilePhoto">{{lecturerProfile.profilePhotoContentType}}, {{vm.byteSize(lecturerProfile.profilePhoto)}}</span>
+                    </td>
+                    <td>
+                        {{lecturerProfile.user.login}}
+                    </td>
+                    <td>
+                        <a ui-sref="salutation-detail({id:lecturerProfile.salutation.id})">{{lecturerProfile.salutation.title}}</a>
+                    </td>
+                    <td class="text-right">
+                        <div class="btn-group flex-btn-group-container">
+                            <button type="submit"
+                                    ui-sref="lecturer-profile-detail({id:lecturerProfile.id})"
+                                    class="btn btn-info btn-sm">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                                <span class="hidden-xs hidden-sm"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="lecturer-profile.edit({id:lecturerProfile.id})"
+                                    class="btn btn-primary btn-sm">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                                <span class="hidden-xs hidden-sm"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="lecturer-profile.delete({id:lecturerProfile.id})"
+                                    class="btn btn-danger btn-sm">
+                                <span class="glyphicon glyphicon-remove-circle"></span>
+                                <span class="hidden-xs hidden-sm"></span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="text-center">
+        <jhi-item-count page="vm.page" total="vm.queryCount" items-per-page="vm.itemsPerPage"></jhi-item-count>
+    </div>
+    <uib-pager total-items="vm.totalItems" ng-model="vm.page" ng-change="vm.transition()"></uib-pager>
+</div>
