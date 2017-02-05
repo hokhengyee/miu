@@ -7,13 +7,19 @@
 	MyForumRoomController.$inject = [ '$scope', '$rootScope', '$stateParams',
 			'previousState', 'entity', 'MyForumRoom', 'MyForumRoomMsg',
 			'ParseLinks', 'AlertService', 'paginationConstants',
-			'pagingParams', 'entity2', '$timeout', 'ForumRoomMessage' ];
+			'pagingParams', 'entity2', '$timeout', 'ForumRoomMessage', 'Auth',
+			'Principal' ];
 
 	function MyForumRoomController($scope, $rootScope, $stateParams,
 			previousState, entity, MyForumRoom, MyForumRoomMsg, ParseLinks,
 			AlertService, paginationConstants, pagingParams, entity2, $timeout,
-			ForumRoomMessage) {
+			ForumRoomMessage, Auth, Principal) {
 		var vm = this;
+		vm.account = null;
+
+		Principal.identity().then(function(account) {
+			vm.account = account;
+		});
 
 		vm.forumRoom = entity;
 		vm.previousState = previousState.name;

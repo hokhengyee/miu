@@ -37,45 +37,16 @@
                 }]
             }
         })
-//        .state('forum-room-message.new', {
-//            parent: 'forum-room-message',
-//            url: '/new',
-//            data: {
-//                authorities: ['ROLE_USER']
-//            },
-//            onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
-//                $uibModal.open({
-//                    templateUrl: 'app/entities/forum-room-message/forum-room-message-dialog.html',
-//                    controller: 'ForumRoomMessageDialogController',
-//                    controllerAs: 'vm',
-//                    backdrop: 'static',
-//                    size: 'lg',
-//                    resolve: {
-//                        entity: function () {
-//                            return {
-//                                message: null,
-//                                messageDatetime: null,
-//                                id: null
-//                            };
-//                        }
-//                    }
-//                }).result.then(function() {
-//                    $state.go('forum-room-message', null, { reload: 'forum-room-message' });
-//                }, function() {
-//                    $state.go('forum-room-message');
-//                });
-//            }]
-//        })
         .state('my-forum-message.delete', {
             parent: 'account',
-            url: '/forum/message/{id}/delete',
+            url: '/forum/{forumid}/message/{id}/delete',
             data: {
                 authorities: ['ROLE_USER']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
                     templateUrl: 'app/account/my-forum-message/my-forum-message-delete-dialog.html',
-                    controller: 'ForumMessageDeleteController',
+                    controller: 'MyForumMessageDeleteController',
                     controllerAs: 'vm',
                     size: 'md',
                     resolve: {
@@ -84,9 +55,9 @@
                         }]
                     }
                 }).result.then(function() {
-                    $state.go('^', null, { reload: '^' });
+                    $state.go('my-forum-room', {id: $stateParams.forumid }, { reload: 'my-forum-room' });
                 }, function() {
-                    $state.go('^');
+                    $state.go('my-forum-room', {id: $stateParams.forumid });
                 });
             }]
         });

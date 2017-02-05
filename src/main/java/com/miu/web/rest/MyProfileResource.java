@@ -167,11 +167,17 @@ public class MyProfileResource {
 	 *            the id of the forumRoomMessage to delete
 	 * @return the ResponseEntity with status 200 (OK)
 	 */
-	@DeleteMapping("/forum-rooms/{id}/delete")
+	@DeleteMapping("/forum/message/{id}")
 	@Timed
 	public ResponseEntity<Void> deleteForumRoomMessage(@PathVariable Long id) {
 		LOGGER.debug("REST request to delete ForumRoomMessage : {}", id);
-		forumRoomMessageRepository.delete(id);
+
+		User user = userRepository.findByUserIsCurrentUser();
+		ForumRoomMessage message = forumRoomMessageRepository.findOne(id);
+		if ("admin".contentEquals(user.getLogin()) || message.getUser().equals(user)) {
+			forumRoomMessageRepository.delete(id);
+		}
+
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("forumRoomMessage", id.toString()))
 				.build();
 	}
@@ -195,6 +201,15 @@ public class MyProfileResource {
 		List<CourseMaterial> courseMaterialList = courseMaterialRepository.getCourseMaterialByCourseTitle(course);
 		HttpHeaders headers = new HttpHeaders();
 		return new ResponseEntity<>(courseMaterialList, headers, HttpStatus.OK);
+	}
+
+	@GetMapping("/forum/message/{id}")
+	@Timed
+	public ResponseEntity<ForumRoomMessage> getForumRoomMessage(@PathVariable Long id) {
+		LOGGER.debug("REST request to get ForumRoomMessage : {}", id);
+		ForumRoomMessage forumRoomMessage = forumRoomMessageRepository.findOne(id);
+		return Optional.ofNullable(forumRoomMessage).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
 
 	@GetMapping("/my-courses")

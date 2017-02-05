@@ -32,11 +32,17 @@
 
 	</div>
 
+	<!-- <button type="submit" ui-sref="{{ vm.previousState }}"
+		class="btn btn-info">
+		<span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span>
+			Back</span>
+	</button>
+	<br /><br /> -->
+
 	<div class="panel panel-primary">
 		<div class="panel-heading">
 			<b>Messages</b>
 		</div>
-		<!-- <pre>{{ vm.forumRoomMessages | json }}</pre> -->
 
 		<div class="table-responsive">
 			<table class="jh-table table table-bordered"
@@ -49,8 +55,9 @@
 									{{forumRoomMessage.messageDatetime | date:'medium'}}</i></span></td>
 						<td class="text-right" width="50px">
 							<div class="btn-group flex-btn-group-container">
-								<button type="submit" has-authority="ROLE_ADMIN"
-									ui-sref="my-forum-message.delete({id:forumRoomMessage.id})"
+								<button type="submit"
+									ng-show="vm.account.login == forumRoomMessage.user.login || vm.account.login == 'admin'"
+									ui-sref="my-forum-message.delete({forumid:vm.forumRoom.id, id:forumRoomMessage.id})"
 									class="btn btn-danger btn-sm">
 									<span class="glyphicon glyphicon-remove-circle"></span> <span
 										class="hidden-xs hidden-sm"></span>
@@ -75,10 +82,10 @@
 		</div>
 	</div>
 
-	<button type="submit" ui-sref="{{ vm.previousState }}"
+	<!-- <button type="submit" ui-sref="{{ vm.previousState }}"
 		class="btn btn-info">
 		<span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span>
 			Back</span>
-	</button>
+	</button> -->
 
 </div>

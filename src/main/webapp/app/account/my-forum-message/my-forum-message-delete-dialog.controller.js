@@ -5,9 +5,9 @@
         .module('miuApp')
         .controller('MyForumMessageDeleteController',MyForumMessageDeleteController);
 
-    MyForumMessageDeleteController.$inject = ['$uibModalInstance', 'entity', 'MyForumRoomMsg'];
+    MyForumMessageDeleteController.$inject = ['$uibModalInstance', 'entity', 'MyForumMsg'];
 
-    function MyForumMessageDeleteController($uibModalInstance, entity, MyForumRoomMsg) {
+    function MyForumMessageDeleteController($uibModalInstance, entity, MyForumMsg) {
         var vm = this;
 
         vm.forumRoomMessage = entity;
@@ -19,7 +19,7 @@
         }
 
         function confirmDelete (id) {
-        	MyForumRoomMsg.delete({id: id},
+        	MyForumMsg.delete({id: id},
                 function () {
                     $uibModalInstance.close(true);
                 });
