@@ -5,15 +5,18 @@
 			MyProfileController);
 
 	MyProfileController.$inject = [ '$stateParams', 'MyProfileUser',
-			'MyStudentProfile', 'MyCourseAccess', 'Auth', 'Principal' ];
+			'MyLecturerProfile', 'MyStudentProfile', 'MyCourseAccess', 'Auth',
+			'Principal', '$sce' ];
 
-	function MyProfileController($stateParams, MyProfileUser, MyStudentProfile,
-			MyCourseAccess, Auth, Principal) {
+	function MyProfileController($stateParams, MyProfileUser,
+			MyLecturerProfile, MyStudentProfile, MyCourseAccess, Auth,
+			Principal, $sce) {
 		var vm = this;
 
 		vm.load = load;
 		vm.user = {};
 		vm.studentProfile = null;
+		vm.lecturerProfile = null;
 		vm.courseAccess = null;
 
 		Principal.identity().then(function(account) {
@@ -34,7 +37,30 @@
 			if (vm.roles.indexOf("ROLE_STUDENT")) {
 				MyStudentProfile.get({}, function(result) {
 					vm.studentProfile = result;
+				}, function(response) {
+					console.log("No Student Profile!");
 				});
+			}
+
+			if (vm.roles.indexOf("ROLE_LECTURER")) {
+				MyLecturerProfile
+						.get(
+								{},
+								function(result) {
+									vm.lecturerProfile = result;
+									vm.academicHistory = $sce
+											.trustAsHtml(vm.lecturerProfile.academicHistory);
+									vm.professionalHistory = $sce
+											.trustAsHtml(vm.lecturerProfile.professionalHistory);
+									vm.pastAndCurrentMinistry = $sce
+											.trustAsHtml(vm.lecturerProfile.pastAndCurrentMinistry);
+									vm.publications = $sce
+											.trustAsHtml(vm.lecturerProfile.publications);
+									vm.familyDetails = $sce
+											.trustAsHtml(vm.lecturerProfile.familyDetails);
+									vm.reference = $sce
+											.trustAsHtml(vm.lecturerProfile.reference);
+								});
 			}
 
 			MyCourseAccess.get({}, function(result) {

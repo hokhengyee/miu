@@ -14,6 +14,14 @@
 							alt="studentProfile image" />
 					</div>
 				</td>
+				<td width="200px" ng-show="vm.lecturerProfile != null">
+					<div ng-if="vm.lecturerProfile.profilePhoto">
+						<img
+							data-ng-src="{{'data:' + vm.lecturerProfile.profilePhotoContentType + ';base64,' + vm.lecturerProfile.profilePhoto}}"
+							style="max-width: 150px; max-height: 150px"
+							alt="lecturerProfile image" />
+					</div>
+				</td>
 				<td>
 					<table class="table table-bordered">
 						<tr ng-show="vm.courseAccess.length > 0">
@@ -33,10 +41,6 @@
 							<th>Email</th>
 							<td>{{vm.user.email}}</td>
 						</tr>
-						<tr ng-show="vm.studentProfile != null">
-							<th>Salutation</th>
-							<td>{{vm.studentProfile.salutation.title}}</td>
-						</tr>
 						<tr>
 							<th>First Name</th>
 							<td>{{vm.user.firstName}}</td>
@@ -44,6 +48,11 @@
 						<tr>
 							<th>Last Name</th>
 							<td>{{vm.user.lastName}}</td>
+						</tr>
+						<!-- Student -->
+						<tr ng-show="vm.studentProfile != null">
+							<th>Salutation</th>
+							<td>{{vm.studentProfile.salutation.title}}</td>
 						</tr>
 						<tr ng-show="vm.studentProfile != null">
 							<th>Gender</th>
@@ -79,6 +88,47 @@
 						<tr ng-show="vm.studentProfile != null">
 							<th>Completion Date</th>
 							<td>{{vm.studentProfile.completionDate | date:'mediumDate'}}</td>
+						</tr>
+						<!-- Lecturer -->
+						<tr ng-show="vm.lecturerProfile != null">
+							<th>Salutation</th>
+							<td>{{vm.lecturerProfile.salutation.title}}</td>
+						</tr>
+						<tr ng-show="vm.lecturerProfile != null">
+							<th>Other Titles</th>
+							<td>{{vm.lecturerProfile.otherTitles}}</td>
+						</tr>
+						<tr ng-show="vm.lecturerProfile != null">
+							<th>Age</th>
+							<td>{{vm.lecturerProfile.age}}</td>
+						</tr>
+						<tr ng-show="vm.lecturerProfile != null">
+							<th>Ordination</th>
+							<td>{{vm.lecturerProfile.ordination}}</td>
+						</tr>
+						<tr ng-show="vm.lecturerProfile != null">
+							<th>Academic History</th>
+							<td><span ng-bind-html="vm.academicHistory"></span></td>
+						</tr>
+						<tr ng-show="vm.lecturerProfile != null">
+							<th>Professional History</th>
+							<td><span ng-bind-html="vm.professionalHistory"></span></td>
+						</tr>
+						<tr ng-show="vm.lecturerProfile != null">
+							<th>Past And Current Ministry</th>
+							<td><span ng-bind-html="vm.pastAndCurrentMinistry"></span></td>
+						</tr>
+						<tr ng-show="vm.lecturerProfile != null">
+							<th>Publications</th>
+							<td><span ng-bind-html="vm.publications"></span></td>
+						</tr>
+						<tr ng-show="vm.lecturerProfile != null">
+							<th>Family Details</th>
+							<td><span ng-bind-html="vm.familyDetails"></span></td>
+						</tr>
+						<tr ng-show="vm.lecturerProfile != null">
+							<th>Reference</th>
+							<td><span ng-bind-html="vm.reference"></span></td>
 						</tr>
 					</table>
 				</td>

@@ -32,6 +32,7 @@ import com.miu.domain.CourseAccess;
 import com.miu.domain.CourseMaterial;
 import com.miu.domain.ForumRoom;
 import com.miu.domain.ForumRoomMessage;
+import com.miu.domain.LecturerProfile;
 import com.miu.domain.StudentPayment;
 import com.miu.domain.StudentProfile;
 import com.miu.domain.User;
@@ -40,6 +41,7 @@ import com.miu.repository.CourseMaterialRepository;
 import com.miu.repository.CourseRepository;
 import com.miu.repository.ForumRoomMessageRepository;
 import com.miu.repository.ForumRoomRepository;
+import com.miu.repository.LecturerProfileRepository;
 import com.miu.repository.StudentPaymentRepository;
 import com.miu.repository.StudentProfileRepository;
 import com.miu.repository.UserRepository;
@@ -103,6 +105,9 @@ public class MyProfileResource {
 
 	@Inject
 	private ForumRoomRepository forumRoomRepository;
+
+	@Inject
+	private LecturerProfileRepository lecturerProfileRepository;
 
 	private final Logger LOGGER = LoggerFactory.getLogger(MyProfileResource.class);
 
@@ -212,6 +217,14 @@ public class MyProfileResource {
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
 
+	@GetMapping("/my-lecturer-profiles")
+	@Timed
+	public ResponseEntity<LecturerProfile> getLecturerProfile() {
+		LecturerProfile profile = lecturerProfileRepository.findLecturerIsCurrentUser();
+		return Optional.ofNullable(profile).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+	}
+
 	@GetMapping("/my-courses")
 	@Timed
 	public ResponseEntity<List<CourseAccess>> getStudentCourses() {
@@ -228,14 +241,6 @@ public class MyProfileResource {
 		return new ResponseEntity<>(paymentList, headers, HttpStatus.OK);
 	}
 
-	/**
-	 * GET /student-profiles/:id : get the "id" studentProfile.
-	 *
-	 * @param id
-	 *            the id of the studentProfile to retrieve
-	 * @return the ResponseEntity with status 200 (OK) and with body the
-	 *         studentProfile, or with status 404 (Not Found)
-	 */
 	@GetMapping("/my-student-profiles")
 	@Timed
 	public ResponseEntity<StudentProfile> getStudentProfile() {
