@@ -167,7 +167,7 @@ public class PublicResource {
 	 * @throws URISyntaxException
 	 *             if there is an error to generate the pagination HTTP headers
 	 */
-	@GetMapping("/news-and-events")
+	@GetMapping("/news-and-events-top3")
 	@Timed
 	public ResponseEntity<List<NewsAndEvent>> getAllNewsAndEvents() throws URISyntaxException {
 		LOGGER.debug("REST request to get a page of NewsAndEvents");

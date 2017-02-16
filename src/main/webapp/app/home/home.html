@@ -54,9 +54,8 @@
 							<td>
 								<div>
 									<h4>
-										<b> <a ng-show="newsAndEvent.websiteLink != null"
-											href="{{ newsAndEvent.websiteLink }}" target="_blank">{{newsAndEvent.title}}</a>
-											<div ng-show="newsAndEvent.websiteLink == null">{{newsAndEvent.title}}</div>
+										<b>
+											<a ui-sref="au-news-and-event-detail({id:newsAndEvent.id})">{{newsAndEvent.title}}</a>
 										</b>
 									</h4>
 								</div>

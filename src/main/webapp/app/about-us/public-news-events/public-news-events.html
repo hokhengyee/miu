@@ -1,0 +1,42 @@
+<div>
+
+	<div class="panel panel-info">
+		<div class="panel-heading">
+			<b>News & Events</b>
+		</div>
+
+		<table class="table table-bordered">
+			<tbody>
+				<tr ng-repeat="newsAndEvent in vm.newsAndEvents">
+					<td>
+						<div>
+							<h4>
+								<b><a ui-sref="au-news-and-event-detail({id:newsAndEvent.id})">{{newsAndEvent.title}}</a>
+								</b>
+							</h4>
+						</div>
+						<div>{{ newsAndEvent.startDT | date:'medium' }} - {{
+							newsAndEvent.endDT | date:'medium' }}</div>
+						<div>
+							<i>Venue: {{ newsAndEvent.venue }}</i>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<div class="panel-body" ng-show="vm.newsAndEvents.length == 0">
+			<div>
+				<center>No news &amp; events.</center>
+			</div>
+		</div>
+		<div class="panel-footer">
+			<div class="text-center">
+				<jhi-item-count page="vm.page" total="vm.queryCount"
+					items-per-page="vm.itemsPerPage"></jhi-item-count>
+			</div>
+			<uib-pager total-items="vm.totalItems" ng-model="vm.page"
+				ng-change="vm.transition()"></uib-pager>
+		</div>
+
+	</div>
+</div>

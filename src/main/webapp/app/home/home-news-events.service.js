@@ -5,7 +5,7 @@
 	HomeNewsAndEvents.$inject = [ '$resource', 'DateUtils' ];
 
 	function HomeNewsAndEvents($resource, DateUtils) {
-		var resourceUrl = 'api/public/news-and-events';
+		var resourceUrl = 'api/public/news-and-events-top3';
 
 		return $resource(resourceUrl, {}, {
 			'query' : {
