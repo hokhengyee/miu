@@ -176,6 +176,16 @@ public class PublicResource {
 		return new ResponseEntity<>(page, headers, HttpStatus.OK);
 	}
 
+	@GetMapping("/news-and-events")
+	@Timed
+	public ResponseEntity<List<NewsAndEvent>> getAllNewsAndEvents(@ApiParam Pageable pageable)
+			throws URISyntaxException {
+		LOGGER.debug("REST request to get a page of NewsAndEvents");
+		Page<NewsAndEvent> page = newsAndEventRepository.findAllByOrderByStartDTDesc(pageable);
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/news-and-events");
+		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+	}
+
 	/**
 	 * GET /courses/:id : get the "id" course.
 	 *
@@ -270,6 +280,15 @@ public class PublicResource {
 		LOGGER.debug("REST request to get Message From President");
 		StaticPage staticPage = staticPageRepository.getStaticPageByTitle("Message from the President");
 		return Optional.ofNullable(staticPage).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+	}
+
+	@GetMapping("/news-and-events/{id}")
+	@Timed
+	public ResponseEntity<NewsAndEvent> getNewsAndEvent(@PathVariable Long id) {
+		LOGGER.debug("REST request to get NewsAndEvent : {}", id);
+		NewsAndEvent newsAndEvent = newsAndEventRepository.findOne(id);
+		return Optional.ofNullable(newsAndEvent).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
 

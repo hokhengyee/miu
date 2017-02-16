@@ -5,7 +5,7 @@
 	AUNewsAndEvent.$inject = [ '$resource', 'DateUtils' ];
 
 	function AUNewsAndEvent($resource, DateUtils) {
-		var resourceUrl = 'api/news-and-events/:id';
+		var resourceUrl = 'api/public/news-and-events/:id';
 
 		return $resource(resourceUrl, {}, {
 			'query' : {
