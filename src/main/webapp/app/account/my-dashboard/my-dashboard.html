@@ -55,12 +55,10 @@
 						<tr ng-repeat="newsAndEvent in vm.newsAndEvents">
 							<td>
 								<div>
-									<h4>
-										<b> <a ng-show="newsAndEvent.websiteLink != null"
-											href="{{ newsAndEvent.websiteLink }}" target="_blank">{{newsAndEvent.title}}</a>
-											<div ng-show="newsAndEvent.websiteLink == null">{{newsAndEvent.title}}</div>
-										</b>
-									</h4>
+									<b> <a ng-show="newsAndEvent.websiteLink != null"
+										href="{{ newsAndEvent.websiteLink }}" target="_blank">{{newsAndEvent.title}}</a>
+										<div ng-show="newsAndEvent.websiteLink == null">{{newsAndEvent.title}}</div>
+									</b>
 								</div>{{ newsAndEvent.startDate | date:'mediumDate' }} - {{
 								newsAndEvent.endDate | date:'mediumDate' }}
 							</td>

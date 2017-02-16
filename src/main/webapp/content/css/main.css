@@ -89,7 +89,7 @@ Logo styles
 }
 
 .logo .logo-img {
-	height: 45px;
+	height: 72px;
 	display: inline-block;
 }
 
@@ -392,3 +392,26 @@ ui bootstrap tweaks
 }
 
 /* jhipster-needle-css-add-main JHipster will add new css style */
+.navbar-default .navbar-nav>li>a {
+	height: 79px !important
+}
+
+.navbar-brand {
+	width: 480px !important;
+}
+
+.navbar-brand span {
+	font-size: 30px !important;
+	width: 400px !important;
+	height: 79px !important;
+	word-wrap: break-word;
+	line-height: 32px !important;
+}
+
+.navbar-brand, .navbar-nav, .navbar-header, .navbar {
+	height: 80px !important;
+}
+
+.panel-heading {
+	font-size: 18px !important;
+}
