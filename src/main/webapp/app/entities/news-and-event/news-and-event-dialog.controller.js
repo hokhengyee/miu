@@ -5,15 +5,17 @@
         .module('miuApp')
         .controller('NewsAndEventDialogController', NewsAndEventDialogController);
 
-    NewsAndEventDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'NewsAndEvent'];
+    NewsAndEventDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'DataUtils', 'entity', 'NewsAndEvent'];
 
-    function NewsAndEventDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, NewsAndEvent) {
+    function NewsAndEventDialogController ($timeout, $scope, $stateParams, $uibModalInstance, DataUtils, entity, NewsAndEvent) {
         var vm = this;
 
         vm.newsAndEvent = entity;
         vm.clear = clear;
         vm.datePickerOpenStatus = {};
         vm.openCalendar = openCalendar;
+        vm.byteSize = DataUtils.byteSize;
+        vm.openFile = DataUtils.openFile;
         vm.save = save;
 
         $timeout(function (){
@@ -43,8 +45,8 @@
             vm.isSaving = false;
         }
 
-        vm.datePickerOpenStatus.startDate = false;
-        vm.datePickerOpenStatus.endDate = false;
+        vm.datePickerOpenStatus.startDT = false;
+        vm.datePickerOpenStatus.endDT = false;
 
         function openCalendar (date) {
             vm.datePickerOpenStatus[date] = true;

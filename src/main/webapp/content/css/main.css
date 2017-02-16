@@ -415,3 +415,12 @@ ui bootstrap tweaks
 .panel-heading {
 	font-size: 18px !important;
 }
+
+.panel-info>.panel-heading {
+	background-color: #02884d !important;
+	color: #ffffff !important;
+}
+
+.panel-info {
+	border-color: #02884d !important;
+}

@@ -11,6 +11,6 @@ import com.miu.domain.NewsAndEvent;
  */
 public interface NewsAndEventRepository extends JpaRepository<NewsAndEvent, Long> {
 
-	List<NewsAndEvent> findTop3ByOrderByStartDateDesc();
+	List<NewsAndEvent> findTop3ByOrderByStartDTDesc();
 
 }

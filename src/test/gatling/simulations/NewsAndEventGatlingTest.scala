@@ -67,7 +67,7 @@ class NewsAndEventGatlingTest extends Simulation {
             .exec(http("Create new newsAndEvent")
             .post("/api/news-and-events")
             .headers(headers_http_authenticated)
-            .body(StringBody("""{"id":null, "title":"SAMPLE_TEXT", "websiteLink":"SAMPLE_TEXT", "startDate":"2020-01-01T00:00:00.000Z", "endDate":"2020-01-01T00:00:00.000Z"}""")).asJSON
+            .body(StringBody("""{"id":null, "title":"SAMPLE_TEXT", "websiteLink":"SAMPLE_TEXT", "startDT":"2020-01-01T00:00:00.000Z", "endDT":"2020-01-01T00:00:00.000Z", "venue":"SAMPLE_TEXT", "eventDetail":null}""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_newsAndEvent_url"))).exitHereIfFailed
             .pause(10)

@@ -18,13 +18,17 @@ import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Base64Utils;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import java.time.LocalDate;
+import java.time.Instant;
+import java.time.ZonedDateTime;
+import java.time.ZoneOffset;
 import java.time.ZoneId;
 import java.util.List;
 
+import static com.miu.web.rest.TestUtil.sameInstant;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -45,11 +49,17 @@ public class NewsAndEventResourceIntTest {
     private static final String DEFAULT_WEBSITE_LINK = "AAAAAAAAAA";
     private static final String UPDATED_WEBSITE_LINK = "BBBBBBBBBB";
 
-    private static final LocalDate DEFAULT_START_DATE = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_START_DATE = LocalDate.now(ZoneId.systemDefault());
+    private static final ZonedDateTime DEFAULT_START_DT = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
+    private static final ZonedDateTime UPDATED_START_DT = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
-    private static final LocalDate DEFAULT_END_DATE = LocalDate.ofEpochDay(0L);
-    private static final LocalDate UPDATED_END_DATE = LocalDate.now(ZoneId.systemDefault());
+    private static final ZonedDateTime DEFAULT_END_DT = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
+    private static final ZonedDateTime UPDATED_END_DT = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
+
+    private static final String DEFAULT_VENUE = "AAAAAAAAAA";
+    private static final String UPDATED_VENUE = "BBBBBBBBBB";
+
+    private static final String DEFAULT_EVENT_DETAIL = "AAAAAAAAAA";
+    private static final String UPDATED_EVENT_DETAIL = "BBBBBBBBBB";
 
     @Inject
     private NewsAndEventRepository newsAndEventRepository;
@@ -87,8 +97,10 @@ public class NewsAndEventResourceIntTest {
         NewsAndEvent newsAndEvent = new NewsAndEvent()
                 .title(DEFAULT_TITLE)
                 .websiteLink(DEFAULT_WEBSITE_LINK)
-                .startDate(DEFAULT_START_DATE)
-                .endDate(DEFAULT_END_DATE);
+                .startDT(DEFAULT_START_DT)
+                .endDT(DEFAULT_END_DT)
+                .venue(DEFAULT_VENUE)
+                .eventDetail(DEFAULT_EVENT_DETAIL);
         return newsAndEvent;
     }
 
@@ -115,8 +127,10 @@ public class NewsAndEventResourceIntTest {
         NewsAndEvent testNewsAndEvent = newsAndEventList.get(newsAndEventList.size() - 1);
         assertThat(testNewsAndEvent.getTitle()).isEqualTo(DEFAULT_TITLE);
         assertThat(testNewsAndEvent.getWebsiteLink()).isEqualTo(DEFAULT_WEBSITE_LINK);
-        assertThat(testNewsAndEvent.getStartDate()).isEqualTo(DEFAULT_START_DATE);
-        assertThat(testNewsAndEvent.getEndDate()).isEqualTo(DEFAULT_END_DATE);
+        assertThat(testNewsAndEvent.getStartDT()).isEqualTo(DEFAULT_START_DT);
+        assertThat(testNewsAndEvent.getEndDT()).isEqualTo(DEFAULT_END_DT);
+        assertThat(testNewsAndEvent.getVenue()).isEqualTo(DEFAULT_VENUE);
+        assertThat(testNewsAndEvent.getEventDetail()).isEqualTo(DEFAULT_EVENT_DETAIL);
     }
 
     @Test
@@ -170,8 +184,10 @@ public class NewsAndEventResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(newsAndEvent.getId().intValue())))
             .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE.toString())))
             .andExpect(jsonPath("$.[*].websiteLink").value(hasItem(DEFAULT_WEBSITE_LINK.toString())))
-            .andExpect(jsonPath("$.[*].startDate").value(hasItem(DEFAULT_START_DATE.toString())))
-            .andExpect(jsonPath("$.[*].endDate").value(hasItem(DEFAULT_END_DATE.toString())));
+            .andExpect(jsonPath("$.[*].startDT").value(hasItem(sameInstant(DEFAULT_START_DT))))
+            .andExpect(jsonPath("$.[*].endDT").value(hasItem(sameInstant(DEFAULT_END_DT))))
+            .andExpect(jsonPath("$.[*].venue").value(hasItem(DEFAULT_VENUE.toString())))
+            .andExpect(jsonPath("$.[*].eventDetail").value(hasItem(DEFAULT_EVENT_DETAIL.toString())));
     }
 
     @Test
@@ -187,8 +203,10 @@ public class NewsAndEventResourceIntTest {
             .andExpect(jsonPath("$.id").value(newsAndEvent.getId().intValue()))
             .andExpect(jsonPath("$.title").value(DEFAULT_TITLE.toString()))
             .andExpect(jsonPath("$.websiteLink").value(DEFAULT_WEBSITE_LINK.toString()))
-            .andExpect(jsonPath("$.startDate").value(DEFAULT_START_DATE.toString()))
-            .andExpect(jsonPath("$.endDate").value(DEFAULT_END_DATE.toString()));
+            .andExpect(jsonPath("$.startDT").value(sameInstant(DEFAULT_START_DT)))
+            .andExpect(jsonPath("$.endDT").value(sameInstant(DEFAULT_END_DT)))
+            .andExpect(jsonPath("$.venue").value(DEFAULT_VENUE.toString()))
+            .andExpect(jsonPath("$.eventDetail").value(DEFAULT_EVENT_DETAIL.toString()));
     }
 
     @Test
@@ -211,8 +229,10 @@ public class NewsAndEventResourceIntTest {
         updatedNewsAndEvent
                 .title(UPDATED_TITLE)
                 .websiteLink(UPDATED_WEBSITE_LINK)
-                .startDate(UPDATED_START_DATE)
-                .endDate(UPDATED_END_DATE);
+                .startDT(UPDATED_START_DT)
+                .endDT(UPDATED_END_DT)
+                .venue(UPDATED_VENUE)
+                .eventDetail(UPDATED_EVENT_DETAIL);
 
         restNewsAndEventMockMvc.perform(put("/api/news-and-events")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -225,8 +245,10 @@ public class NewsAndEventResourceIntTest {
         NewsAndEvent testNewsAndEvent = newsAndEventList.get(newsAndEventList.size() - 1);
         assertThat(testNewsAndEvent.getTitle()).isEqualTo(UPDATED_TITLE);
         assertThat(testNewsAndEvent.getWebsiteLink()).isEqualTo(UPDATED_WEBSITE_LINK);
-        assertThat(testNewsAndEvent.getStartDate()).isEqualTo(UPDATED_START_DATE);
-        assertThat(testNewsAndEvent.getEndDate()).isEqualTo(UPDATED_END_DATE);
+        assertThat(testNewsAndEvent.getStartDT()).isEqualTo(UPDATED_START_DT);
+        assertThat(testNewsAndEvent.getEndDT()).isEqualTo(UPDATED_END_DT);
+        assertThat(testNewsAndEvent.getVenue()).isEqualTo(UPDATED_VENUE);
+        assertThat(testNewsAndEvent.getEventDetail()).isEqualTo(UPDATED_EVENT_DETAIL);
     }
 
     @Test

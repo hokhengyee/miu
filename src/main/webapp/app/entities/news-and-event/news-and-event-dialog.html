@@ -42,24 +42,35 @@
             </div>
         </div>
         <div class="form-group">
-            <label class="control-label" for="field_startDate">Start Date</label>
+            <label class="control-label" for="field_startDT">Start DT</label>
                 <div class="input-group">
-                    <input id="field_startDate" type="text" class="form-control" name="startDate" uib-datepicker-popup="{{dateformat}}" ng-model="vm.newsAndEvent.startDate" is-open="vm.datePickerOpenStatus.startDate"
-                    />
+                    <input id="field_startDT" type="text" class="form-control" name="startDT" datetime-picker="{{dateformat}}" ng-model="vm.newsAndEvent.startDT" is-open="vm.datePickerOpenStatus.startDT"
+                      />
                     <span class="input-group-btn">
-                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('startDate')"><i class="glyphicon glyphicon-calendar"></i></button>
+                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('startDT')"><i class="glyphicon glyphicon-calendar"></i></button>
                     </span>
                 </div>
         </div>
         <div class="form-group">
-            <label class="control-label" for="field_endDate">End Date</label>
+            <label class="control-label" for="field_endDT">End DT</label>
                 <div class="input-group">
-                    <input id="field_endDate" type="text" class="form-control" name="endDate" uib-datepicker-popup="{{dateformat}}" ng-model="vm.newsAndEvent.endDate" is-open="vm.datePickerOpenStatus.endDate"
-                    />
+                    <input id="field_endDT" type="text" class="form-control" name="endDT" datetime-picker="{{dateformat}}" ng-model="vm.newsAndEvent.endDT" is-open="vm.datePickerOpenStatus.endDT"
+                      />
                     <span class="input-group-btn">
-                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('endDate')"><i class="glyphicon glyphicon-calendar"></i></button>
+                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('endDT')"><i class="glyphicon glyphicon-calendar"></i></button>
                     </span>
                 </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_venue">Venue</label>
+            <input type="text" class="form-control" name="venue" id="field_venue"
+                    ng-model="vm.newsAndEvent.venue"
+                     />
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_eventDetail">Event Detail</label>
+                <textarea class="form-control" name="eventDetail" id="field_eventDetail"
+                    ng-model="vm.newsAndEvent.eventDetail"  ></textarea>
         </div>
 
     </div>

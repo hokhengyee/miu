@@ -20,12 +20,21 @@
             "fieldValidateRulesMaxlength": "3000"
         },
         {
-            "fieldName": "startDate",
-            "fieldType": "LocalDate"
+            "fieldName": "startDT",
+            "fieldType": "ZonedDateTime"
         },
         {
-            "fieldName": "endDate",
-            "fieldType": "LocalDate"
+            "fieldName": "endDT",
+            "fieldType": "ZonedDateTime"
+        },
+        {
+            "fieldName": "venue",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "eventDetail",
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "text"
         }
     ],
     "changelogDate": "20170122100726",

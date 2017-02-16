@@ -6,7 +6,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.io.Serializable;
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.Objects;
 
 /**
@@ -32,11 +32,18 @@ public class NewsAndEvent implements Serializable {
     @Column(name = "website_link", length = 3000)
     private String websiteLink;
 
-    @Column(name = "start_date")
-    private LocalDate startDate;
+    @Column(name = "start_dt")
+    private ZonedDateTime startDT;
 
-    @Column(name = "end_date")
-    private LocalDate endDate;
+    @Column(name = "end_dt")
+    private ZonedDateTime endDT;
+
+    @Column(name = "venue")
+    private String venue;
+
+    @Lob
+    @Column(name = "event_detail")
+    private String eventDetail;
 
     public Long getId() {
         return id;
@@ -72,30 +79,56 @@ public class NewsAndEvent implements Serializable {
         this.websiteLink = websiteLink;
     }
 
-    public LocalDate getStartDate() {
-        return startDate;
+    public ZonedDateTime getStartDT() {
+        return startDT;
     }
 
-    public NewsAndEvent startDate(LocalDate startDate) {
-        this.startDate = startDate;
+    public NewsAndEvent startDT(ZonedDateTime startDT) {
+        this.startDT = startDT;
         return this;
     }
 
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
+    public void setStartDT(ZonedDateTime startDT) {
+        this.startDT = startDT;
     }
 
-    public LocalDate getEndDate() {
-        return endDate;
+    public ZonedDateTime getEndDT() {
+        return endDT;
     }
 
-    public NewsAndEvent endDate(LocalDate endDate) {
-        this.endDate = endDate;
+    public NewsAndEvent endDT(ZonedDateTime endDT) {
+        this.endDT = endDT;
         return this;
     }
 
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
+    public void setEndDT(ZonedDateTime endDT) {
+        this.endDT = endDT;
+    }
+
+    public String getVenue() {
+        return venue;
+    }
+
+    public NewsAndEvent venue(String venue) {
+        this.venue = venue;
+        return this;
+    }
+
+    public void setVenue(String venue) {
+        this.venue = venue;
+    }
+
+    public String getEventDetail() {
+        return eventDetail;
+    }
+
+    public NewsAndEvent eventDetail(String eventDetail) {
+        this.eventDetail = eventDetail;
+        return this;
+    }
+
+    public void setEventDetail(String eventDetail) {
+        this.eventDetail = eventDetail;
     }
 
     @Override
@@ -124,8 +157,10 @@ public class NewsAndEvent implements Serializable {
             "id=" + id +
             ", title='" + title + "'" +
             ", websiteLink='" + websiteLink + "'" +
-            ", startDate='" + startDate + "'" +
-            ", endDate='" + endDate + "'" +
+            ", startDT='" + startDT + "'" +
+            ", endDT='" + endDT + "'" +
+            ", venue='" + venue + "'" +
+            ", eventDetail='" + eventDetail + "'" +
             '}';
     }
 }

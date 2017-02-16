@@ -13,7 +13,7 @@
             parent: 'entity',
             url: '/news-and-event?page&sort&search',
             data: {
-                authorities: ['ROLE_ADMIN'],
+                authorities: ['ROLE_USER'],
                 pageTitle: 'NewsAndEvents'
             },
             views: {
@@ -50,7 +50,7 @@
             parent: 'entity',
             url: '/news-and-event/{id}',
             data: {
-                authorities: ['ROLE_ADMIN'],
+                authorities: ['ROLE_USER'],
                 pageTitle: 'NewsAndEvent'
             },
             views: {
@@ -78,7 +78,7 @@
             parent: 'news-and-event-detail',
             url: '/detail/edit',
             data: {
-                authorities: ['ROLE_ADMIN']
+                authorities: ['ROLE_USER']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
@@ -103,7 +103,7 @@
             parent: 'news-and-event',
             url: '/new',
             data: {
-                authorities: ['ROLE_ADMIN']
+                authorities: ['ROLE_USER']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
@@ -117,8 +117,10 @@
                             return {
                                 title: null,
                                 websiteLink: null,
-                                startDate: null,
-                                endDate: null,
+                                startDT: null,
+                                endDT: null,
+                                venue: null,
+                                eventDetail: null,
                                 id: null
                             };
                         }
@@ -134,7 +136,7 @@
             parent: 'news-and-event',
             url: '/{id}/edit',
             data: {
-                authorities: ['ROLE_ADMIN']
+                authorities: ['ROLE_USER']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
@@ -159,7 +161,7 @@
             parent: 'news-and-event',
             url: '/{id}/delete',
             data: {
-                authorities: ['ROLE_ADMIN']
+                authorities: ['ROLE_USER']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({

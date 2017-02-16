@@ -32,16 +32,26 @@
                 <constraints nullable="true" />
             </column>
             
-            <column name="start_date" type="date">
+            <column name="start_dt" type="timestamp">
                 <constraints nullable="true" />
             </column>
             
-            <column name="end_date" type="date">
+            <column name="end_dt" type="timestamp">
+                <constraints nullable="true" />
+            </column>
+            
+            <column name="venue" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            
+            <column name="event_detail" type="clob">
                 <constraints nullable="true" />
             </column>
             
             <!-- jhipster-needle-liquibase-add-column - JHipster will add columns here, do not remove-->
         </createTable>
+        <dropDefaultValue tableName="news_and_event" columnName="start_dt" columnDataType="datetime"/>
+        <dropDefaultValue tableName="news_and_event" columnName="end_dt" columnDataType="datetime"/>
         
     </changeSet>
 </databaseChangeLog>

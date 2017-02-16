@@ -171,7 +171,7 @@ public class PublicResource {
 	@Timed
 	public ResponseEntity<List<NewsAndEvent>> getAllNewsAndEvents() throws URISyntaxException {
 		LOGGER.debug("REST request to get a page of NewsAndEvents");
-		List<NewsAndEvent> page = newsAndEventRepository.findTop3ByOrderByStartDateDesc();
+		List<NewsAndEvent> page = newsAndEventRepository.findTop3ByOrderByStartDTDesc();
 		HttpHeaders headers = new HttpHeaders();
 		return new ResponseEntity<>(page, headers, HttpStatus.OK);
 	}
