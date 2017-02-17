@@ -70,5 +70,7 @@
 
     <cache alias="com.miu.domain.StudentModuleResult" uses-template="simple"/>
 
+    <cache alias="com.miu.domain.StudentOtherResult" uses-template="simple"/>
+
     <!-- jhipster-needle-ehcache-add-entry -->
 </config>
