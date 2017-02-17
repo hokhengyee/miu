@@ -1,0 +1,35 @@
+
+<div>
+    <h2><span>Student Module Result</span> {{vm.studentModuleResult.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="dl-horizontal jh-entity-details">
+        <dt><span>Result</span></dt>
+        <dd>
+            <span>{{vm.studentModuleResult.result}}</span>
+        </dd>
+        <dt><span>Date Graded</span></dt>
+        <dd>
+            <span>{{vm.studentModuleResult.dateGraded | date:'mediumDate'}}</span>
+        </dd>
+        <dt><span>User</span></dt>
+        <dd>
+            {{vm.studentModuleResult.user.login}}
+        </dd>
+        <dt><span>Module</span></dt>
+        <dd>
+            <a ui-sref="module-detail({id:vm.studentModuleResult.module.id})">{{vm.studentModuleResult.module.moduleCode}}</a>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            ui-sref="{{ vm.previousState }}"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span> Back</span>
+    </button>
+
+    <button type="button" ui-sref="student-module-result-detail.edit({id:vm.studentModuleResult.id})" class="btn btn-primary">
+        <span class="glyphicon glyphicon-pencil"></span>
+        <span class="hidden-xs hidden-sm"> Edit</span>
+    </button>
+</div>
