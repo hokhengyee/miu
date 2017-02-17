@@ -28,6 +28,7 @@
     <include file="classpath:config/liquibase/changelog/20170202142037_added_entity_CommonResources.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20170202180508_added_entity_CourseMaterial.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20170205144013_added_entity_LecturerProfile.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170217152659_added_entity_CustomStudentReportType.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="classpath:config/liquibase/changelog/20161219050608_added_entity_constraints_Module.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20161219064046_added_entity_constraints_ModuleType.xml" relativeToChangelogFile="false"/>
