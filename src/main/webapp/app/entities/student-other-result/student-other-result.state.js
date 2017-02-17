@@ -119,6 +119,7 @@
                                 title: null,
                                 result: null,
                                 dateGraded: null,
+                                resultOrder: null,
                                 id: null
                             };
                         }

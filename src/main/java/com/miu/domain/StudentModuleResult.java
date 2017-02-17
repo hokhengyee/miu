@@ -29,6 +29,9 @@ public class StudentModuleResult implements Serializable {
     @Column(name = "date_graded")
     private LocalDate dateGraded;
 
+    @Column(name = "result_order")
+    private Long resultOrder;
+
     @ManyToOne
     @NotNull
     private User user;
@@ -69,6 +72,19 @@ public class StudentModuleResult implements Serializable {
 
     public void setDateGraded(LocalDate dateGraded) {
         this.dateGraded = dateGraded;
+    }
+
+    public Long getResultOrder() {
+        return resultOrder;
+    }
+
+    public StudentModuleResult resultOrder(Long resultOrder) {
+        this.resultOrder = resultOrder;
+        return this;
+    }
+
+    public void setResultOrder(Long resultOrder) {
+        this.resultOrder = resultOrder;
     }
 
     public User getUser() {
@@ -123,6 +139,7 @@ public class StudentModuleResult implements Serializable {
             "id=" + id +
             ", result='" + result + "'" +
             ", dateGraded='" + dateGraded + "'" +
+            ", resultOrder='" + resultOrder + "'" +
             '}';
     }
 }

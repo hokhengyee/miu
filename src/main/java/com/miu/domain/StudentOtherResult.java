@@ -35,6 +35,9 @@ public class StudentOtherResult implements Serializable {
     @Column(name = "date_graded")
     private LocalDate dateGraded;
 
+    @Column(name = "result_order")
+    private Long resultOrder;
+
     @ManyToOne
     @NotNull
     private CustomStudentReportType customStudentReportType;
@@ -103,6 +106,19 @@ public class StudentOtherResult implements Serializable {
         this.dateGraded = dateGraded;
     }
 
+    public Long getResultOrder() {
+        return resultOrder;
+    }
+
+    public StudentOtherResult resultOrder(Long resultOrder) {
+        this.resultOrder = resultOrder;
+        return this;
+    }
+
+    public void setResultOrder(Long resultOrder) {
+        this.resultOrder = resultOrder;
+    }
+
     public CustomStudentReportType getCustomStudentReportType() {
         return customStudentReportType;
     }
@@ -157,6 +173,7 @@ public class StudentOtherResult implements Serializable {
             ", title='" + title + "'" +
             ", result='" + result + "'" +
             ", dateGraded='" + dateGraded + "'" +
+            ", resultOrder='" + resultOrder + "'" +
             '}';
     }
 }

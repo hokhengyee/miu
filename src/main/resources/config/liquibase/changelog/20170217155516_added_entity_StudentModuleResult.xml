@@ -32,6 +32,10 @@
                 <constraints nullable="true" />
             </column>
             
+            <column name="result_order" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            
             <column name="user_id" type="bigint">
                 <constraints nullable="false" />
             </column>

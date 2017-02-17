@@ -21,6 +21,7 @@
                     <th jh-sort-by="id"><span>ID</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="result"><span>Result</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="dateGraded"><span>Date Graded</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="resultOrder"><span>Result Order</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="user.login"><span>User</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="module.moduleCode"><span>Module</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th></th>
@@ -31,6 +32,7 @@
                     <td><a ui-sref="student-module-result-detail({id:studentModuleResult.id})">{{studentModuleResult.id}}</a></td>
                     <td>{{studentModuleResult.result}}</td>
                         <td>{{studentModuleResult.dateGraded | date:'mediumDate'}}</td>
+                    <td>{{studentModuleResult.resultOrder}}</td>
                     <td>
                         {{studentModuleResult.user.login}}
                     </td>

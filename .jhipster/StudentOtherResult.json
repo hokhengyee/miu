@@ -37,6 +37,10 @@
         {
             "fieldName": "dateGraded",
             "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "resultOrder",
+            "fieldType": "Long"
         }
     ],
     "changelogDate": "20170217161812",

@@ -47,6 +47,9 @@ public class StudentModuleResultResourceIntTest {
     private static final LocalDate DEFAULT_DATE_GRADED = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_DATE_GRADED = LocalDate.now(ZoneId.systemDefault());
 
+    private static final Long DEFAULT_RESULT_ORDER = 1L;
+    private static final Long UPDATED_RESULT_ORDER = 2L;
+
     @Inject
     private StudentModuleResultRepository studentModuleResultRepository;
 
@@ -82,7 +85,8 @@ public class StudentModuleResultResourceIntTest {
     public static StudentModuleResult createEntity(EntityManager em) {
         StudentModuleResult studentModuleResult = new StudentModuleResult()
                 .result(DEFAULT_RESULT)
-                .dateGraded(DEFAULT_DATE_GRADED);
+                .dateGraded(DEFAULT_DATE_GRADED)
+                .resultOrder(DEFAULT_RESULT_ORDER);
         // Add required entity
         User user = UserResourceIntTest.createEntity(em);
         em.persist(user);
@@ -119,6 +123,7 @@ public class StudentModuleResultResourceIntTest {
         StudentModuleResult testStudentModuleResult = studentModuleResultList.get(studentModuleResultList.size() - 1);
         assertThat(testStudentModuleResult.getResult()).isEqualTo(DEFAULT_RESULT);
         assertThat(testStudentModuleResult.getDateGraded()).isEqualTo(DEFAULT_DATE_GRADED);
+        assertThat(testStudentModuleResult.getResultOrder()).isEqualTo(DEFAULT_RESULT_ORDER);
     }
 
     @Test
@@ -153,7 +158,8 @@ public class StudentModuleResultResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(studentModuleResult.getId().intValue())))
             .andExpect(jsonPath("$.[*].result").value(hasItem(DEFAULT_RESULT.toString())))
-            .andExpect(jsonPath("$.[*].dateGraded").value(hasItem(DEFAULT_DATE_GRADED.toString())));
+            .andExpect(jsonPath("$.[*].dateGraded").value(hasItem(DEFAULT_DATE_GRADED.toString())))
+            .andExpect(jsonPath("$.[*].resultOrder").value(hasItem(DEFAULT_RESULT_ORDER.intValue())));
     }
 
     @Test
@@ -168,7 +174,8 @@ public class StudentModuleResultResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(studentModuleResult.getId().intValue()))
             .andExpect(jsonPath("$.result").value(DEFAULT_RESULT.toString()))
-            .andExpect(jsonPath("$.dateGraded").value(DEFAULT_DATE_GRADED.toString()));
+            .andExpect(jsonPath("$.dateGraded").value(DEFAULT_DATE_GRADED.toString()))
+            .andExpect(jsonPath("$.resultOrder").value(DEFAULT_RESULT_ORDER.intValue()));
     }
 
     @Test
@@ -190,7 +197,8 @@ public class StudentModuleResultResourceIntTest {
         StudentModuleResult updatedStudentModuleResult = studentModuleResultRepository.findOne(studentModuleResult.getId());
         updatedStudentModuleResult
                 .result(UPDATED_RESULT)
-                .dateGraded(UPDATED_DATE_GRADED);
+                .dateGraded(UPDATED_DATE_GRADED)
+                .resultOrder(UPDATED_RESULT_ORDER);
 
         restStudentModuleResultMockMvc.perform(put("/api/student-module-results")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -203,6 +211,7 @@ public class StudentModuleResultResourceIntTest {
         StudentModuleResult testStudentModuleResult = studentModuleResultList.get(studentModuleResultList.size() - 1);
         assertThat(testStudentModuleResult.getResult()).isEqualTo(UPDATED_RESULT);
         assertThat(testStudentModuleResult.getDateGraded()).isEqualTo(UPDATED_DATE_GRADED);
+        assertThat(testStudentModuleResult.getResultOrder()).isEqualTo(UPDATED_RESULT_ORDER);
     }
 
     @Test

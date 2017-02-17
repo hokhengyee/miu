@@ -53,6 +53,9 @@ public class StudentOtherResultResourceIntTest {
     private static final LocalDate DEFAULT_DATE_GRADED = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_DATE_GRADED = LocalDate.now(ZoneId.systemDefault());
 
+    private static final Long DEFAULT_RESULT_ORDER = 1L;
+    private static final Long UPDATED_RESULT_ORDER = 2L;
+
     @Inject
     private StudentOtherResultRepository studentOtherResultRepository;
 
@@ -90,7 +93,8 @@ public class StudentOtherResultResourceIntTest {
                 .code(DEFAULT_CODE)
                 .title(DEFAULT_TITLE)
                 .result(DEFAULT_RESULT)
-                .dateGraded(DEFAULT_DATE_GRADED);
+                .dateGraded(DEFAULT_DATE_GRADED)
+                .resultOrder(DEFAULT_RESULT_ORDER);
         // Add required entity
         CustomStudentReportType customStudentReportType = CustomStudentReportTypeResourceIntTest.createEntity(em);
         em.persist(customStudentReportType);
@@ -129,6 +133,7 @@ public class StudentOtherResultResourceIntTest {
         assertThat(testStudentOtherResult.getTitle()).isEqualTo(DEFAULT_TITLE);
         assertThat(testStudentOtherResult.getResult()).isEqualTo(DEFAULT_RESULT);
         assertThat(testStudentOtherResult.getDateGraded()).isEqualTo(DEFAULT_DATE_GRADED);
+        assertThat(testStudentOtherResult.getResultOrder()).isEqualTo(DEFAULT_RESULT_ORDER);
     }
 
     @Test
@@ -165,7 +170,8 @@ public class StudentOtherResultResourceIntTest {
             .andExpect(jsonPath("$.[*].code").value(hasItem(DEFAULT_CODE.toString())))
             .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE.toString())))
             .andExpect(jsonPath("$.[*].result").value(hasItem(DEFAULT_RESULT.toString())))
-            .andExpect(jsonPath("$.[*].dateGraded").value(hasItem(DEFAULT_DATE_GRADED.toString())));
+            .andExpect(jsonPath("$.[*].dateGraded").value(hasItem(DEFAULT_DATE_GRADED.toString())))
+            .andExpect(jsonPath("$.[*].resultOrder").value(hasItem(DEFAULT_RESULT_ORDER.intValue())));
     }
 
     @Test
@@ -182,7 +188,8 @@ public class StudentOtherResultResourceIntTest {
             .andExpect(jsonPath("$.code").value(DEFAULT_CODE.toString()))
             .andExpect(jsonPath("$.title").value(DEFAULT_TITLE.toString()))
             .andExpect(jsonPath("$.result").value(DEFAULT_RESULT.toString()))
-            .andExpect(jsonPath("$.dateGraded").value(DEFAULT_DATE_GRADED.toString()));
+            .andExpect(jsonPath("$.dateGraded").value(DEFAULT_DATE_GRADED.toString()))
+            .andExpect(jsonPath("$.resultOrder").value(DEFAULT_RESULT_ORDER.intValue()));
     }
 
     @Test
@@ -206,7 +213,8 @@ public class StudentOtherResultResourceIntTest {
                 .code(UPDATED_CODE)
                 .title(UPDATED_TITLE)
                 .result(UPDATED_RESULT)
-                .dateGraded(UPDATED_DATE_GRADED);
+                .dateGraded(UPDATED_DATE_GRADED)
+                .resultOrder(UPDATED_RESULT_ORDER);
 
         restStudentOtherResultMockMvc.perform(put("/api/student-other-results")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -221,6 +229,7 @@ public class StudentOtherResultResourceIntTest {
         assertThat(testStudentOtherResult.getTitle()).isEqualTo(UPDATED_TITLE);
         assertThat(testStudentOtherResult.getResult()).isEqualTo(UPDATED_RESULT);
         assertThat(testStudentOtherResult.getDateGraded()).isEqualTo(UPDATED_DATE_GRADED);
+        assertThat(testStudentOtherResult.getResultOrder()).isEqualTo(UPDATED_RESULT_ORDER);
     }
 
     @Test

@@ -20,6 +20,10 @@
         <dd>
             <span>{{vm.studentOtherResult.dateGraded | date:'mediumDate'}}</span>
         </dd>
+        <dt><span>Result Order</span></dt>
+        <dd>
+            <span>{{vm.studentOtherResult.resultOrder}}</span>
+        </dd>
         <dt><span>Custom Student Report Type</span></dt>
         <dd>
             <a ui-sref="custom-student-report-type-detail({id:vm.studentOtherResult.customStudentReportType.id})">{{vm.studentOtherResult.customStudentReportType.label}}</a>

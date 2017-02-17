@@ -23,6 +23,7 @@
                     <th jh-sort-by="title"><span>Title</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="result"><span>Result</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="dateGraded"><span>Date Graded</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="resultOrder"><span>Result Order</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="customStudentReportType.label"><span>Custom Student Report Type</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th jh-sort-by="user.login"><span>User</span> <span class="glyphicon glyphicon-sort"></span></th>
                     <th></th>
@@ -35,6 +36,7 @@
                     <td>{{studentOtherResult.title}}</td>
                     <td>{{studentOtherResult.result}}</td>
                         <td>{{studentOtherResult.dateGraded | date:'mediumDate'}}</td>
+                    <td>{{studentOtherResult.resultOrder}}</td>
                     <td>
                         <a ui-sref="custom-student-report-type-detail({id:studentOtherResult.customStudentReportType.id})">{{studentOtherResult.customStudentReportType.label}}</a>
                     </td>
