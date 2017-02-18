@@ -76,8 +76,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr
-								ng-repeat="item in vm.researchPapers track by item">
+							<tr ng-repeat="item in vm.researchPapers track by item">
 								<td>{{item.researchPaper.code}}</td>
 								<td>{{item.researchPaper.title}}</td>
 								<td>{{item.result}}</td>
@@ -95,6 +94,26 @@
 			<!-- Book Reviews -->
 			<div class="panel panel-primary">
 				<div class="panel-heading">Book Reviews</div>
+				<div class="table-responsive">
+					<table class="table table-bordered">
+						<thead>
+							<tr class="info">
+								<th width="120px"><span>Course Code</span></th>
+								<th><span>Book Review</span></th>
+								<th width="60px"><span>Result</span></th>
+								<th width="110px"><span>Date Graded</span></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="item in vm.bookReviews track by item">
+								<td>{{item.code}}</td>
+								<td>{{item.title}}</td>
+								<td>{{item.result}}</td>
+								<td>{{item.dateGraded | date:'mediumDate'}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 				<div class="panel-body" ng-show="vm.bookReviews.length == 0">
 					<center>No results at the moment.</center>
 				</div>
@@ -104,6 +123,26 @@
 			<!-- Dissertation -->
 			<div class="panel panel-primary">
 				<div class="panel-heading">Dissertation</div>
+				<div class="table-responsive">
+					<table class="table table-bordered">
+						<thead>
+							<tr class="info">
+								<th width="120px"><span>Course Code</span></th>
+								<th><span>Dissertation</span></th>
+								<th width="60px"><span>Result</span></th>
+								<th width="110px"><span>Date Graded</span></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="item in vm.dissertations track by item">
+								<td>{{item.code}}</td>
+								<td>{{item.title}}</td>
+								<td>{{item.result}}</td>
+								<td>{{item.dateGraded | date:'mediumDate'}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 				<div class="panel-body" ng-show="vm.dissertations.length == 0">
 					<center>No results at the moment.</center>
 				</div>
@@ -113,6 +152,26 @@
 			<!-- Writing Articles -->
 			<div class="panel panel-primary">
 				<div class="panel-heading">Writing Articles</div>
+				<div class="table-responsive">
+					<table class="table table-bordered">
+						<thead>
+							<tr class="info">
+								<th width="120px"><span>Course Code</span></th>
+								<th><span>Article</span></th>
+								<th width="60px"><span>Result</span></th>
+								<th width="110px"><span>Date Graded</span></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="item in vm.writingArticles track by item">
+								<td>{{item.code}}</td>
+								<td>{{item.title}}</td>
+								<td>{{item.result}}</td>
+								<td>{{item.dateGraded | date:'mediumDate'}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 				<div class="panel-body" ng-show="vm.writingArticles.length == 0">
 					<center>No results at the moment.</center>
 				</div>
@@ -122,12 +181,33 @@
 			<!-- Sermon Outlines -->
 			<div class="panel panel-primary">
 				<div class="panel-heading">Sermon Outlines</div>
+				<div class="table-responsive">
+					<table class="table table-bordered">
+						<thead>
+							<tr class="info">
+								<th width="120px"><span>Course Code</span></th>
+								<th><span>Sermon</span></th>
+								<th width="60px"><span>Result</span></th>
+								<th width="110px"><span>Date Graded</span></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="item in vm.sermonOutlines track by item">
+								<td>{{item.code}}</td>
+								<td>{{item.title}}</td>
+								<td>{{item.result}}</td>
+								<td>{{item.dateGraded | date:'mediumDate'}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
 				<div class="panel-body" ng-show="vm.sermonOutlines.length == 0">
 					<center>No results at the moment.</center>
 				</div>
 			</div>
 			<!-- Sermon Outlines -->
 
+			<span ng-bind-html="vm.staticHtml"></span>
 		</div>
 	</div>
 

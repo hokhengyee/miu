@@ -1,12 +1,11 @@
 (function() {
 	'use strict';
-	angular.module('miuApp').factory('MyResearchPaperResult',
-			MyResearchPaperResult);
+	angular.module('miuApp').factory('MyBookReviewResult', MyBookReviewResult);
 
-	MyResearchPaperResult.$inject = [ '$resource' ];
+	MyBookReviewResult.$inject = [ '$resource' ];
 
-	function MyResearchPaperResult($resource) {
-		var resourceUrl = 'api/my-research-papers-results';
+	function MyBookReviewResult($resource) {
+		var resourceUrl = 'api/my-book-reviews-results';
 
 		return $resource(resourceUrl, {}, {
 			'query' : {

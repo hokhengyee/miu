@@ -401,11 +401,20 @@ ui bootstrap tweaks
 }
 
 .navbar-brand span {
-	font-size: 30px !important;
+	font-size: 22px !important;
 	width: 400px !important;
 	height: 79px !important;
 	word-wrap: break-word;
 	line-height: 32px !important;
+	font-weight: bold;
+}
+
+.navbar-brand span.navbar-sub {
+	font-size: 16px !important;
+}
+
+.navbar-default {
+	background-color: #ffffff !important;
 }
 
 .navbar-brand, .navbar-nav, .navbar-header, .navbar {
@@ -417,10 +426,23 @@ ui bootstrap tweaks
 }
 
 .panel-info>.panel-heading {
-	background-color: #9900FF !important;
+	background-color: #FEA601 !important;
 	color: #ffffff !important;
 }
 
 .panel-info {
-	border-color: #9900FF !important;
+	border-color: #FEA601 !important;
 }
+
+.news-events-footer {
+	background-color: #FFFFA6 !important;
+}
+
+.table-news-events {
+	background-color: #FFFFA6 !important;
+}
+
+/*.table-striped>tbody>tr:nth-child(2n+1)>td, .table-striped>tbody>tr:nth-child(2n+1)>th
+	{
+	background-color: #FFFFA6 !important;
+}*/

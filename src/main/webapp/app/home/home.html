@@ -10,23 +10,33 @@
 					<b>Certification</b>
 				</div>
 				<div class="panel-body">
-
 					<div class="row">
-						<div class="col-md-3">
-							<img src="/content/images/logo-APS.png" width="100px"
-								height="95px" border="none" /> <br /> <br /> <img
-								src="/content/images/logo-AJA.png" width="100px" height="75px"
-								border="none" />
-						</div>
-						<div class="col-md-9">
-							"MIU in collaboration with Asia Pacific Seminary" is Certified
-							ISO 9001:2008 Organization since 2005 for its quality management
+						<div class="col-md-12" style="text-align: justify">"MIU in
+							collaboration with Asia Pacific Seminary" is Certified ISO
+							9001:2008 Organization since 2005 for its quality management
 							system in distance and online learning for higher education by
 							Anglo Japanese American (AJA), a certification body of United
 							Kingdom Accreditation Services (UKAS). Below are some information
-							about our ISO accreditation.<br /> <br />
+							about our ISO accreditation.</div>
+					</div>
+					<br />
 
-							<ul style="padding-left: 15px">
+					<div class="row">
+						<div class="col-md-3" style="text-align: right">
+							<br /> <img src="/content/images/logo-APS.png" width="80px"
+								height="75px" border="none" />
+						</div>
+						<div class="col-md-4" style="text-align: center">
+							<img src="/content/images/logo-AJA.png" width="132px"
+								height="100px" border="none" /><br />
+							<center>
+								<span>AJA07/11853</span>
+							</center>
+
+						</div>
+						<div class="col-md-5">
+							<br />
+							<ul style="padding-left: 15px;">
 								<li><a href="/content/certificates/02_AJA_Certificate2.jpg"
 									target="_blank">Registration Certificate</a></li>
 								<li><a href="/content/certificates/03_AJA_Certificate3.jpg"
@@ -48,14 +58,21 @@
 					<b>News & Events</b>
 				</div>
 
-				<table class="table table-bordered">
+				<table class="table table-bordered table-news-events">
 					<tbody>
 						<tr ng-repeat="newsAndEvent in vm.newsAndEvents">
 							<td>
 								<div>
 									<h4>
 										<b>
-											<a ui-sref="au-news-and-event-detail({id:newsAndEvent.id})">{{newsAndEvent.title}}</a>
+											<div ng-if="newsAndEvent.websiteLink">
+												<a href="{{ newsAndEvent.websiteLink }}" target="_blank"
+													style="color: #A85400">{{newsAndEvent.title}}</a>
+											</div>
+											<div ng-if="!newsAndEvent.websiteLink">
+												<a ui-sref="au-news-and-event-detail({id:newsAndEvent.id})"
+													style="color: #A85400">{{newsAndEvent.title}}</a>
+											</div>
 										</b>
 									</h4>
 								</div>
@@ -73,9 +90,10 @@
 						<center>No news &amp; events.</center>
 					</div>
 				</div>
-				<div class="panel-footer">
+				<div class="panel-footer news-events-footer">
 					<center>
-						<a href="" class="btn btn-primary">View More</a>
+						<a ui-sref="au-news-and-event" class="btn btn-warning">View
+							More</a>
 					</center>
 				</div>
 
@@ -85,7 +103,7 @@
 				<div class="panel-heading">
 					<b>Support &amp; Donations</b>
 				</div>
-				<div class="panel-body">
+				<div class="panel-body" style="text-align: justify">
 					Millennium International University is a not-for-profit
 					organization hosting who are dedicated to keeping religious faith
 					and experience in dialogue with higher education on the online

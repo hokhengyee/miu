@@ -19,6 +19,14 @@
 					controller : 'MyResultController',
 					controllerAs : 'vm'
 				}
+			},
+			resolve : {
+				entity : [ '$stateParams', 'GradingMsg',
+						function($stateParams, GradingMsg) {
+							return GradingMsg.get({
+								id : $stateParams.id
+							}).$promise;
+						} ]
 			}
 		});
 	}

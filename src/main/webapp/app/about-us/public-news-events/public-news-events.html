@@ -5,13 +5,21 @@
 			<b>News & Events</b>
 		</div>
 
-		<table class="table table-bordered">
+		<table class="table table-bordered table-news-events">
 			<tbody>
 				<tr ng-repeat="newsAndEvent in vm.newsAndEvents">
 					<td>
 						<div>
 							<h4>
-								<b><a ui-sref="au-news-and-event-detail({id:newsAndEvent.id})">{{newsAndEvent.title}}</a>
+								<b>
+									<div ng-if="newsAndEvent.websiteLink">
+										<a href="{{ newsAndEvent.websiteLink }}" target="_blank"
+											style="color: #A85400">{{newsAndEvent.title}}</a>
+									</div>
+									<div ng-if="!newsAndEvent.websiteLink">
+										<a ui-sref="au-news-and-event-detail({id:newsAndEvent.id})"
+											style="color: #A85400">{{newsAndEvent.title}}</a>
+									</div>
 								</b>
 							</h4>
 						</div>
@@ -29,7 +37,7 @@
 				<center>No news &amp; events.</center>
 			</div>
 		</div>
-		<div class="panel-footer">
+		<div class="panel-footer news-events-footer">
 			<div class="text-center">
 				<jhi-item-count page="vm.page" total="vm.queryCount"
 					items-per-page="vm.itemsPerPage"></jhi-item-count>
