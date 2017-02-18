@@ -1,18 +1,30 @@
 package com.miu.repository;
 
-import com.miu.domain.StudentOtherResult;
-
-import org.springframework.data.jpa.repository.*;
-
 import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import com.miu.domain.StudentOtherResult;
 
 /**
  * Spring Data JPA repository for the StudentOtherResult entity.
  */
-@SuppressWarnings("unused")
-public interface StudentOtherResultRepository extends JpaRepository<StudentOtherResult,Long> {
+public interface StudentOtherResultRepository extends JpaRepository<StudentOtherResult, Long> {
 
-    @Query("select studentOtherResult from StudentOtherResult studentOtherResult where studentOtherResult.user.login = ?#{principal.username}")
-    List<StudentOtherResult> findByUserIsCurrentUser();
+	@Query("select studentOtherResult from StudentOtherResult studentOtherResult where studentOtherResult.user.login = ?#{principal.username}")
+	List<StudentOtherResult> findByUserIsCurrentUser();
+
+	@Query("SELECT r FROM StudentOtherResult r WHERE r.customStudentReportType=1 AND r.user.login = ?#{principal.username} ORDER BY r.resultOrder")
+	List<StudentOtherResult> getMyArticleResults();
+
+	@Query("SELECT r FROM StudentOtherResult r WHERE r.customStudentReportType=2 AND r.user.login = ?#{principal.username} ORDER BY r.resultOrder")
+	List<StudentOtherResult> getMyBookReviewResults();
+
+	@Query("SELECT r FROM StudentOtherResult r WHERE r.customStudentReportType=3 AND r.user.login = ?#{principal.username} ORDER BY r.resultOrder")
+	List<StudentOtherResult> getMyDissertationResults();
+
+	@Query("SELECT r FROM StudentOtherResult r WHERE r.customStudentReportType=4 AND r.user.login = ?#{principal.username} ORDER BY r.resultOrder")
+	List<StudentOtherResult> getMySermonResults();
 
 }

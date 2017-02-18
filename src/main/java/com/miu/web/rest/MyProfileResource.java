@@ -33,8 +33,10 @@ import com.miu.domain.CourseMaterial;
 import com.miu.domain.ForumRoom;
 import com.miu.domain.ForumRoomMessage;
 import com.miu.domain.LecturerProfile;
+import com.miu.domain.StudentModuleResult;
 import com.miu.domain.StudentPayment;
 import com.miu.domain.StudentProfile;
+import com.miu.domain.StudentResearchPaperResult;
 import com.miu.domain.User;
 import com.miu.repository.CourseAccessRepository;
 import com.miu.repository.CourseMaterialRepository;
@@ -42,8 +44,10 @@ import com.miu.repository.CourseRepository;
 import com.miu.repository.ForumRoomMessageRepository;
 import com.miu.repository.ForumRoomRepository;
 import com.miu.repository.LecturerProfileRepository;
+import com.miu.repository.StudentModuleResultRepository;
 import com.miu.repository.StudentPaymentRepository;
 import com.miu.repository.StudentProfileRepository;
+import com.miu.repository.StudentResearchPaperResultRepository;
 import com.miu.repository.UserRepository;
 import com.miu.service.UserService;
 import com.miu.service.dto.ForumMessageDto;
@@ -122,6 +126,12 @@ public class MyProfileResource {
 
 	@Inject
 	private UserService userService;
+
+	@Inject
+	private StudentModuleResultRepository studentModuleResultRepository;
+
+	@Inject
+	private StudentResearchPaperResultRepository studentResearchPaperResultRepository;
 
 	/**
 	 * POST /forum-room-messages : Create a new forumRoomMessage.
@@ -241,12 +251,36 @@ public class MyProfileResource {
 		return new ResponseEntity<>(paymentList, headers, HttpStatus.OK);
 	}
 
+	@GetMapping("/my-practical-ministry-modules-results")
+	@Timed
+	public ResponseEntity<List<StudentModuleResult>> getPracticalMinistryResults() {
+		List<StudentModuleResult> results = studentModuleResultRepository.getPracticalMinistryResult();
+		HttpHeaders headers = new HttpHeaders();
+		return new ResponseEntity<>(results, headers, HttpStatus.OK);
+	}
+
+	@GetMapping("/my-theological-modules-results")
+	@Timed
+	public ResponseEntity<List<StudentModuleResult>> getTheologicalResults() {
+		List<StudentModuleResult> results = studentModuleResultRepository.getTheologicalResult();
+		HttpHeaders headers = new HttpHeaders();
+		return new ResponseEntity<>(results, headers, HttpStatus.OK);
+	}
+
 	@GetMapping("/my-student-profiles")
 	@Timed
 	public ResponseEntity<StudentProfile> getStudentProfile() {
 		StudentProfile studentProfile = studentProfileRepository.findByUserIsCurrentUser();
 		return Optional.ofNullable(studentProfile).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+	}
+
+	@GetMapping("/my-research-papers-results")
+	@Timed
+	public ResponseEntity<List<StudentResearchPaperResult>> getStudentResearchPaperResults() {
+		List<StudentResearchPaperResult> results = studentResearchPaperResultRepository.getMyResearchPaperResults();
+		HttpHeaders headers = new HttpHeaders();
+		return new ResponseEntity<>(results, headers, HttpStatus.OK);
 	}
 
 	/**

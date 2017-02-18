@@ -1,0 +1,21 @@
+package com.miu.repository;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
+import com.miu.domain.StudentResearchPaperResult;
+
+/**
+ * Spring Data JPA repository for the StudentResearchPaperResult entity.
+ */
+public interface StudentResearchPaperResultRepository extends JpaRepository<StudentResearchPaperResult, Long> {
+
+	@Query("select studentResearchPaperResult from StudentResearchPaperResult studentResearchPaperResult where studentResearchPaperResult.user.login = ?#{principal.username}")
+	List<StudentResearchPaperResult> findByUserIsCurrentUser();
+
+	@Query("SELECT r FROM StudentResearchPaperResult r WHERE r.user.login = ?#{principal.username} ORDER BY r.resultOrder")
+	List<StudentResearchPaperResult> getMyResearchPaperResults();
+
+}

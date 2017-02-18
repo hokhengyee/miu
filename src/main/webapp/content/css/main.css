@@ -417,10 +417,10 @@ ui bootstrap tweaks
 }
 
 .panel-info>.panel-heading {
-	background-color: #02884d !important;
+	background-color: #9900FF !important;
 	color: #ffffff !important;
 }
 
 .panel-info {
-	border-color: #02884d !important;
+	border-color: #9900FF !important;
 }

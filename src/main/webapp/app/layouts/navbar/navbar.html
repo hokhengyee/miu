@@ -233,24 +233,28 @@
 								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>News
 									And Event</span>
 						</a></li>
-<li ui-sref-active="active">
-                            <a ui-sref="custom-student-report-type" ng-click="vm.collapseNavbar()">
-                                <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
-                                <span >Custom Student Report Type</span>
-                            </a>
-                        </li>
-<li ui-sref-active="active">
-                            <a ui-sref="student-module-result" ng-click="vm.collapseNavbar()">
-                                <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
-                                <span >Student Module Result</span>
-                            </a>
-                        </li>
-<li ui-sref-active="active">
-                            <a ui-sref="student-other-result" ng-click="vm.collapseNavbar()">
-                                <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
-                                <span >Student Other Result</span>
-                            </a>
-                        </li>
+						<li ui-sref-active="active"><a
+							ui-sref="custom-student-report-type"
+							ng-click="vm.collapseNavbar()"> <span
+								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Custom
+									Student Report Type</span>
+						</a></li>
+						<li ui-sref-active="active"><a
+							ui-sref="student-module-result" ng-click="vm.collapseNavbar()">
+								<span class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Student
+									Module Result</span>
+						</a></li>
+						<li ui-sref-active="active"><a ui-sref="student-other-result"
+							ng-click="vm.collapseNavbar()"> <span
+								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Student
+									Other Result</span>
+						</a></li>
+						<li ui-sref-active="active"><a
+							ui-sref="student-research-paper-result"
+							ng-click="vm.collapseNavbar()"> <span
+								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Student
+									Research Paper Result</span>
+						</a></li>
 						<!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
 					</ul></li>
 				<li ng-class="{active: vm.$state.includes('account')}" uib-dropdown
@@ -276,6 +280,12 @@
 							ui-sref="my-dashboard" ng-click="vm.collapseNavbar()"> <span
 								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>My
 									Dashboard</span>
+						</a></li>
+						<li ui-sref-active="active" ng-switch-when="true"><a
+							has-authority="ROLE_ADMIN" ui-sref="my-results"
+							ng-click="vm.collapseNavbar()"> <span
+								class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>My
+									Gradings</span>
 						</a></li>
 						<li ui-sref-active="active" ng-switch-when="true"><a
 							ui-sref="my-forum" ng-click="vm.collapseNavbar()"> <span
