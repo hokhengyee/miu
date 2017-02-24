@@ -89,7 +89,7 @@ Logo styles
 }
 
 .logo .logo-img {
-	height: 72px;
+	height: 120px;
 	display: inline-block;
 }
 
@@ -393,15 +393,15 @@ ui bootstrap tweaks
 
 /* jhipster-needle-css-add-main JHipster will add new css style */
 .navbar-default .navbar-nav>li>a {
-	height: 79px !important
+	height: 50px !important
 }
 
 .navbar-brand {
-	width: 480px !important;
+	width: 100% !important;
 }
 
 .navbar-brand span {
-	font-size: 22px !important;
+	font-size: 38px !important;
 	width: 400px !important;
 	height: 79px !important;
 	word-wrap: break-word;
@@ -410,7 +410,7 @@ ui bootstrap tweaks
 }
 
 .navbar-brand span.navbar-sub {
-	font-size: 16px !important;
+	font-size: 14px !important;
 }
 
 .navbar-default {
@@ -418,7 +418,7 @@ ui bootstrap tweaks
 }
 
 .navbar-brand, .navbar-nav, .navbar-header, .navbar {
-	height: 80px !important;
+	height: 130px !important;
 }
 
 .panel-heading {
@@ -442,7 +442,8 @@ ui bootstrap tweaks
 	background-color: #FFFFA6 !important;
 }
 
-/*.table-striped>tbody>tr:nth-child(2n+1)>td, .table-striped>tbody>tr:nth-child(2n+1)>th
-	{
-	background-color: #FFFFA6 !important;
-}*/
+.navbar-nav {
+	height: 50px !important;
+	margin-top: -52px !important;
+	padding-right: 100px !important;
+}
