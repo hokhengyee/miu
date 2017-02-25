@@ -69,9 +69,9 @@
 									class="hidden-xs hidden-sm"></span>
 							</button>
 							<button type="submit"
+								ng-disabled="user.login == 'system' || user.login == 'admin' || user.login == 'anonymoususer'"
 								ui-sref="user-management.delete({login:user.login})"
-								class="btn btn-danger btn-sm"
-								ng-disabled="vm.currentAccount.login==user.login">
+								class="btn btn-danger btn-sm">
 								<span class="glyphicon glyphicon-remove-circle"></span> <span
 									class="hidden-xs hidden-sm"></span>
 							</button>
@@ -84,9 +84,9 @@
 	<div class="text-center">
 		<jhi-item-count page="vm.page" total="vm.queryCount"
 			items-per-page="vm.itemsPerPage"></jhi-item-count>
-		<uib-pager class="pagination-sm" total-items="vm.totalItems"
-			ng-model="vm.page" ng-change="vm.transition()"></uib-pager>
+
+		<uib-pager total-items="vm.totalItems" ng-model="vm.page"
+			ng-change="vm.transition()"></uib-pager>
 	</div>
 
-	<pre>{{ vm | json }}</pre>
 </div>

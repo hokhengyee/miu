@@ -58,5 +58,13 @@
 				search : vm.currentSearch
 			});
 		}
+
+		$scope.checkUser = function() {
+			if (vm.current.login == 'system') {
+				return true;
+			}
+
+			return true;
+		};
 	}
 })();

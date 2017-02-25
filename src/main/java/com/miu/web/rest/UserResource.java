@@ -2,8 +2,10 @@ package com.miu.web.rest;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -148,6 +150,22 @@ public class UserResource {
 				.build();
 	}
 
+	@GetMapping("/lecturer-users")
+	@Timed
+	public ResponseEntity<List<ManagedUserVM>> getAllLecturerUsers() throws URISyntaxException {
+		List<User> page = userRepository.findAllWithAuthorities();
+		List<ManagedUserVM> managedUserVMs = page.stream().map(ManagedUserVM::new).collect(Collectors.toList());
+		List<ManagedUserVM> output = new ArrayList<ManagedUserVM>();
+		for (ManagedUserVM managedUserVM : managedUserVMs) {
+			if (managedUserVM.getAuthorities().contains("ROLE_LECTURER")) {
+				output.add(managedUserVM);
+			}
+		}
+
+		HttpHeaders headers = new HttpHeaders();
+		return new ResponseEntity<>(output, headers, HttpStatus.OK);
+	}
+
 	/**
 	 * GET /users : get all users.
 	 *
@@ -159,13 +177,12 @@ public class UserResource {
 	 */
 	@GetMapping("/users")
 	@Timed
-	public ResponseEntity<List<User>> getAllUsers(@ApiParam Pageable pageable) throws URISyntaxException {
-		Page<User> page = userRepository.findAll(pageable);
-		// List<ManagedUserVM> managedUserVMs =
-		// page.getContent().stream().map(ManagedUserVM::new)
-		// .collect(Collectors.toList());
+	public ResponseEntity<List<ManagedUserVM>> getAllUsers(@ApiParam Pageable pageable) throws URISyntaxException {
+		Page<User> page = userRepository.findAllWithAuthorities(pageable);
+		List<ManagedUserVM> managedUserVMs = page.getContent().stream().map(ManagedUserVM::new)
+				.collect(Collectors.toList());
 		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/users");
-		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+		return new ResponseEntity<>(managedUserVMs, headers, HttpStatus.OK);
 	}
 
 	/**
