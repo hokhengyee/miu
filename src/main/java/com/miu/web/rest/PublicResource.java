@@ -221,11 +221,11 @@ public class PublicResource {
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
 
-	@GetMapping("/faculty-and-alumni")
+	@GetMapping("/alumni")
 	@Timed
-	public ResponseEntity<StaticPage> getFacultyAndAlumni() throws URISyntaxException {
-		LOGGER.debug("REST request to get Faculty And Alumni");
-		StaticPage staticPage = staticPageRepository.getStaticPageByTitle("Faculty & Alumni");
+	public ResponseEntity<StaticPage> getAlumni() throws URISyntaxException {
+		LOGGER.debug("REST request to get Alumni");
+		StaticPage staticPage = staticPageRepository.getStaticPageByTitle("Alumni");
 		return Optional.ofNullable(staticPage).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}

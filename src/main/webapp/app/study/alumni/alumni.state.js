@@ -6,24 +6,24 @@
 	stateConfig.$inject = [ '$stateProvider' ];
 
 	function stateConfig($stateProvider) {
-		$stateProvider.state('faculty-alumni-msg', {
+		$stateProvider.state('alumni-msg', {
 			parent : 'study',
-			url : '/faculty-and-alumni',
+			url : '/alumni',
 			data : {
 				authorities : [],
-				pageTitle : 'Faculty & Alumni'
+				pageTitle : 'Alumni'
 			},
 			views : {
 				'content@' : {
 					templateUrl : 'app/static/public-static-page.html',
-					controller : 'FacultyAlumniController',
+					controller : 'AlumniController',
 					controllerAs : 'vm'
 				}
 			},
 			resolve : {
-				entity : [ '$stateParams', 'FacultyAlumniMsg',
-						function($stateParams, FacultyAlumniMsg) {
-							return FacultyAlumniMsg.get({
+				entity : [ '$stateParams', 'AlumniMsg',
+						function($stateParams, AlumniMsg) {
+							return AlumniMsg.get({
 								id : $stateParams.id
 							}).$promise;
 						} ]

@@ -1,42 +1,50 @@
 <div>
-	<h2>Courses &amp; Fees</h2>
-	<jhi-alert></jhi-alert>
-	<div class="table-responsive">
-		<table class="jh-table table">
-			<tbody>
-				<tr ng-repeat="course in vm.courses track by course.id" valign="top">
-					<!-- <td><a ui-sref="course-detail({id:course.id})">{{course.id}}</a></td> -->
-					<td><a ui-sref="public-course-detail({id:course.id})"><h3>{{course.title}}
-								({{ course.creditHours }} hours)</h3></a> Description:
-						{{course.description}}<br /> <br />
-						<table class="table table-bordered">
-							<tr>
-								<th width="25%">Application Fee:&nbsp;</th>
-								<td>{{ course.applicationFee }}</td>
-							</tr>
-							<tr>
-								<th>Registration Fee:&nbsp;</th>
-								<td>{{ course.registrationFee }}</td>
-							</tr>
-							<tr>
-								<th>Course Fee *:&nbsp;</th>
-								<td>{{ course.courseFee }}</td>
-							</tr>
-						</table></td>
-				</tr>
-			</tbody>
-		</table>
-		<ul>
-			<li>Course Fee includes course materials which are issued by
-				MIU.</li>
-			<li>Excludes textbooks and workbook not from MIU.</li>
-			<li>E-Library fee : USD $70.00 (one time)</li>
-		</ul>
+
+	<div class="panel panel-primary">
+		<div class="panel-heading">Courses &amp; Fees</div>
+
+		<jhi-alert></jhi-alert>
+		<div class="table-responsive">
+			<table class="jh-table table">
+				<tbody>
+					<tr ng-repeat="course in vm.courses track by course.id"
+						valign="top">
+						<!-- <td><a ui-sref="course-detail({id:course.id})">{{course.id}}</a></td> -->
+						<td><a ui-sref="public-course-detail({id:course.id})"><h3>{{course.title}}
+									({{ course.creditHours }} hours)</h3></a>
+							<div ng-show="{{ course.description }}">
+								Description: {{course.description}} <br />
+							</div> <br />
+							<table class="table table-bordered">
+								<tr>
+									<th width="25%">Application Fee:&nbsp;</th>
+									<td>{{ course.applicationFee }}</td>
+								</tr>
+								<tr>
+									<th>Registration Fee:&nbsp;</th>
+									<td>{{ course.registrationFee }}</td>
+								</tr>
+								<tr>
+									<th>Course Fee *:&nbsp;</th>
+									<td>{{ course.courseFee }}</td>
+								</tr>
+							</table></td>
+					</tr>
+				</tbody>
+			</table>
+			<ul>
+				<li>Course Fee includes course materials which are issued by
+					MIU.</li>
+				<li>Excludes textbooks and workbook not from MIU.</li>
+				<li>E-Library fee : USD $70.00 (one time)</li>
+			</ul>
+		</div>
+		<div class="text-center">
+			<jhi-item-count page="vm.page" total="vm.queryCount"
+				items-per-page="vm.itemsPerPage"></jhi-item-count>
+		</div>
+		<uib-pager total-items="vm.totalItems" ng-model="vm.page"
+			ng-change="vm.transition()"></uib-pager>
+
 	</div>
-	<div class="text-center">
-		<jhi-item-count page="vm.page" total="vm.queryCount"
-			items-per-page="vm.itemsPerPage"></jhi-item-count>
-	</div>
-	<uib-pager total-items="vm.totalItems" ng-model="vm.page"
-		ng-change="vm.transition()"></uib-pager>
 </div>

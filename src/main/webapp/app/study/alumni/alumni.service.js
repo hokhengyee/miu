@@ -1,11 +1,11 @@
 (function() {
 	'use strict';
-	angular.module('miuApp').factory('FacultyAlumniMsg', FacultyAlumniMsg);
+	angular.module('miuApp').factory('AlumniMsg', AlumniMsg);
 
-	FacultyAlumniMsg.$inject = [ '$resource' ];
+	AlumniMsg.$inject = [ '$resource' ];
 
-	function FacultyAlumniMsg($resource) {
-		var resourceUrl = 'api/public/faculty-and-alumni';
+	function AlumniMsg($resource) {
+		var resourceUrl = 'api/public/alumni';
 
 		return $resource(resourceUrl, {}, {
 			'get' : {
