@@ -71,7 +71,10 @@
 	<div class="text-center">
 		<jhi-item-count page="vm.page" total="vm.queryCount"
 			items-per-page="vm.itemsPerPage"></jhi-item-count>
+
+		<uib-pager total-items="vm.totalItems" ng-model="vm.page"
+			ng-change="vm.transition()"></uib-pager>
 	</div>
-	<uib-pager total-items="vm.totalItems" ng-model="vm.page"
-		ng-change="vm.transition()"></uib-pager>
+
+	<pre>{{ vm | json }}</pre>
 </div>

@@ -49,10 +49,10 @@ spring:
         jcache:
             config: ehcache.xml
     mail:
-        host: email.godaddy.com
-        port: 25
-        username: info@miuedu.us
-        password: Zaq1@wsx
+        host:
+        port: 
+        username:
+        password:
     messages:
         cache-seconds: 1
     thymeleaf:

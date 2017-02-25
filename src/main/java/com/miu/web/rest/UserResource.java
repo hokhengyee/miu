@@ -4,7 +4,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 
@@ -160,12 +159,13 @@ public class UserResource {
 	 */
 	@GetMapping("/users")
 	@Timed
-	public ResponseEntity<List<ManagedUserVM>> getAllUsers(@ApiParam Pageable pageable) throws URISyntaxException {
-		Page<User> page = userRepository.findAllWithAuthorities(pageable);
-		List<ManagedUserVM> managedUserVMs = page.getContent().stream().map(ManagedUserVM::new)
-				.collect(Collectors.toList());
+	public ResponseEntity<List<User>> getAllUsers(@ApiParam Pageable pageable) throws URISyntaxException {
+		Page<User> page = userRepository.findAll(pageable);
+		// List<ManagedUserVM> managedUserVMs =
+		// page.getContent().stream().map(ManagedUserVM::new)
+		// .collect(Collectors.toList());
 		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/users");
-		return new ResponseEntity<>(managedUserVMs, headers, HttpStatus.OK);
+		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
 	}
 
 	/**

@@ -230,6 +230,15 @@ public class PublicResource {
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
 
+	@GetMapping("/adjunct-faculty")
+	@Timed
+	public ResponseEntity<StaticPage> getAdjunctFaculty() throws URISyntaxException {
+		LOGGER.debug("REST request to get Adjunct Faculty");
+		StaticPage staticPage = staticPageRepository.getStaticPageByTitle("Adjunct Faculty");
+		return Optional.ofNullable(staticPage).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+	}
+
 	/**
 	 * GET /galleries/:id : get the "id" gallery.
 	 *
