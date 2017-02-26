@@ -166,6 +166,22 @@ public class UserResource {
 		return new ResponseEntity<>(output, headers, HttpStatus.OK);
 	}
 
+	@GetMapping("/student-users")
+	@Timed
+	public ResponseEntity<List<ManagedUserVM>> getAllStudentUsers() throws URISyntaxException {
+		List<User> page = userRepository.findAllWithAuthorities();
+		List<ManagedUserVM> managedUserVMs = page.stream().map(ManagedUserVM::new).collect(Collectors.toList());
+		List<ManagedUserVM> output = new ArrayList<ManagedUserVM>();
+		for (ManagedUserVM managedUserVM : managedUserVMs) {
+			if (managedUserVM.getAuthorities().contains("ROLE_STUDENT")) {
+				output.add(managedUserVM);
+			}
+		}
+
+		HttpHeaders headers = new HttpHeaders();
+		return new ResponseEntity<>(output, headers, HttpStatus.OK);
+	}
+
 	/**
 	 * GET /users : get all users.
 	 *

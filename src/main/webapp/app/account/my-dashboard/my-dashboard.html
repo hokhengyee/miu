@@ -132,15 +132,11 @@
 				<tr
 					ng-repeat="courseMaterial in vm.courseMaterials track by courseMaterial.displayOrder">
 					<td><b>{{courseMaterial.title}}</b><br />{{courseMaterial.description}}</td>
-					<td width="50px"><a ng-show="courseMaterial.content"
-						class="btn btn-primary" alt="Download" title="Download"
-						ng-if="courseMaterial.content"
-						ng-click="vm.openFile(courseMaterial.contentContentType, courseMaterial.content)"><i
-							class="glyphicon glyphicon-download" /> </a> <a alt="Download"
-						ng-show="courseMaterial.websiteLink" title="Download"
+					<td width="50px"><a alt="Preview"
+						ng-show="courseMaterial.websiteLink" title="Preview"
 						href="{{courseMaterial.websiteLink}}" target="_blank"
 						class="btn btn-primary"><i
-							class="glyphicon glyphicon-download" /></a></td>
+							class="glyphicon glyphicon-save-file" /></a></td>
 				</tr>
 			</tbody>
 		</table>

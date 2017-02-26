@@ -304,15 +304,16 @@
 							ui-sref="my-forum" ng-click="vm.collapseNavbar()"> <span
 								class="glyphicon glyphicon-blackboard"></span>&nbsp; <span>Forum</span>
 						</a></li>
-						<li ui-sref-active="active" ng-switch-when="true"><a
-							ui-sref="settings" ng-click="vm.collapseNavbar()"> <span
+						<li ui-sref-active="active" ng-switch-when="true"
+							has-authority="ROLE_ADMIN"><a ui-sref="settings"
+							ng-click="vm.collapseNavbar()"> <span
 								class="glyphicon glyphicon-wrench"></span>&nbsp; <span>Settings</span>
 						</a></li>
 						<li ui-sref-active="active" ng-switch-when="true"><a
 							ui-sref="password" ng-click="vm.collapseNavbar()"> <span
 								class="glyphicon glyphicon-lock"></span>&nbsp; <span>Password</span>
 						</a></li>
-						<li ui-sref-active="active" ng-switch-when="true"><a
+						<li ui-sref-active="active" ng-switch-when="true" ng-show="false"><a
 							ui-sref="sessions" ng-click="vm.collapseNavbar()"> <span
 								class="glyphicon glyphicon-cloud"></span>&nbsp; <span>Sessions</span>
 						</a></li>

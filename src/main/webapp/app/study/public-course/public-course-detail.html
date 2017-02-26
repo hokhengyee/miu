@@ -1,6 +1,9 @@
 <div>
 	<h2>{{vm.course.title}} ({{vm.course.creditHours}} Hours)</h2>
-	<br /> {{ vm.course.description }} <br /> <br />
+	<br />
+	<div ng-show="{{ vm.course.description }}">
+		{{ vm.course.description }} <br /> <br />
+	</div>
 
 	<jhi-alert-error></jhi-alert-error>
 
