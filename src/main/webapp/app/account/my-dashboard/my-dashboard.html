@@ -46,25 +46,50 @@
 
 		<!-- News & Events -->
 		<div class="col-md-6">
-			<div class="panel panel-primary">
+			<div class="panel panel-info">
 				<div class="panel-heading">
-					<h3 class="panel-title">News & Events</h3>
+					<b>News & Events</b>
 				</div>
-				<table class="table table-bordered">
+
+				<table class="table table-bordered table-news-events">
 					<tbody>
 						<tr ng-repeat="newsAndEvent in vm.newsAndEvents">
 							<td>
 								<div>
-									<b> <a ng-show="newsAndEvent.websiteLink != null"
-										href="{{ newsAndEvent.websiteLink }}" target="_blank">{{newsAndEvent.title}}</a>
-										<div ng-show="newsAndEvent.websiteLink == null">{{newsAndEvent.title}}</div>
-									</b>
-								</div>{{ newsAndEvent.startDate | date:'mediumDate' }} - {{
-								newsAndEvent.endDate | date:'mediumDate' }}
+									<h4>
+										<b>
+											<div ng-if="newsAndEvent.websiteLink">
+												<a href="{{ newsAndEvent.websiteLink }}" target="_blank"
+													style="color: #A85400">{{newsAndEvent.title}}</a>
+											</div>
+											<div ng-if="!newsAndEvent.websiteLink">
+												<a ui-sref="au-news-and-event-detail({id:newsAndEvent.id})"
+													style="color: #A85400">{{newsAndEvent.title}}</a>
+											</div>
+										</b>
+									</h4>
+								</div>
+								<div>{{ newsAndEvent.startDT | date:'medium' }} - {{
+									newsAndEvent.endDT | date:'medium' }}</div>
+								<div>
+									<i>Venue: {{ newsAndEvent.venue }}</i>
+								</div>
 							</td>
 						</tr>
 					</tbody>
 				</table>
+				<div class="panel-body" ng-show="vm.newsAndEvents.length == 0">
+					<div>
+						<center>No news &amp; events.</center>
+					</div>
+				</div>
+				<div class="panel-footer news-events-footer">
+					<center>
+						<a ui-sref="au-news-and-event" class="btn btn-warning">View
+							More</a>
+					</center>
+				</div>
+
 			</div>
 		</div>
 	</div>
