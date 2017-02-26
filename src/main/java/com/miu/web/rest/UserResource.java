@@ -182,6 +182,15 @@ public class UserResource {
 		return new ResponseEntity<>(output, headers, HttpStatus.OK);
 	}
 
+	@GetMapping("/all-users")
+	@Timed
+	public ResponseEntity<List<ManagedUserVM>> getFullUsers() throws URISyntaxException {
+		List<User> page = userRepository.findAllWithAuthorities();
+		List<ManagedUserVM> managedUserVMs = page.stream().map(ManagedUserVM::new).collect(Collectors.toList());
+		HttpHeaders headers = new HttpHeaders();
+		return new ResponseEntity<>(managedUserVMs, headers, HttpStatus.OK);
+	}
+
 	/**
 	 * GET /users : get all users.
 	 *

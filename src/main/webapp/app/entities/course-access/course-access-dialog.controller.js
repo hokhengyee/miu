@@ -1,48 +1,50 @@
 (function() {
-    'use strict';
+	'use strict';
 
-    angular
-        .module('miuApp')
-        .controller('CourseAccessDialogController', CourseAccessDialogController);
+	angular.module('miuApp').controller('CourseAccessDialogController',
+			CourseAccessDialogController);
 
-    CourseAccessDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'CourseAccess', 'User', 'Course'];
+	CourseAccessDialogController.$inject = [ '$timeout', '$scope',
+			'$stateParams', '$uibModalInstance', 'entity', 'CourseAccess',
+			'AllUser', 'Course' ];
 
-    function CourseAccessDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, CourseAccess, User, Course) {
-        var vm = this;
+	function CourseAccessDialogController($timeout, $scope, $stateParams,
+			$uibModalInstance, entity, CourseAccess, AllUser, Course) {
+		var vm = this;
 
-        vm.courseAccess = entity;
-        vm.clear = clear;
-        vm.save = save;
-        vm.users = User.query();
-        vm.courses = Course.query();
+		vm.courseAccess = entity;
+		vm.clear = clear;
+		vm.save = save;
+		vm.users = AllUser.query();
+		vm.courses = Course.query();
 
-        $timeout(function (){
-            angular.element('.form-group:eq(1)>input').focus();
-        });
+		$timeout(function() {
+			angular.element('.form-group:eq(1)>input').focus();
+		});
 
-        function clear () {
-            $uibModalInstance.dismiss('cancel');
-        }
+		function clear() {
+			$uibModalInstance.dismiss('cancel');
+		}
 
-        function save () {
-            vm.isSaving = true;
-            if (vm.courseAccess.id !== null) {
-                CourseAccess.update(vm.courseAccess, onSaveSuccess, onSaveError);
-            } else {
-                CourseAccess.save(vm.courseAccess, onSaveSuccess, onSaveError);
-            }
-        }
+		function save() {
+			vm.isSaving = true;
+			if (vm.courseAccess.id !== null) {
+				CourseAccess
+						.update(vm.courseAccess, onSaveSuccess, onSaveError);
+			} else {
+				CourseAccess.save(vm.courseAccess, onSaveSuccess, onSaveError);
+			}
+		}
 
-        function onSaveSuccess (result) {
-            $scope.$emit('miuApp:courseAccessUpdate', result);
-            $uibModalInstance.close(result);
-            vm.isSaving = false;
-        }
+		function onSaveSuccess(result) {
+			$scope.$emit('miuApp:courseAccessUpdate', result);
+			$uibModalInstance.close(result);
+			vm.isSaving = false;
+		}
 
-        function onSaveError () {
-            vm.isSaving = false;
-        }
+		function onSaveError() {
+			vm.isSaving = false;
+		}
 
-
-    }
+	}
 })();
