@@ -5,7 +5,7 @@
 	MyCommonResources.$inject = [ '$resource' ];
 
 	function MyCommonResources($resource) {
-		var resourceUrl = 'api/common-resources';
+		var resourceUrl = 'api/ordered-common-resources';
 
 		return $resource(resourceUrl, {}, {
 			'query' : {

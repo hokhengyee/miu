@@ -107,14 +107,10 @@
 				<tr
 					ng-repeat="commonResources in vm.commonResources track by commonResources.id">
 					<td><b>{{commonResources.title}}</b><br />{{commonResources.description}}</td>
-					<td width="50px"><a alt="Download" title="Download"
-						ng-if="commonResources.content" ng-show="commonResources.content"
-						class="btn btn-primary"
-						ng-click="vm.openFile(commonResources.contentContentType, commonResources.content)"><i
-							class="glyphicon glyphicon-download" /></a> <a alt="Preview"
+					<td width="50px"><a alt="Preview"
 						ng-show="commonResources.websiteLink" title="Preview"
 						class="btn btn-primary" href="{{commonResources.websiteLink}}"
-						target="_blank"><i class="glyphicon glyphicon-music" /> </a></td>
+						target="_blank"><i class="glyphicon glyphicon-save-file" /> </a></td>
 				</tr>
 			</tbody>
 		</table>
