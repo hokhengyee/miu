@@ -42,12 +42,8 @@
 							<td>{{vm.user.email}}</td>
 						</tr>
 						<tr>
-							<th>First Name</th>
-							<td>{{vm.user.firstName}}</td>
-						</tr>
-						<tr>
-							<th>Last Name</th>
-							<td>{{vm.user.lastName}}</td>
+							<th>Full Name</th>
+							<td>{{vm.user.firstName}} {{vm.user.lastName}}</td>
 						</tr>
 						<!-- Student -->
 						<tr ng-show="vm.studentProfile != null">
