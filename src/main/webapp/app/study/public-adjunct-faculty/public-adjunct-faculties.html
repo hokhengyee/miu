@@ -1,0 +1,26 @@
+<div>
+	<div class="panel panel-primary">
+		<div class="panel-heading">Adjunct Faculty</div>
+		<div class="table-responsive">
+			<table class="table table-bordered">
+				<tbody>
+					<tr
+						ng-repeat="adjunctFaculty in vm.adjunctFaculties track by adjunctFaculty.id">
+						<td><a
+							ui-sref="public-lecturer-profile-detail({id:adjunctFaculty.lecturerProfile.id})">{{adjunctFaculty.lecturerProfile.salutation.title}}
+								{{adjunctFaculty.lecturerProfile.user.firstName}}
+								{{adjunctFaculty.lecturerProfile.user.lastName }}</a> <b><i>{{adjunctFaculty.lecturerProfile.otherTitles
+									}}</i></b></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="text-center">
+			<jhi-item-count page="vm.page" total="vm.queryCount"
+				items-per-page="vm.itemsPerPage"></jhi-item-count>
+		</div>
+		<uib-pager total-items="vm.totalItems" ng-model="vm.page"
+			ng-change="vm.transition()"></uib-pager>
+
+	</div>
+</div>

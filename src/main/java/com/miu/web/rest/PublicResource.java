@@ -24,17 +24,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
+import com.miu.domain.AdjunctFaculty;
 import com.miu.domain.Course;
 import com.miu.domain.EntryQualification;
 import com.miu.domain.Gallery;
+import com.miu.domain.LecturerProfile;
 import com.miu.domain.Module;
 import com.miu.domain.NewsAndEvent;
 import com.miu.domain.OnlineApplication;
 import com.miu.domain.ResearchPaper;
 import com.miu.domain.StaticPage;
+import com.miu.repository.AdjunctFacultyRepository;
 import com.miu.repository.CourseRepository;
 import com.miu.repository.EntryQualificationRepository;
 import com.miu.repository.GalleryRepository;
+import com.miu.repository.LecturerProfileRepository;
 import com.miu.repository.ModuleRepository;
 import com.miu.repository.NewsAndEventRepository;
 import com.miu.repository.OnlineApplicationRepository;
@@ -53,6 +57,9 @@ import io.swagger.annotations.ApiParam;
 public class PublicResource {
 
 	@Inject
+	private AdjunctFacultyRepository adjunctFacultyRepository;
+
+	@Inject
 	private CourseRepository courseRepository;
 
 	@Inject
@@ -60,6 +67,9 @@ public class PublicResource {
 
 	@Inject
 	private GalleryRepository galleryRepository;
+
+	@Inject
+	private LecturerProfileRepository lecturerProfileRepository;
 
 	private final Logger LOGGER = LoggerFactory.getLogger(PublicResource.class);
 
@@ -117,6 +127,16 @@ public class PublicResource {
 		StaticPage staticPage = staticPageRepository.getStaticPageByTitle("Accredited Centers");
 		return Optional.ofNullable(staticPage).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+	}
+
+	@GetMapping("/adjunct-faculty")
+	@Timed
+	public ResponseEntity<List<AdjunctFaculty>> getAllAdjunctFaculties(@ApiParam Pageable pageable)
+			throws URISyntaxException {
+		LOGGER.debug("REST request to get a page of AdjunctFaculties");
+		Page<AdjunctFaculty> page = adjunctFacultyRepository.findAllByOrderByShowOrder(pageable);
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/adjunct-faculty");
+		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
 	}
 
 	/**
@@ -186,6 +206,15 @@ public class PublicResource {
 		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
 	}
 
+	@GetMapping("/alumni")
+	@Timed
+	public ResponseEntity<StaticPage> getAlumni() throws URISyntaxException {
+		LOGGER.debug("REST request to get Alumni");
+		StaticPage staticPage = staticPageRepository.getStaticPageByTitle("Alumni");
+		return Optional.ofNullable(staticPage).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+	}
+
 	/**
 	 * GET /courses/:id : get the "id" course.
 	 *
@@ -218,24 +247,6 @@ public class PublicResource {
 		Course course = courseRepository.findOne(id);
 		EntryQualification entryQualification = entryQualificationRepository.getCourseEntryQualifications(course);
 		return Optional.ofNullable(entryQualification).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-	}
-
-	@GetMapping("/alumni")
-	@Timed
-	public ResponseEntity<StaticPage> getAlumni() throws URISyntaxException {
-		LOGGER.debug("REST request to get Alumni");
-		StaticPage staticPage = staticPageRepository.getStaticPageByTitle("Alumni");
-		return Optional.ofNullable(staticPage).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
-				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-	}
-
-	@GetMapping("/adjunct-faculty")
-	@Timed
-	public ResponseEntity<StaticPage> getAdjunctFaculty() throws URISyntaxException {
-		LOGGER.debug("REST request to get Adjunct Faculty");
-		StaticPage staticPage = staticPageRepository.getStaticPageByTitle("Adjunct Faculty");
-		return Optional.ofNullable(staticPage).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
 
@@ -280,6 +291,15 @@ public class PublicResource {
 		LOGGER.debug("REST request to get Homepage");
 		StaticPage staticPage = staticPageRepository.getStaticPageByTitle("Home");
 		return Optional.ofNullable(staticPage).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+	}
+
+	@GetMapping("/public-lecturer-profiles/{id}")
+	@Timed
+	public ResponseEntity<LecturerProfile> getLecturerProfile(@PathVariable Long id) {
+		LOGGER.debug("REST request to get LecturerProfile : {}", id);
+		LecturerProfile lecturerProfile = lecturerProfileRepository.findOne(id);
+		return Optional.ofNullable(lecturerProfile).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
 
