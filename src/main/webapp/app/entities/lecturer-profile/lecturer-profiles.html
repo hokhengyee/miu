@@ -48,7 +48,8 @@
                         </a>
                         <span ng-if="lecturerProfile.profilePhoto">{{lecturerProfile.profilePhotoContentType}}, {{vm.byteSize(lecturerProfile.profilePhoto)}}</span>
                     </td> -->
-					<td>{{lecturerProfile.user.login}}</td>
+					<td><b>{{lecturerProfile.user.firstName}}
+							{{lecturerProfile.user.lastName}}</b> <br />({{lecturerProfile.user.login}})</td>
 					<td><a
 						ui-sref="salutation-detail({id:lecturerProfile.salutation.id})">{{lecturerProfile.salutation.title}}</a>
 					</td>
