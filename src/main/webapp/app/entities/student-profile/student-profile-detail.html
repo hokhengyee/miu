@@ -1,72 +1,149 @@
-
 <div>
-    <h2><span>Student Profile</span> {{vm.studentProfile.id}}</h2>
-    <hr>
-    <jhi-alert-error></jhi-alert-error>
-    <dl class="dl-horizontal jh-entity-details">
-        <dt><span>Student Id</span></dt>
-        <dd>
-            <span>{{vm.studentProfile.studentId}}</span>
-        </dd>
-        <dt><span>Date Of Birth</span></dt>
-        <dd>
-            <span>{{vm.studentProfile.dateOfBirth | date:'mediumDate'}}</span>
-        </dd>
-        <dt><span>Phone</span></dt>
-        <dd>
-            <span>{{vm.studentProfile.phone}}</span>
-        </dd>
-        <dt><span>Application Date</span></dt>
-        <dd>
-            <span>{{vm.studentProfile.applicationDate | date:'mediumDate'}}</span>
-        </dd>
-        <dt><span>Commencement Date</span></dt>
-        <dd>
-            <span>{{vm.studentProfile.commencementDate | date:'mediumDate'}}</span>
-        </dd>
-        <dt><span>Completion Date</span></dt>
-        <dd>
-            <span>{{vm.studentProfile.completionDate | date:'mediumDate'}}</span>
-        </dd>
-        <dt><span>Mailing Address</span></dt>
-        <dd>
-            <span>{{vm.studentProfile.mailingAddress}}</span>
-        </dd>
-        <dt><span>Profile Photo</span></dt>
-        <dd>
-            <div ng-if="vm.studentProfile.profilePhoto">
-                <a ng-click="vm.openFile(vm.studentProfile.profilePhotoContentType, vm.studentProfile.profilePhoto)">
-                    <img data-ng-src="{{'data:' + vm.studentProfile.profilePhotoContentType + ';base64,' + vm.studentProfile.profilePhoto}}" style="max-width: 100%;" alt="studentProfile image"/>
-                </a>
-                {{vm.studentProfile.profilePhotoContentType}}, {{vm.byteSize(vm.studentProfile.profilePhoto)}}
-            </div>
-        </dd>
-        <dt><span>Salutation</span></dt>
-        <dd>
-            <a ui-sref="salutation-detail({id:vm.studentProfile.salutation.id})">{{vm.studentProfile.salutation.title}}</a>
-        </dd>
-        <dt><span>Gender</span></dt>
-        <dd>
-            <a ui-sref="gender-detail({id:vm.studentProfile.gender.id})">{{vm.studentProfile.gender.title}}</a>
-        </dd>
-        <dt><span>Supervisor</span></dt>
-        <dd>
-            {{vm.studentProfile.supervisor.login}}
-        </dd>
-        <dt><span>User</span></dt>
-        <dd>
-            {{vm.studentProfile.user.login}}
-        </dd>
-    </dl>
 
-    <button type="submit"
-            ui-sref="{{ vm.previousState }}"
-            class="btn btn-info">
-        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span> Back</span>
-    </button>
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<h3 class="panel-title">Student Profile: {{
+				vm.studentProfile.user.login }}</h3>
+		</div>
+		<table class="table">
+			<tr>
+				<td width="200px" ng-show="vm.studentProfile != null">
+					<div ng-if="vm.studentProfile.profilePhoto">
+						<img
+							data-ng-src="{{'data:' + vm.studentProfile.profilePhotoContentType + ';base64,' + vm.studentProfile.profilePhoto}}"
+							style="max-width: 150px; max-height: 150px"
+							alt="studentProfile image" />
+					</div>
+				</td>
+				<td width="200px" ng-show="vm.lecturerProfile != null">
+					<div ng-if="vm.lecturerProfile.profilePhoto">
+						<img
+							data-ng-src="{{'data:' + vm.lecturerProfile.profilePhotoContentType + ';base64,' + vm.lecturerProfile.profilePhoto}}"
+							style="max-width: 150px; max-height: 150px"
+							alt="lecturerProfile image" />
+					</div>
+				</td>
+				<td>
+					<table class="table table-bordered">
+						<tr ng-show="vm.courseAccess.length > 0">
+							<th width="130px">Courses</th>
+							<td><div ng-repeat="ca in vm.courseAccess">{{
+									ca.course.title }}</div></td>
+						</tr>
+						<tr ng-show="vm.studentProfile != null">
+							<th width="130px">Student ID</th>
+							<td>{{vm.studentProfile.studentId}}</td>
+						</tr>
+						<tr>
+							<th>Login</th>
+							<td>{{vm.studentProfile.user.login}}</td>
+						</tr>
+						<tr>
+							<th>Email</th>
+							<td><a href="mailto:{{vm.studentProfile.user.email}}">{{vm.studentProfile.user.email}}</a></td>
+						</tr>
+						<tr>
+							<th>Full Name</th>
+							<td>{{vm.studentProfile.user.firstName}}
+								{{vm.studentProfile.user.lastName}}</td>
+						</tr>
+						<!-- Student -->
+						<tr ng-show="vm.studentProfile != null">
+							<th>Salutation</th>
+							<td>{{vm.studentProfile.salutation.title}}</td>
+						</tr>
+						<tr ng-show="vm.studentProfile != null">
+							<th>Gender</th>
+							<td>{{vm.studentProfile.gender.title}}</td>
+						</tr>
+						<tr ng-show="vm.studentProfile != null">
+							<th>Date Of Birth</th>
+							<td>{{vm.studentProfile.dateOfBirth | date:'mediumDate'}}</td>
+						</tr>
+						<tr ng-show="vm.studentProfile != null">
+							<th>Phone</th>
+							<td>{{vm.studentProfile.phone}}</td>
+						</tr>
+						<tr ng-show="vm.studentProfile != null">
+							<th>Mailing Address</th>
+							<td>{{vm.studentProfile.mailingAddress}}</td>
+						</tr>
+						<tr ng-show="vm.studentProfile != null">
+							<th>Supervisor</th>
+							<td>{{vm.studentProfile.supervisor.firstName}}
+								{{vm.studentProfile.supervisor.lastName}}</td>
+						</tr>
+						<tr ng-show="vm.studentProfile != null">
+							<th>Application Date</th>
+							<td>{{vm.studentProfile.applicationDate |
+								date:'mediumDate'}}</td>
+						</tr>
+						<tr ng-show="vm.studentProfile != null">
+							<th>Commencement Date</th>
+							<td>{{vm.studentProfile.commencementDate |
+								date:'mediumDate'}}</td>
+						</tr>
+						<tr ng-show="vm.studentProfile != null">
+							<th>Completion Date</th>
+							<td>{{vm.studentProfile.completionDate | date:'mediumDate'}}</td>
+						</tr>
+						<!-- Lecturer -->
+						<tr ng-show="vm.lecturerProfile != null">
+							<th>Salutation</th>
+							<td>{{vm.lecturerProfile.salutation.title}}</td>
+						</tr>
+						<tr ng-show="vm.lecturerProfile != null">
+							<th>Other Titles</th>
+							<td>{{vm.lecturerProfile.otherTitles}}</td>
+						</tr>
+						<tr ng-show="vm.lecturerProfile != null">
+							<th>Age</th>
+							<td>{{vm.lecturerProfile.age}}</td>
+						</tr>
+						<tr ng-show="vm.lecturerProfile != null">
+							<th>Ordination</th>
+							<td>{{vm.lecturerProfile.ordination}}</td>
+						</tr>
+						<tr ng-show="vm.lecturerProfile != null">
+							<th>Academic History</th>
+							<td><span ng-bind-html="vm.academicHistory"></span></td>
+						</tr>
+						<tr ng-show="vm.lecturerProfile != null">
+							<th>Professional History</th>
+							<td><span ng-bind-html="vm.professionalHistory"></span></td>
+						</tr>
+						<tr ng-show="vm.lecturerProfile != null">
+							<th>Past And Current Ministry</th>
+							<td><span ng-bind-html="vm.pastAndCurrentMinistry"></span></td>
+						</tr>
+						<tr ng-show="vm.lecturerProfile != null">
+							<th>Publications</th>
+							<td><span ng-bind-html="vm.publications"></span></td>
+						</tr>
+						<tr ng-show="vm.lecturerProfile != null">
+							<th>Family Details</th>
+							<td><span ng-bind-html="vm.familyDetails"></span></td>
+						</tr>
+						<tr ng-show="vm.lecturerProfile != null">
+							<th>Reference</th>
+							<td><span ng-bind-html="vm.reference"></span></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</div>
 
-    <button type="button" ui-sref="student-profile-detail.edit({id:vm.studentProfile.id})" class="btn btn-primary">
-        <span class="glyphicon glyphicon-pencil"></span>
-        <span class="hidden-xs hidden-sm"> Edit</span>
-    </button>
+	<button type="submit" ui-sref="{{ vm.previousState }}"
+		class="btn btn-info">
+		<span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span>
+			Back</span>
+	</button>
+
+	<button type="button"
+		ui-sref="student-profile-detail.edit({id:vm.studentProfile.id})"
+		class="btn btn-primary">
+		<span class="glyphicon glyphicon-pencil"></span> <span
+			class="hidden-xs hidden-sm"> Edit</span>
+	</button>
 </div>
