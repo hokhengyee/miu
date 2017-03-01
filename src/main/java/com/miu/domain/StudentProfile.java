@@ -58,6 +58,9 @@ public class StudentProfile implements Serializable {
     @Column(name = "profile_photo_content_type")
     private String profilePhotoContentType;
 
+    @Column(name = "extended_completion_date")
+    private LocalDate extendedCompletionDate;
+
     @ManyToOne
     @NotNull
     private Salutation salutation;
@@ -199,6 +202,19 @@ public class StudentProfile implements Serializable {
         this.profilePhotoContentType = profilePhotoContentType;
     }
 
+    public LocalDate getExtendedCompletionDate() {
+        return extendedCompletionDate;
+    }
+
+    public StudentProfile extendedCompletionDate(LocalDate extendedCompletionDate) {
+        this.extendedCompletionDate = extendedCompletionDate;
+        return this;
+    }
+
+    public void setExtendedCompletionDate(LocalDate extendedCompletionDate) {
+        this.extendedCompletionDate = extendedCompletionDate;
+    }
+
     public Salutation getSalutation() {
         return salutation;
     }
@@ -284,6 +300,7 @@ public class StudentProfile implements Serializable {
             ", mailingAddress='" + mailingAddress + "'" +
             ", profilePhoto='" + profilePhoto + "'" +
             ", profilePhotoContentType='" + profilePhotoContentType + "'" +
+            ", extendedCompletionDate='" + extendedCompletionDate + "'" +
             '}';
     }
 }

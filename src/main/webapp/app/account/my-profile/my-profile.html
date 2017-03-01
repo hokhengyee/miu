@@ -85,6 +85,12 @@
 							<th>Completion Date</th>
 							<td>{{vm.studentProfile.completionDate | date:'mediumDate'}}</td>
 						</tr>
+						<tr ng-show="vm.studentProfile != null">
+							<th>Completion Date</th>
+							<td>{{vm.studentProfile.extendedCompletionDate |
+								date:'mediumDate'}}</td>
+						</tr>
+
 						<!-- Lecturer -->
 						<tr ng-show="vm.lecturerProfile != null">
 							<th>Salutation</th>

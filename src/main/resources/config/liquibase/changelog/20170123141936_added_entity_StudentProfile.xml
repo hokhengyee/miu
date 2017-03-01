@@ -59,6 +59,10 @@
                 <constraints nullable="true" />
             </column>
             
+            <column name="extended_completion_date" type="date">
+                <constraints nullable="true" />
+            </column>
+            
             <column name="salutation_id" type="bigint">
                 <constraints nullable="false" />
             </column>

@@ -53,6 +53,7 @@
 		vm.datePickerOpenStatus.applicationDate = false;
 		vm.datePickerOpenStatus.commencementDate = false;
 		vm.datePickerOpenStatus.completionDate = false;
+		vm.datePickerOpenStatus.extendedCompletionDate = false;
 
 		vm.setProfilePhoto = function($file, studentProfile) {
 			if ($file && $file.$error === 'pattern') {

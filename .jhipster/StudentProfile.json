@@ -91,6 +91,10 @@
             "fieldName": "profilePhoto",
             "fieldType": "byte[]",
             "fieldTypeBlobContent": "image"
+        },
+        {
+            "fieldName": "extendedCompletionDate",
+            "fieldType": "LocalDate"
         }
     ],
     "changelogDate": "20170123141936",

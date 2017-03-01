@@ -67,7 +67,7 @@ class StudentProfileGatlingTest extends Simulation {
             .exec(http("Create new studentProfile")
             .post("/api/student-profiles")
             .headers(headers_http_authenticated)
-            .body(StringBody("""{"id":null, "studentId":"SAMPLE_TEXT", "dateOfBirth":"2020-01-01T00:00:00.000Z", "phone":"SAMPLE_TEXT", "applicationDate":"2020-01-01T00:00:00.000Z", "commencementDate":"2020-01-01T00:00:00.000Z", "completionDate":"2020-01-01T00:00:00.000Z", "mailingAddress":null, "profilePhoto":null}""")).asJSON
+            .body(StringBody("""{"id":null, "studentId":"SAMPLE_TEXT", "dateOfBirth":"2020-01-01T00:00:00.000Z", "phone":"SAMPLE_TEXT", "applicationDate":"2020-01-01T00:00:00.000Z", "commencementDate":"2020-01-01T00:00:00.000Z", "completionDate":"2020-01-01T00:00:00.000Z", "mailingAddress":null, "profilePhoto":null, "extendedCompletionDate":"2020-01-01T00:00:00.000Z"}""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_studentProfile_url"))).exitHereIfFailed
             .pause(10)

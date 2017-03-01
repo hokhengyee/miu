@@ -24,6 +24,8 @@
 								.convertLocalDateFromServer(data.commencementDate);
 						data.completionDate = DateUtils
 								.convertLocalDateFromServer(data.completionDate);
+						data.extendedCompletionDate = DateUtils
+								.convertLocalDateFromServer(data.extendedCompletionDate);						
 					}
 
 					else {
@@ -41,6 +43,7 @@
                     copy.applicationDate = DateUtils.convertLocalDateToServer(copy.applicationDate);
                     copy.commencementDate = DateUtils.convertLocalDateToServer(copy.commencementDate);
                     copy.completionDate = DateUtils.convertLocalDateToServer(copy.completionDate);
+                    copy.extendedCompletionDate = DateUtils.convertLocalDateToServer(copy.extendedCompletionDate);
                     return angular.toJson(copy);
                 }
             }
