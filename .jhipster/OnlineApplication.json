@@ -13,14 +13,6 @@
     ],
     "fields": [
         {
-            "fieldName": "nricNo",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "maxlength"
-            ],
-            "fieldValidateRulesMaxlength": "100"
-        },
-        {
             "fieldName": "dateOfBirth",
             "fieldType": "LocalDate",
             "fieldValidateRules": [

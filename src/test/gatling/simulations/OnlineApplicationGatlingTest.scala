@@ -67,7 +67,7 @@ class OnlineApplicationGatlingTest extends Simulation {
             .exec(http("Create new onlineApplication")
             .post("/api/online-applications")
             .headers(headers_http_authenticated)
-            .body(StringBody("""{"id":null, "nricNo":"SAMPLE_TEXT", "dateOfBirth":"2020-01-01T00:00:00.000Z", "telephone":"SAMPLE_TEXT", "email":"SAMPLE_TEXT", "city":"SAMPLE_TEXT", "state":"SAMPLE_TEXT", "country":"SAMPLE_TEXT", "postcode":"SAMPLE_TEXT", "registrationDatetime":"2020-01-01T00:00:00.000Z", "surname":"SAMPLE_TEXT", "givenName":"SAMPLE_TEXT", "address":"SAMPLE_TEXT", "applicationForm":null}""")).asJSON
+            .body(StringBody("""{"id":null, "dateOfBirth":"2020-01-01T00:00:00.000Z", "telephone":"SAMPLE_TEXT", "email":"SAMPLE_TEXT", "city":"SAMPLE_TEXT", "state":"SAMPLE_TEXT", "country":"SAMPLE_TEXT", "postcode":"SAMPLE_TEXT", "registrationDatetime":"2020-01-01T00:00:00.000Z", "surname":"SAMPLE_TEXT", "givenName":"SAMPLE_TEXT", "address":"SAMPLE_TEXT", "applicationForm":null}""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_onlineApplication_url"))).exitHereIfFailed
             .pause(10)

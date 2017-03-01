@@ -51,7 +51,6 @@
                     resolve: {
                         entity: function () {
                             return {
-                                nricNo: null,
                                 dateOfBirth: null,
                                 telephone: null,
                                 email: null,

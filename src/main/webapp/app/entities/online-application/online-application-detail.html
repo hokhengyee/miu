@@ -1,117 +1,74 @@
 
 <div>
-	<h2>
-		<span>Online Application</span> {{vm.onlineApplication.id}}
-	</h2>
-	<hr>
-	<jhi-alert-error></jhi-alert-error>
-	<dl class="dl-horizontal jh-entity-details">
-		<dt>
-			<span>Registration Datetime</span>
-		</dt>
-		<dd>
-			<span>{{vm.onlineApplication.registrationDatetime |
-				date:'medium'}}</span>
-		</dd>
-		<dt>
-			<span>Course</span>
-		</dt>
-		<dd>
-			<a ui-sref="course-detail({id:vm.onlineApplication.course.id})">{{vm.onlineApplication.course.title}}</a>
-		</dd>
+    <h2><span>Online Application</span> {{vm.onlineApplication.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="dl-horizontal jh-entity-details">
+        <dt><span>Date Of Birth</span></dt>
+        <dd>
+            <span>{{vm.onlineApplication.dateOfBirth | date:'mediumDate'}}</span>
+        </dd>
+        <dt><span>Telephone</span></dt>
+        <dd>
+            <span>{{vm.onlineApplication.telephone}}</span>
+        </dd>
+        <dt><span>Email</span></dt>
+        <dd>
+            <span>{{vm.onlineApplication.email}}</span>
+        </dd>
+        <dt><span>City</span></dt>
+        <dd>
+            <span>{{vm.onlineApplication.city}}</span>
+        </dd>
+        <dt><span>State</span></dt>
+        <dd>
+            <span>{{vm.onlineApplication.state}}</span>
+        </dd>
+        <dt><span>Country</span></dt>
+        <dd>
+            <span>{{vm.onlineApplication.country}}</span>
+        </dd>
+        <dt><span>Postcode</span></dt>
+        <dd>
+            <span>{{vm.onlineApplication.postcode}}</span>
+        </dd>
+        <dt><span>Registration Datetime</span></dt>
+        <dd>
+            <span>{{vm.onlineApplication.registrationDatetime | date:'medium'}}</span>
+        </dd>
+        <dt><span>Surname</span></dt>
+        <dd>
+            <span>{{vm.onlineApplication.surname}}</span>
+        </dd>
+        <dt><span>Given Name</span></dt>
+        <dd>
+            <span>{{vm.onlineApplication.givenName}}</span>
+        </dd>
+        <dt><span>Address</span></dt>
+        <dd>
+            <span>{{vm.onlineApplication.address}}</span>
+        </dd>
+        <dt><span>Application Form</span></dt>
+        <dd>
+            <div ng-if="vm.onlineApplication.applicationForm">
+                <a ng-click="vm.openFile(vm.onlineApplication.applicationFormContentType, vm.onlineApplication.applicationForm)">open</a>
+                {{vm.onlineApplication.applicationFormContentType}}, {{vm.byteSize(vm.onlineApplication.applicationForm)}}
+            </div>
+        </dd>
+        <dt><span>Course</span></dt>
+        <dd>
+            <a ui-sref="course-detail({id:vm.onlineApplication.course.id})">{{vm.onlineApplication.course.title}}</a>
+        </dd>
+    </dl>
 
-		<dt>
-			<span>Surname</span>
-		</dt>
-		<dd>
-			<span>{{vm.onlineApplication.surname}}</span>
-		</dd>
-		<dt>
-			<span>Given Name</span>
-		</dt>
-		<dd>
-			<span>{{vm.onlineApplication.givenName}}</span>
-		</dd>
-		<dt>
-			<span>Date Of Birth</span>
-		</dt>
-		<dd>
-			<span>{{vm.onlineApplication.dateOfBirth | date:'mediumDate'}}</span>
-		</dd>
-		<dt>
-			<span>Nric No</span>
-		</dt>
-		<dd>
-			<span>{{vm.onlineApplication.nricNo}}</span>
-		</dd>
+    <button type="submit"
+            ui-sref="{{ vm.previousState }}"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span> Back</span>
+    </button>
 
-		<dt>
-			<span>Telephone</span>
-		</dt>
-		<dd>
-			<span>{{vm.onlineApplication.telephone}}</span>
-		</dd>
-		<dt>
-			<span>Email</span>
-		</dt>
-		<dd>
-			<span>{{vm.onlineApplication.email}}</span>
-		</dd>
-		<dt>
-			<span>Address</span>
-		</dt>
-		<dd>
-			<span>{{vm.onlineApplication.address}}</span>
-		</dd>
-		<dt>
-			<span>City</span>
-		</dt>
-		<dd>
-			<span>{{vm.onlineApplication.city}}</span>
-		</dd>
-		<dt>
-			<span>State</span>
-		</dt>
-		<dd>
-			<span>{{vm.onlineApplication.state}}</span>
-		</dd>
-		<dt>
-			<span>Country</span>
-		</dt>
-		<dd>
-			<span>{{vm.onlineApplication.country}}</span>
-		</dd>
-		<dt>
-			<span>Postcode</span>
-		</dt>
-		<dd>
-			<span>{{vm.onlineApplication.postcode}}</span>
-		</dd>
-
-		<dt>
-			<span>Application Form</span>
-		</dt>
-		<dd>
-			<div ng-if="vm.onlineApplication.applicationForm">
-				<a
-					ng-click="vm.openFile(vm.onlineApplication.applicationFormContentType, vm.onlineApplication.applicationForm)"
-					download="ApplicationForm.xls">open</a>
-				{{vm.onlineApplication.applicationFormContentType}},
-				{{vm.byteSize(vm.onlineApplication.applicationForm)}}
-			</div>
-		</dd>
-	</dl>
-
-	<button type="submit" ui-sref="{{ vm.previousState }}"
-		class="btn btn-info">
-		<span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span>
-			Back</span>
-	</button>
-
-	<button type="button"
-		ui-sref="online-application-detail.edit({id:vm.onlineApplication.id})"
-		class="btn btn-primary">
-		<span class="glyphicon glyphicon-pencil"></span> <span
-			class="hidden-xs hidden-sm"> Edit</span>
-	</button>
+    <button type="button" ui-sref="online-application-detail.edit({id:vm.onlineApplication.id})" class="btn btn-primary">
+        <span class="glyphicon glyphicon-pencil"></span>
+        <span class="hidden-xs hidden-sm"> Edit</span>
+    </button>
 </div>
