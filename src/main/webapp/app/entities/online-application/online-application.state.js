@@ -128,6 +128,14 @@
                                 address: null,
                                 applicationForm: null,
                                 applicationFormContentType: null,
+                                profilePhoto: null,
+                                profilePhotoContentType: null,
+                                academicCertificate: null,
+                                academicCertificateContentType: null,
+                                letterOfRecommendation: null,
+                                letterOfRecommendationContentType: null,
+                                profileDocument: null,
+                                profileDocumentContentType: null,
                                 id: null
                             };
                         }

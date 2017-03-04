@@ -55,6 +55,36 @@
                 {{vm.onlineApplication.applicationFormContentType}}, {{vm.byteSize(vm.onlineApplication.applicationForm)}}
             </div>
         </dd>
+        <dt><span>Profile Photo</span></dt>
+        <dd>
+            <div ng-if="vm.onlineApplication.profilePhoto">
+                <a ng-click="vm.openFile(vm.onlineApplication.profilePhotoContentType, vm.onlineApplication.profilePhoto)">
+                    <img data-ng-src="{{'data:' + vm.onlineApplication.profilePhotoContentType + ';base64,' + vm.onlineApplication.profilePhoto}}" style="max-width: 100%;" alt="onlineApplication image"/>
+                </a>
+                {{vm.onlineApplication.profilePhotoContentType}}, {{vm.byteSize(vm.onlineApplication.profilePhoto)}}
+            </div>
+        </dd>
+        <dt><span>Academic Certificate</span></dt>
+        <dd>
+            <div ng-if="vm.onlineApplication.academicCertificate">
+                <a ng-click="vm.openFile(vm.onlineApplication.academicCertificateContentType, vm.onlineApplication.academicCertificate)">open</a>
+                {{vm.onlineApplication.academicCertificateContentType}}, {{vm.byteSize(vm.onlineApplication.academicCertificate)}}
+            </div>
+        </dd>
+        <dt><span>Letter Of Recommendation</span></dt>
+        <dd>
+            <div ng-if="vm.onlineApplication.letterOfRecommendation">
+                <a ng-click="vm.openFile(vm.onlineApplication.letterOfRecommendationContentType, vm.onlineApplication.letterOfRecommendation)">open</a>
+                {{vm.onlineApplication.letterOfRecommendationContentType}}, {{vm.byteSize(vm.onlineApplication.letterOfRecommendation)}}
+            </div>
+        </dd>
+        <dt><span>Profile Document</span></dt>
+        <dd>
+            <div ng-if="vm.onlineApplication.profileDocument">
+                <a ng-click="vm.openFile(vm.onlineApplication.profileDocumentContentType, vm.onlineApplication.profileDocument)">open</a>
+                {{vm.onlineApplication.profileDocumentContentType}}, {{vm.byteSize(vm.onlineApplication.profileDocument)}}
+            </div>
+        </dd>
         <dt><span>Course</span></dt>
         <dd>
             <a ui-sref="course-detail({id:vm.onlineApplication.course.id})">{{vm.onlineApplication.course.title}}</a>

@@ -1,53 +1,42 @@
 (function() {
 	'use strict';
 
-	angular.module('miuApp').controller('OnlineApplicationDialogController',
-			OnlineApplicationDialogController);
+	angular.module('miuApp').controller('ApplyCourseController',
+			ApplyCourseController);
 
-	OnlineApplicationDialogController.$inject = [ '$timeout', '$scope',
-			'$stateParams', '$uibModalInstance', 'DataUtils', 'entity',
-			'OnlineApplication', 'Course' ];
+	ApplyCourseController.$inject = [ '$timeout', '$scope', '$stateParams',
+			'DataUtils', 'entity', 'PublicOnlineApplication', 'PublicCourse',
+			'$state' ];
 
-	function OnlineApplicationDialogController($timeout, $scope, $stateParams,
-			$uibModalInstance, DataUtils, entity, OnlineApplication, Course) {
+	function ApplyCourseController($timeout, $scope, $stateParams, DataUtils,
+			entity, PublicOnlineApplication, PublicCourse, $state) {
 		var vm = this;
 
 		vm.onlineApplication = entity;
-		vm.clear = clear;
 		vm.datePickerOpenStatus = {};
 		vm.openCalendar = openCalendar;
 		vm.byteSize = DataUtils.byteSize;
 		vm.openFile = DataUtils.openFile;
 		vm.save = save;
-		vm.courses = Course.query();
+		vm.courses = PublicCourse.query();
+		vm.error = false;
 
 		$timeout(function() {
 			angular.element('.form-group:eq(1)>input').focus();
 		});
 
-		function clear() {
-			$uibModalInstance.dismiss('cancel');
-		}
-
 		function save() {
-			vm.isSaving = true;
-			if (vm.onlineApplication.id !== null) {
-				OnlineApplication.update(vm.onlineApplication, onSaveSuccess,
-						onSaveError);
-			} else {
-				OnlineApplication.save(vm.onlineApplication, onSaveSuccess,
-						onSaveError);
-			}
+			PublicOnlineApplication.save(vm.onlineApplication, onSaveSuccess,
+					onSaveError);
 		}
 
 		function onSaveSuccess(result) {
-			$scope.$emit('miuApp:onlineApplicationUpdate', result);
-			$uibModalInstance.close(result);
-			vm.isSaving = false;
+			$state.go('public-online-application-success');
 		}
 
 		function onSaveError() {
-			vm.isSaving = false;
+			// vm.isSaving = false;
+			vm.error = true;
 		}
 
 		vm.datePickerOpenStatus.dateOfBirth = false;
@@ -130,5 +119,6 @@
 		function openCalendar(date) {
 			vm.datePickerOpenStatus[date] = true;
 		}
+
 	}
 })();

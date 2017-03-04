@@ -75,6 +75,34 @@
                 <constraints nullable="false" />
             </column>
             
+            <column name="profile_photo" type="longblob">
+                <constraints nullable="true" />
+            </column>
+            <column name="profile_photo_content_type" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            
+            <column name="academic_certificate" type="longblob">
+                <constraints nullable="true" />
+            </column>
+            <column name="academic_certificate_content_type" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            
+            <column name="letter_of_recommendation" type="longblob">
+                <constraints nullable="true" />
+            </column>
+            <column name="letter_of_recommendation_content_type" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            
+            <column name="profile_document" type="longblob">
+                <constraints nullable="true" />
+            </column>
+            <column name="profile_document_content_type" type="varchar(255)">
+                <constraints nullable="true" />
+            </column>
+            
             <column name="course_id" type="bigint">
                 <constraints nullable="false" />
             </column>

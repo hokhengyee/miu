@@ -5,10 +5,9 @@
 			ApplyCourseCompleteController);
 
 	ApplyCourseCompleteController.$inject = [ '$scope', '$rootScope',
-			'$stateParams', 'entity' ];
+			'$stateParams' ];
 
-	function ApplyCourseCompleteController($scope, $rootScope, $stateParams,
-			entity) {
+	function ApplyCourseCompleteController($scope, $rootScope, $stateParams) {
 		var vm = this;
 
 	}

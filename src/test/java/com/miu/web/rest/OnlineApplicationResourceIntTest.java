@@ -83,6 +83,26 @@ public class OnlineApplicationResourceIntTest {
     private static final String DEFAULT_APPLICATION_FORM_CONTENT_TYPE = "image/jpg";
     private static final String UPDATED_APPLICATION_FORM_CONTENT_TYPE = "image/png";
 
+    private static final byte[] DEFAULT_PROFILE_PHOTO = TestUtil.createByteArray(1, "0");
+    private static final byte[] UPDATED_PROFILE_PHOTO = TestUtil.createByteArray(2, "1");
+    private static final String DEFAULT_PROFILE_PHOTO_CONTENT_TYPE = "image/jpg";
+    private static final String UPDATED_PROFILE_PHOTO_CONTENT_TYPE = "image/png";
+
+    private static final byte[] DEFAULT_ACADEMIC_CERTIFICATE = TestUtil.createByteArray(1, "0");
+    private static final byte[] UPDATED_ACADEMIC_CERTIFICATE = TestUtil.createByteArray(2, "1");
+    private static final String DEFAULT_ACADEMIC_CERTIFICATE_CONTENT_TYPE = "image/jpg";
+    private static final String UPDATED_ACADEMIC_CERTIFICATE_CONTENT_TYPE = "image/png";
+
+    private static final byte[] DEFAULT_LETTER_OF_RECOMMENDATION = TestUtil.createByteArray(1, "0");
+    private static final byte[] UPDATED_LETTER_OF_RECOMMENDATION = TestUtil.createByteArray(2, "1");
+    private static final String DEFAULT_LETTER_OF_RECOMMENDATION_CONTENT_TYPE = "image/jpg";
+    private static final String UPDATED_LETTER_OF_RECOMMENDATION_CONTENT_TYPE = "image/png";
+
+    private static final byte[] DEFAULT_PROFILE_DOCUMENT = TestUtil.createByteArray(1, "0");
+    private static final byte[] UPDATED_PROFILE_DOCUMENT = TestUtil.createByteArray(2, "1");
+    private static final String DEFAULT_PROFILE_DOCUMENT_CONTENT_TYPE = "image/jpg";
+    private static final String UPDATED_PROFILE_DOCUMENT_CONTENT_TYPE = "image/png";
+
     @Inject
     private OnlineApplicationRepository onlineApplicationRepository;
 
@@ -129,7 +149,15 @@ public class OnlineApplicationResourceIntTest {
                 .givenName(DEFAULT_GIVEN_NAME)
                 .address(DEFAULT_ADDRESS)
                 .applicationForm(DEFAULT_APPLICATION_FORM)
-                .applicationFormContentType(DEFAULT_APPLICATION_FORM_CONTENT_TYPE);
+                .applicationFormContentType(DEFAULT_APPLICATION_FORM_CONTENT_TYPE)
+                .profilePhoto(DEFAULT_PROFILE_PHOTO)
+                .profilePhotoContentType(DEFAULT_PROFILE_PHOTO_CONTENT_TYPE)
+                .academicCertificate(DEFAULT_ACADEMIC_CERTIFICATE)
+                .academicCertificateContentType(DEFAULT_ACADEMIC_CERTIFICATE_CONTENT_TYPE)
+                .letterOfRecommendation(DEFAULT_LETTER_OF_RECOMMENDATION)
+                .letterOfRecommendationContentType(DEFAULT_LETTER_OF_RECOMMENDATION_CONTENT_TYPE)
+                .profileDocument(DEFAULT_PROFILE_DOCUMENT)
+                .profileDocumentContentType(DEFAULT_PROFILE_DOCUMENT_CONTENT_TYPE);
         // Add required entity
         Course course = CourseResourceIntTest.createEntity(em);
         em.persist(course);
@@ -172,6 +200,14 @@ public class OnlineApplicationResourceIntTest {
         assertThat(testOnlineApplication.getAddress()).isEqualTo(DEFAULT_ADDRESS);
         assertThat(testOnlineApplication.getApplicationForm()).isEqualTo(DEFAULT_APPLICATION_FORM);
         assertThat(testOnlineApplication.getApplicationFormContentType()).isEqualTo(DEFAULT_APPLICATION_FORM_CONTENT_TYPE);
+        assertThat(testOnlineApplication.getProfilePhoto()).isEqualTo(DEFAULT_PROFILE_PHOTO);
+        assertThat(testOnlineApplication.getProfilePhotoContentType()).isEqualTo(DEFAULT_PROFILE_PHOTO_CONTENT_TYPE);
+        assertThat(testOnlineApplication.getAcademicCertificate()).isEqualTo(DEFAULT_ACADEMIC_CERTIFICATE);
+        assertThat(testOnlineApplication.getAcademicCertificateContentType()).isEqualTo(DEFAULT_ACADEMIC_CERTIFICATE_CONTENT_TYPE);
+        assertThat(testOnlineApplication.getLetterOfRecommendation()).isEqualTo(DEFAULT_LETTER_OF_RECOMMENDATION);
+        assertThat(testOnlineApplication.getLetterOfRecommendationContentType()).isEqualTo(DEFAULT_LETTER_OF_RECOMMENDATION_CONTENT_TYPE);
+        assertThat(testOnlineApplication.getProfileDocument()).isEqualTo(DEFAULT_PROFILE_DOCUMENT);
+        assertThat(testOnlineApplication.getProfileDocumentContentType()).isEqualTo(DEFAULT_PROFILE_DOCUMENT_CONTENT_TYPE);
     }
 
     @Test
@@ -415,7 +451,15 @@ public class OnlineApplicationResourceIntTest {
             .andExpect(jsonPath("$.[*].givenName").value(hasItem(DEFAULT_GIVEN_NAME.toString())))
             .andExpect(jsonPath("$.[*].address").value(hasItem(DEFAULT_ADDRESS.toString())))
             .andExpect(jsonPath("$.[*].applicationFormContentType").value(hasItem(DEFAULT_APPLICATION_FORM_CONTENT_TYPE)))
-            .andExpect(jsonPath("$.[*].applicationForm").value(hasItem(Base64Utils.encodeToString(DEFAULT_APPLICATION_FORM))));
+            .andExpect(jsonPath("$.[*].applicationForm").value(hasItem(Base64Utils.encodeToString(DEFAULT_APPLICATION_FORM))))
+            .andExpect(jsonPath("$.[*].profilePhotoContentType").value(hasItem(DEFAULT_PROFILE_PHOTO_CONTENT_TYPE)))
+            .andExpect(jsonPath("$.[*].profilePhoto").value(hasItem(Base64Utils.encodeToString(DEFAULT_PROFILE_PHOTO))))
+            .andExpect(jsonPath("$.[*].academicCertificateContentType").value(hasItem(DEFAULT_ACADEMIC_CERTIFICATE_CONTENT_TYPE)))
+            .andExpect(jsonPath("$.[*].academicCertificate").value(hasItem(Base64Utils.encodeToString(DEFAULT_ACADEMIC_CERTIFICATE))))
+            .andExpect(jsonPath("$.[*].letterOfRecommendationContentType").value(hasItem(DEFAULT_LETTER_OF_RECOMMENDATION_CONTENT_TYPE)))
+            .andExpect(jsonPath("$.[*].letterOfRecommendation").value(hasItem(Base64Utils.encodeToString(DEFAULT_LETTER_OF_RECOMMENDATION))))
+            .andExpect(jsonPath("$.[*].profileDocumentContentType").value(hasItem(DEFAULT_PROFILE_DOCUMENT_CONTENT_TYPE)))
+            .andExpect(jsonPath("$.[*].profileDocument").value(hasItem(Base64Utils.encodeToString(DEFAULT_PROFILE_DOCUMENT))));
     }
 
     @Test
@@ -441,7 +485,15 @@ public class OnlineApplicationResourceIntTest {
             .andExpect(jsonPath("$.givenName").value(DEFAULT_GIVEN_NAME.toString()))
             .andExpect(jsonPath("$.address").value(DEFAULT_ADDRESS.toString()))
             .andExpect(jsonPath("$.applicationFormContentType").value(DEFAULT_APPLICATION_FORM_CONTENT_TYPE))
-            .andExpect(jsonPath("$.applicationForm").value(Base64Utils.encodeToString(DEFAULT_APPLICATION_FORM)));
+            .andExpect(jsonPath("$.applicationForm").value(Base64Utils.encodeToString(DEFAULT_APPLICATION_FORM)))
+            .andExpect(jsonPath("$.profilePhotoContentType").value(DEFAULT_PROFILE_PHOTO_CONTENT_TYPE))
+            .andExpect(jsonPath("$.profilePhoto").value(Base64Utils.encodeToString(DEFAULT_PROFILE_PHOTO)))
+            .andExpect(jsonPath("$.academicCertificateContentType").value(DEFAULT_ACADEMIC_CERTIFICATE_CONTENT_TYPE))
+            .andExpect(jsonPath("$.academicCertificate").value(Base64Utils.encodeToString(DEFAULT_ACADEMIC_CERTIFICATE)))
+            .andExpect(jsonPath("$.letterOfRecommendationContentType").value(DEFAULT_LETTER_OF_RECOMMENDATION_CONTENT_TYPE))
+            .andExpect(jsonPath("$.letterOfRecommendation").value(Base64Utils.encodeToString(DEFAULT_LETTER_OF_RECOMMENDATION)))
+            .andExpect(jsonPath("$.profileDocumentContentType").value(DEFAULT_PROFILE_DOCUMENT_CONTENT_TYPE))
+            .andExpect(jsonPath("$.profileDocument").value(Base64Utils.encodeToString(DEFAULT_PROFILE_DOCUMENT)));
     }
 
     @Test
@@ -474,7 +526,15 @@ public class OnlineApplicationResourceIntTest {
                 .givenName(UPDATED_GIVEN_NAME)
                 .address(UPDATED_ADDRESS)
                 .applicationForm(UPDATED_APPLICATION_FORM)
-                .applicationFormContentType(UPDATED_APPLICATION_FORM_CONTENT_TYPE);
+                .applicationFormContentType(UPDATED_APPLICATION_FORM_CONTENT_TYPE)
+                .profilePhoto(UPDATED_PROFILE_PHOTO)
+                .profilePhotoContentType(UPDATED_PROFILE_PHOTO_CONTENT_TYPE)
+                .academicCertificate(UPDATED_ACADEMIC_CERTIFICATE)
+                .academicCertificateContentType(UPDATED_ACADEMIC_CERTIFICATE_CONTENT_TYPE)
+                .letterOfRecommendation(UPDATED_LETTER_OF_RECOMMENDATION)
+                .letterOfRecommendationContentType(UPDATED_LETTER_OF_RECOMMENDATION_CONTENT_TYPE)
+                .profileDocument(UPDATED_PROFILE_DOCUMENT)
+                .profileDocumentContentType(UPDATED_PROFILE_DOCUMENT_CONTENT_TYPE);
 
         restOnlineApplicationMockMvc.perform(put("/api/online-applications")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -498,6 +558,14 @@ public class OnlineApplicationResourceIntTest {
         assertThat(testOnlineApplication.getAddress()).isEqualTo(UPDATED_ADDRESS);
         assertThat(testOnlineApplication.getApplicationForm()).isEqualTo(UPDATED_APPLICATION_FORM);
         assertThat(testOnlineApplication.getApplicationFormContentType()).isEqualTo(UPDATED_APPLICATION_FORM_CONTENT_TYPE);
+        assertThat(testOnlineApplication.getProfilePhoto()).isEqualTo(UPDATED_PROFILE_PHOTO);
+        assertThat(testOnlineApplication.getProfilePhotoContentType()).isEqualTo(UPDATED_PROFILE_PHOTO_CONTENT_TYPE);
+        assertThat(testOnlineApplication.getAcademicCertificate()).isEqualTo(UPDATED_ACADEMIC_CERTIFICATE);
+        assertThat(testOnlineApplication.getAcademicCertificateContentType()).isEqualTo(UPDATED_ACADEMIC_CERTIFICATE_CONTENT_TYPE);
+        assertThat(testOnlineApplication.getLetterOfRecommendation()).isEqualTo(UPDATED_LETTER_OF_RECOMMENDATION);
+        assertThat(testOnlineApplication.getLetterOfRecommendationContentType()).isEqualTo(UPDATED_LETTER_OF_RECOMMENDATION_CONTENT_TYPE);
+        assertThat(testOnlineApplication.getProfileDocument()).isEqualTo(UPDATED_PROFILE_DOCUMENT);
+        assertThat(testOnlineApplication.getProfileDocumentContentType()).isEqualTo(UPDATED_PROFILE_DOCUMENT_CONTENT_TYPE);
     }
 
     @Test

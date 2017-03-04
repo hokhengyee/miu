@@ -83,6 +83,34 @@ public class OnlineApplication implements Serializable {
     @Column(name = "application_form_content_type", nullable = false)
     private String applicationFormContentType;
 
+    @Lob
+    @Column(name = "profile_photo")
+    private byte[] profilePhoto;
+
+    @Column(name = "profile_photo_content_type")
+    private String profilePhotoContentType;
+
+    @Lob
+    @Column(name = "academic_certificate")
+    private byte[] academicCertificate;
+
+    @Column(name = "academic_certificate_content_type")
+    private String academicCertificateContentType;
+
+    @Lob
+    @Column(name = "letter_of_recommendation")
+    private byte[] letterOfRecommendation;
+
+    @Column(name = "letter_of_recommendation_content_type")
+    private String letterOfRecommendationContentType;
+
+    @Lob
+    @Column(name = "profile_document")
+    private byte[] profileDocument;
+
+    @Column(name = "profile_document_content_type")
+    private String profileDocumentContentType;
+
     @ManyToOne
     @NotNull
     private Course course;
@@ -264,6 +292,110 @@ public class OnlineApplication implements Serializable {
         this.applicationFormContentType = applicationFormContentType;
     }
 
+    public byte[] getProfilePhoto() {
+        return profilePhoto;
+    }
+
+    public OnlineApplication profilePhoto(byte[] profilePhoto) {
+        this.profilePhoto = profilePhoto;
+        return this;
+    }
+
+    public void setProfilePhoto(byte[] profilePhoto) {
+        this.profilePhoto = profilePhoto;
+    }
+
+    public String getProfilePhotoContentType() {
+        return profilePhotoContentType;
+    }
+
+    public OnlineApplication profilePhotoContentType(String profilePhotoContentType) {
+        this.profilePhotoContentType = profilePhotoContentType;
+        return this;
+    }
+
+    public void setProfilePhotoContentType(String profilePhotoContentType) {
+        this.profilePhotoContentType = profilePhotoContentType;
+    }
+
+    public byte[] getAcademicCertificate() {
+        return academicCertificate;
+    }
+
+    public OnlineApplication academicCertificate(byte[] academicCertificate) {
+        this.academicCertificate = academicCertificate;
+        return this;
+    }
+
+    public void setAcademicCertificate(byte[] academicCertificate) {
+        this.academicCertificate = academicCertificate;
+    }
+
+    public String getAcademicCertificateContentType() {
+        return academicCertificateContentType;
+    }
+
+    public OnlineApplication academicCertificateContentType(String academicCertificateContentType) {
+        this.academicCertificateContentType = academicCertificateContentType;
+        return this;
+    }
+
+    public void setAcademicCertificateContentType(String academicCertificateContentType) {
+        this.academicCertificateContentType = academicCertificateContentType;
+    }
+
+    public byte[] getLetterOfRecommendation() {
+        return letterOfRecommendation;
+    }
+
+    public OnlineApplication letterOfRecommendation(byte[] letterOfRecommendation) {
+        this.letterOfRecommendation = letterOfRecommendation;
+        return this;
+    }
+
+    public void setLetterOfRecommendation(byte[] letterOfRecommendation) {
+        this.letterOfRecommendation = letterOfRecommendation;
+    }
+
+    public String getLetterOfRecommendationContentType() {
+        return letterOfRecommendationContentType;
+    }
+
+    public OnlineApplication letterOfRecommendationContentType(String letterOfRecommendationContentType) {
+        this.letterOfRecommendationContentType = letterOfRecommendationContentType;
+        return this;
+    }
+
+    public void setLetterOfRecommendationContentType(String letterOfRecommendationContentType) {
+        this.letterOfRecommendationContentType = letterOfRecommendationContentType;
+    }
+
+    public byte[] getProfileDocument() {
+        return profileDocument;
+    }
+
+    public OnlineApplication profileDocument(byte[] profileDocument) {
+        this.profileDocument = profileDocument;
+        return this;
+    }
+
+    public void setProfileDocument(byte[] profileDocument) {
+        this.profileDocument = profileDocument;
+    }
+
+    public String getProfileDocumentContentType() {
+        return profileDocumentContentType;
+    }
+
+    public OnlineApplication profileDocumentContentType(String profileDocumentContentType) {
+        this.profileDocumentContentType = profileDocumentContentType;
+        return this;
+    }
+
+    public void setProfileDocumentContentType(String profileDocumentContentType) {
+        this.profileDocumentContentType = profileDocumentContentType;
+    }
+
     public Course getCourse() {
         return course;
     }
@@ -314,6 +446,14 @@ public class OnlineApplication implements Serializable {
             ", address='" + address + "'" +
             ", applicationForm='" + applicationForm + "'" +
             ", applicationFormContentType='" + applicationFormContentType + "'" +
+            ", profilePhoto='" + profilePhoto + "'" +
+            ", profilePhotoContentType='" + profilePhotoContentType + "'" +
+            ", academicCertificate='" + academicCertificate + "'" +
+            ", academicCertificateContentType='" + academicCertificateContentType + "'" +
+            ", letterOfRecommendation='" + letterOfRecommendation + "'" +
+            ", letterOfRecommendationContentType='" + letterOfRecommendationContentType + "'" +
+            ", profileDocument='" + profileDocument + "'" +
+            ", profileDocumentContentType='" + profileDocumentContentType + "'" +
             '}';
     }
 }
