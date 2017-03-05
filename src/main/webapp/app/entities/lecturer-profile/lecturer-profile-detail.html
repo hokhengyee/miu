@@ -1,96 +1,92 @@
-
 <div>
-	<h2>
-		<span>Lecturer Profile</span> {{vm.lecturerProfile.id}}
-	</h2>
-	<hr>
-	<jhi-alert-error></jhi-alert-error>
-	<dl class="dl-horizontal jh-entity-details">
-		<dt>
-			<span>Profile Photo</span>
-		</dt>
-		<dd>
-			<div ng-if="vm.lecturerProfile.profilePhoto">
-				<a
-					ng-click="vm.openFile(vm.lecturerProfile.profilePhotoContentType, vm.lecturerProfile.profilePhoto)">
-					<img
-					data-ng-src="{{'data:' + vm.lecturerProfile.profilePhotoContentType + ';base64,' + vm.lecturerProfile.profilePhoto}}"
-					style="max-width: 100%;" alt="lecturerProfile image" />
-				</a> {{vm.lecturerProfile.profilePhotoContentType}},
-				{{vm.byteSize(vm.lecturerProfile.profilePhoto)}}
-			</div>
-		</dd>
-		<dt>
-			<span>User</span>
-		</dt>
-		<dd>{{vm.lecturerProfile.user.login}}</dd>
-		<dt>
-			<span>Salutation</span>
-		</dt>
-		<dd>
-			<a ui-sref="salutation-detail({id:vm.lecturerProfile.salutation.id})">{{vm.lecturerProfile.salutation.title}}</a>
-		</dd>
-		<dt>
-			<span>Other Titles</span>
-		</dt>
-		<dd>
-			<span>{{vm.lecturerProfile.otherTitles}}</span>
-		</dd>
-		<dt>
-			<span>Age</span>
-		</dt>
-		<dd>
-			<span>{{vm.lecturerProfile.age}}</span>
-		</dd>
-		<dt>
-			<span>Ordination</span>
-		</dt>
-		<dd>
-			<span>{{vm.lecturerProfile.ordination}}</span>
-		</dd>
-		<dt>
-			<span>Academic History</span>
-		</dt>
-		<dd>
-			<!-- <span>{{vm.lecturerProfile.academicHistory}}</span> -->
-			<span ng-bind-html="vm.academicHistory"></span>
-		</dd>
-		<dt>
-			<span>Professional History</span>
-		</dt>
-		<dd>
-			<!-- <span>{{vm.lecturerProfile.professionalHistory}}</span> -->
-			<span ng-bind-html="vm.professionalHistory"></span>
-		</dd>
-		<dt>
-			<span>Past And Current Ministry</span>
-		</dt>
-		<dd>
-			<!-- <span>{{vm.lecturerProfile.pastAndCurrentMinistry}}</span> -->
-			<span ng-bind-html="vm.pastAndCurrentMinistry"></span>
-		</dd>
-		<dt>
-			<span>Publications</span>
-		</dt>
-		<dd>
-			<!-- <span>{{vm.lecturerProfile.publications}}</span> -->
-			<span ng-bind-html="vm.publications"></span>
-		</dd>
-		<dt>
-			<span>Family Details</span>
-		</dt>
-		<dd>
-			<!-- <span>{{vm.lecturerProfile.familyDetails}}</span> -->
-			<span ng-bind-html="vm.familyDetails"></span>
-		</dd>
-		<dt>
-			<span>Reference</span>
-		</dt>
-		<dd>
-			<!-- <span>{{vm.lecturerProfile.reference}}</span> -->
-			<span ng-bind-html="vm.reference"></span>
-		</dd>
-	</dl>
+
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<h3 class="panel-title">Lecturer Profile:
+				{{vm.lecturerProfile.user.login}}</h3>
+		</div>
+		<table class="table">
+			<tr>
+				<td width="200px" ng-show="vm.studentProfile != null">
+					<div ng-if="vm.studentProfile.profilePhoto">
+						<img
+							data-ng-src="{{'data:' + vm.studentProfile.profilePhotoContentType + ';base64,' + vm.studentProfile.profilePhoto}}"
+							style="max-width: 150px; max-height: 150px"
+							alt="studentProfile image" />
+					</div>
+				</td>
+				<td width="200px" ng-show="vm.lecturerProfile != null">
+					<div ng-if="vm.lecturerProfile.profilePhoto">
+						<img
+							data-ng-src="{{'data:' + vm.lecturerProfile.profilePhotoContentType + ';base64,' + vm.lecturerProfile.profilePhoto}}"
+							style="max-width: 150px; max-height: 150px"
+							alt="lecturerProfile image" />
+					</div>
+				</td>
+				<td><jhi-alert-error></jhi-alert-error>
+					<table class="table table-bordered">
+						<tr ng-show="vm.courseAccess.length > 0">
+							<th width="130px">Courses</th>
+							<td><div ng-repeat="ca in vm.courseAccess">{{
+									ca.course.title }}</div></td>
+						</tr>
+						<tr>
+							<th width="130px">Login</th>
+							<td>{{vm.lecturerProfile.user.login}}</td>
+						</tr>
+						<tr>
+							<th>Email</th>
+							<td>{{vm.lecturerProfile.user.email}}</td>
+						</tr>
+						<tr>
+							<th>Full Name</th>
+							<td>{{vm.lecturerProfile.user.firstName}}
+								{{vm.lecturerProfile.user.lastName}}</td>
+						</tr>
+						<tr ng-show="vm.lecturerProfile != null">
+							<th>Salutation</th>
+							<td>{{vm.lecturerProfile.salutation.title}}</td>
+						</tr>
+						<tr ng-show="vm.lecturerProfile != null">
+							<th>Other Titles</th>
+							<td>{{vm.lecturerProfile.otherTitles}}</td>
+						</tr>
+						<tr ng-show="vm.lecturerProfile != null">
+							<th>Age</th>
+							<td>{{vm.lecturerProfile.age}}</td>
+						</tr>
+						<tr ng-show="vm.lecturerProfile != null">
+							<th>Ordination</th>
+							<td>{{vm.lecturerProfile.ordination}}</td>
+						</tr>
+						<tr ng-show="vm.lecturerProfile != null">
+							<th>Academic History</th>
+							<td><span ng-bind-html="vm.academicHistory"></span></td>
+						</tr>
+						<tr ng-show="vm.lecturerProfile != null">
+							<th>Professional History</th>
+							<td><span ng-bind-html="vm.professionalHistory"></span></td>
+						</tr>
+						<tr ng-show="vm.lecturerProfile != null">
+							<th>Past And Current Ministry</th>
+							<td><span ng-bind-html="vm.pastAndCurrentMinistry"></span></td>
+						</tr>
+						<tr ng-show="vm.lecturerProfile != null">
+							<th>Publications</th>
+							<td><span ng-bind-html="vm.publications"></span></td>
+						</tr>
+						<tr ng-show="vm.lecturerProfile != null">
+							<th>Family Details</th>
+							<td><span ng-bind-html="vm.familyDetails"></span></td>
+						</tr>
+						<tr ng-show="vm.lecturerProfile != null">
+							<th>Reference</th>
+							<td><span ng-bind-html="vm.reference"></span></td>
+						</tr>
+					</table></td>
+			</tr>
+		</table>
+	</div>
 
 	<button type="submit" ui-sref="{{ vm.previousState }}"
 		class="btn btn-info">
