@@ -1,0 +1,43 @@
+<div>
+
+	<jhi-alert></jhi-alert>
+
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<b>Student Payments: {{vm.user.firstName}} {{vm.user.lastName}}</b>
+		</div>
+		<table class="table table-bordered">
+			<tr>
+				<th>Payment Details</th>
+				<th width="100px">Amount</th>
+				<th width="120px">Payment Date</th>
+				<th width="100px">Paid Status</th>
+			</tr>
+			<tr ng-repeat="studentPayment in vm.studentPayments">
+				<td><b>{{studentPayment.paymentType.title}}</b>
+					({{studentPayment.course.title}})<br />
+					{{studentPayment.description}}</td>
+				<td>{{studentPayment.amount}}</td>
+				<td>{{studentPayment.paymentDate | date:'mediumDate'}}</td>
+				<td>
+					<center>
+						<button class="btn btn-success btn-xs"
+							ng-show="studentPayment.paid">
+							<i class="glyphicon glyphicon-ok" />
+						</button>
+					</center>
+				</td>
+			</tr>
+		</table>
+		<div class="panel-body" ng-show="vm.studentPayments.length == 0">
+			<center>No payments.</center>
+		</div>
+	</div>
+
+	<button type="submit" ui-sref="{{ vm.previousState }}"
+		class="btn btn-info">
+		<span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span>
+			Back</span>
+	</button>
+
+</div>

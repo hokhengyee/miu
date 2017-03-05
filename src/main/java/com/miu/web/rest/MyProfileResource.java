@@ -202,6 +202,14 @@ public class MyProfileResource {
 				.build();
 	}
 
+	@GetMapping("/admin-student-payments/{id}")
+	@Timed
+	public ResponseEntity<List<StudentPayment>> getAdminStudentPayments(@PathVariable Long id) {
+		List<StudentPayment> paymentList = studentPaymentRepository.findAdminUserList(id);
+		HttpHeaders headers = new HttpHeaders();
+		return new ResponseEntity<>(paymentList, headers, HttpStatus.OK);
+	}
+
 	@GetMapping("/forum/{id}/messages")
 	@Timed
 	public ResponseEntity<List<ForumRoomMessage>> getAllForumRoomMessages(@PathVariable Long id,
@@ -335,6 +343,15 @@ public class MyProfileResource {
 		return userService.getUserWithAuthoritiesByLogin(login).map(ManagedUserVM::new)
 				.map(managedUserVM -> new ResponseEntity<>(managedUserVM, HttpStatus.OK))
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+	}
+
+	@GetMapping("/admin-find-user/{id}")
+	@Timed
+	public ResponseEntity<User> findUser(@PathVariable Long id) {
+		LOGGER.debug("REST request to get User : {}", id);
+		User user = userRepository.findOne(id);
+		HttpHeaders headers = new HttpHeaders();
+		return new ResponseEntity<>(user, headers, HttpStatus.OK);
 	}
 
 	/**

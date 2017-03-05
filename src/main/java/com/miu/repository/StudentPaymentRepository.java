@@ -12,7 +12,9 @@ import com.miu.domain.StudentPayment;
  */
 public interface StudentPaymentRepository extends JpaRepository<StudentPayment, Long> {
 
+	@Query("select studentPayment from StudentPayment studentPayment where studentPayment.user.id = ?1")
+	List<StudentPayment> findAdminUserList(Long userID);
+
 	@Query("select studentPayment from StudentPayment studentPayment where studentPayment.user.login = ?#{principal.username}")
 	List<StudentPayment> findByUserIsCurrentUser();
-
 }
