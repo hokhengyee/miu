@@ -27,4 +27,16 @@ public interface StudentOtherResultRepository extends JpaRepository<StudentOther
 	@Query("SELECT r FROM StudentOtherResult r WHERE r.customStudentReportType=4 AND r.user.login = ?#{principal.username} ORDER BY r.resultOrder")
 	List<StudentOtherResult> getMySermonResults();
 
+	@Query("SELECT r FROM StudentOtherResult r WHERE r.customStudentReportType=1 AND r.user.id = ?1 ORDER BY r.resultOrder")
+	List<StudentOtherResult> getUserArticleResults(Long id);
+
+	@Query("SELECT r FROM StudentOtherResult r WHERE r.customStudentReportType=2 AND r.user.id = ?1 ORDER BY r.resultOrder")
+	List<StudentOtherResult> getUserBookReviewResults(Long id);
+
+	@Query("SELECT r FROM StudentOtherResult r WHERE r.customStudentReportType=3 AND r.user.id = ?1 ORDER BY r.resultOrder")
+	List<StudentOtherResult> getUserDissertationResults(Long id);
+
+	@Query("SELECT r FROM StudentOtherResult r WHERE r.customStudentReportType=4 AND r.user.id = ?1 ORDER BY r.resultOrder")
+	List<StudentOtherResult> getUserSermonResults(Long id);
+
 }

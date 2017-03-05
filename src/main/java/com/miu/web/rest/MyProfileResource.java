@@ -202,6 +202,15 @@ public class MyProfileResource {
 				.build();
 	}
 
+	@GetMapping("/admin-find-user/{id}")
+	@Timed
+	public ResponseEntity<User> findUser(@PathVariable Long id) {
+		LOGGER.debug("REST request to get User : {}", id);
+		User user = userRepository.findOne(id);
+		HttpHeaders headers = new HttpHeaders();
+		return new ResponseEntity<>(user, headers, HttpStatus.OK);
+	}
+
 	@GetMapping("/admin-student-payments/{id}")
 	@Timed
 	public ResponseEntity<List<StudentPayment>> getAdminStudentPayments(@PathVariable Long id) {
@@ -345,13 +354,60 @@ public class MyProfileResource {
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
 	}
 
-	@GetMapping("/admin-find-user/{id}")
+	@GetMapping("/admin-find-user-practical-ministry-modules-results/{id}")
 	@Timed
-	public ResponseEntity<User> findUser(@PathVariable Long id) {
-		LOGGER.debug("REST request to get User : {}", id);
-		User user = userRepository.findOne(id);
+	public ResponseEntity<List<StudentModuleResult>> getUserPracticalMinistryResults(@PathVariable Long id) {
+		List<StudentModuleResult> results = studentModuleResultRepository.getUserPracticalMinistryResult(id);
 		HttpHeaders headers = new HttpHeaders();
-		return new ResponseEntity<>(user, headers, HttpStatus.OK);
+		return new ResponseEntity<>(results, headers, HttpStatus.OK);
+	}
+
+	@GetMapping("/admin-find-user-articles-results/{id}")
+	@Timed
+	public ResponseEntity<List<StudentOtherResult>> getUserStudentArticleResults(@PathVariable Long id) {
+		List<StudentOtherResult> results = studentOtherResultRepository.getUserArticleResults(id);
+		HttpHeaders headers = new HttpHeaders();
+		return new ResponseEntity<>(results, headers, HttpStatus.OK);
+	}
+
+	@GetMapping("/admin-find-user-book-reviews-results/{id}")
+	@Timed
+	public ResponseEntity<List<StudentOtherResult>> getUserStudentBookReviewResults(@PathVariable Long id) {
+		List<StudentOtherResult> results = studentOtherResultRepository.getUserBookReviewResults(id);
+		HttpHeaders headers = new HttpHeaders();
+		return new ResponseEntity<>(results, headers, HttpStatus.OK);
+	}
+
+	@GetMapping("/admin-find-user-dissertation-results/{id}")
+	@Timed
+	public ResponseEntity<List<StudentOtherResult>> getUserStudentDissertationResults(@PathVariable Long id) {
+		List<StudentOtherResult> results = studentOtherResultRepository.getUserDissertationResults(id);
+		HttpHeaders headers = new HttpHeaders();
+		return new ResponseEntity<>(results, headers, HttpStatus.OK);
+	}
+
+	@GetMapping("/admin-find-user-research-papers-results/{id}")
+	@Timed
+	public ResponseEntity<List<StudentResearchPaperResult>> getUserStudentResearchPaperResults(@PathVariable Long id) {
+		List<StudentResearchPaperResult> results = studentResearchPaperResultRepository.getUserResearchPaperResults(id);
+		HttpHeaders headers = new HttpHeaders();
+		return new ResponseEntity<>(results, headers, HttpStatus.OK);
+	}
+
+	@GetMapping("/admin-find-user-sermon-results/{id}")
+	@Timed
+	public ResponseEntity<List<StudentOtherResult>> getUserStudentSermonResults(@PathVariable Long id) {
+		List<StudentOtherResult> results = studentOtherResultRepository.getUserSermonResults(id);
+		HttpHeaders headers = new HttpHeaders();
+		return new ResponseEntity<>(results, headers, HttpStatus.OK);
+	}
+
+	@GetMapping("/admin-find-user-theological-modules-results/{id}")
+	@Timed
+	public ResponseEntity<List<StudentModuleResult>> getUserTheologicalResults(@PathVariable Long id) {
+		List<StudentModuleResult> results = studentModuleResultRepository.getUserTheologicalResult(id);
+		HttpHeaders headers = new HttpHeaders();
+		return new ResponseEntity<>(results, headers, HttpStatus.OK);
 	}
 
 	/**

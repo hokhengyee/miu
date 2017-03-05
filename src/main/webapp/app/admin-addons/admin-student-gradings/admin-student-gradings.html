@@ -1,0 +1,224 @@
+<div>
+
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<b>Student Gradings: {{vm.user.firstName}} {{vm.user.lastName}}</b>
+		</div>
+		<div class="panel-body">
+
+			<!-- Theological Courses -->
+			<div class="panel panel-primary">
+				<div class="panel-heading">Theological Courses</div>
+				<div class="table-responsive">
+					<table class="table table-bordered">
+						<thead>
+							<tr class="info">
+								<th width="120px"><span>Course Code</span></th>
+								<th><span>Theological Course</span></th>
+								<th width="60px"><span>Result</span></th>
+								<th width="110px"><span>Date Graded</span></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr
+								ng-repeat="studentModuleResult in vm.theologicalResults track by studentModuleResult.id">
+								<td>{{studentModuleResult.module.moduleCode}}</td>
+								<td>{{studentModuleResult.module.title}}</td>
+								<td>{{studentModuleResult.result}}</td>
+								<td>{{studentModuleResult.dateGraded | date:'mediumDate'}}</td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="panel-body" ng-show="vm.theologicalResults.length == 0">
+						<center>No results at the moment.</center>
+					</div>
+				</div>
+			</div>
+			<!-- Theological Courses -->
+
+			<!-- Practical Ministry Courses -->
+			<div class="panel panel-primary">
+				<div class="panel-heading">Practical Ministry Courses</div>
+				<div class="table-responsive">
+					<table class="table table-bordered">
+						<thead>
+							<tr class="info">
+								<th width="120px"><span>Course Code</span></th>
+								<th><span>Practical Ministry Course</span></th>
+								<th width="60px"><span>Result</span></th>
+								<th width="110px"><span>Date Graded</span></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr
+								ng-repeat="studentModuleResult in vm.practicalMinistryResults track by studentModuleResult.id">
+								<td>{{studentModuleResult.module.moduleCode}}</td>
+								<td>{{studentModuleResult.module.title}}</td>
+								<td>{{studentModuleResult.result}}</td>
+								<td>{{studentModuleResult.dateGraded | date:'mediumDate'}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="panel-body"
+					ng-show="vm.practicalMinistryResults.length == 0">
+					<center>No results at the moment.</center>
+				</div>
+			</div>
+			<!-- Practical Ministry Courses -->
+
+			<!-- Research Papers -->
+			<div class="panel panel-primary">
+				<div class="panel-heading">Research Papers</div>
+				<div class="table-responsive">
+					<table class="table table-bordered">
+						<thead>
+							<tr class="info">
+								<th width="120px"><span>Course Code</span></th>
+								<th><span>Research Paper</span></th>
+								<th width="60px"><span>Result</span></th>
+								<th width="110px"><span>Date Graded</span></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="item in vm.researchPapers track by item">
+								<td>{{item.researchPaper.code}}</td>
+								<td>{{item.researchPaper.title}}</td>
+								<td>{{item.result}}</td>
+								<td>{{item.dateGraded | date:'mediumDate'}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="panel-body" ng-show="vm.researchPapers.length == 0">
+					<center>No results at the moment.</center>
+				</div>
+			</div>
+			<!-- Research Papers -->
+
+			<!-- Book Reviews -->
+			<div class="panel panel-primary">
+				<div class="panel-heading">Book Reviews</div>
+				<div class="table-responsive">
+					<table class="table table-bordered">
+						<thead>
+							<tr class="info">
+								<th width="120px"><span>Course Code</span></th>
+								<th><span>Book Review</span></th>
+								<th width="60px"><span>Result</span></th>
+								<th width="110px"><span>Date Graded</span></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="item in vm.bookReviews track by item">
+								<td>{{item.code}}</td>
+								<td>{{item.title}}</td>
+								<td>{{item.result}}</td>
+								<td>{{item.dateGraded | date:'mediumDate'}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="panel-body" ng-show="vm.bookReviews.length == 0">
+					<center>No results at the moment.</center>
+				</div>
+			</div>
+			<!-- Book Reviews -->
+
+			<!-- Dissertation -->
+			<div class="panel panel-primary">
+				<div class="panel-heading">Dissertation</div>
+				<div class="table-responsive">
+					<table class="table table-bordered">
+						<thead>
+							<tr class="info">
+								<th width="120px"><span>Course Code</span></th>
+								<th><span>Dissertation</span></th>
+								<th width="60px"><span>Result</span></th>
+								<th width="110px"><span>Date Graded</span></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="item in vm.dissertations track by item">
+								<td>{{item.code}}</td>
+								<td>{{item.title}}</td>
+								<td>{{item.result}}</td>
+								<td>{{item.dateGraded | date:'mediumDate'}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="panel-body" ng-show="vm.dissertations.length == 0">
+					<center>No results at the moment.</center>
+				</div>
+			</div>
+			<!-- Dissertation -->
+
+			<!-- Writing Articles -->
+			<div class="panel panel-primary">
+				<div class="panel-heading">Writing Articles</div>
+				<div class="table-responsive">
+					<table class="table table-bordered">
+						<thead>
+							<tr class="info">
+								<th width="120px"><span>Course Code</span></th>
+								<th><span>Article</span></th>
+								<th width="60px"><span>Result</span></th>
+								<th width="110px"><span>Date Graded</span></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="item in vm.writingArticles track by item">
+								<td>{{item.code}}</td>
+								<td>{{item.title}}</td>
+								<td>{{item.result}}</td>
+								<td>{{item.dateGraded | date:'mediumDate'}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="panel-body" ng-show="vm.writingArticles.length == 0">
+					<center>No results at the moment.</center>
+				</div>
+			</div>
+			<!-- Writing Articles -->
+
+			<!-- Sermon Outlines -->
+			<div class="panel panel-primary">
+				<div class="panel-heading">Sermon Outlines</div>
+				<div class="table-responsive">
+					<table class="table table-bordered">
+						<thead>
+							<tr class="info">
+								<th width="120px"><span>Course Code</span></th>
+								<th><span>Sermon</span></th>
+								<th width="60px"><span>Result</span></th>
+								<th width="110px"><span>Date Graded</span></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr ng-repeat="item in vm.sermonOutlines track by item">
+								<td>{{item.code}}</td>
+								<td>{{item.title}}</td>
+								<td>{{item.result}}</td>
+								<td>{{item.dateGraded | date:'mediumDate'}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<div class="panel-body" ng-show="vm.sermonOutlines.length == 0">
+					<center>No results at the moment.</center>
+				</div>
+			</div>
+			<!-- Sermon Outlines -->
+
+		</div>
+	</div>
+
+	<button type="submit" ui-sref="{{ vm.previousState }}"
+		class="btn btn-info">
+		<span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span>
+			Back</span>
+	</button>
+
+</div>

@@ -18,4 +18,7 @@ public interface StudentResearchPaperResultRepository extends JpaRepository<Stud
 	@Query("SELECT r FROM StudentResearchPaperResult r WHERE r.user.login = ?#{principal.username} ORDER BY r.resultOrder")
 	List<StudentResearchPaperResult> getMyResearchPaperResults();
 
+	@Query("SELECT r FROM StudentResearchPaperResult r WHERE r.user.id = ?1 ORDER BY r.resultOrder")
+	List<StudentResearchPaperResult> getUserResearchPaperResults(Long id);
+
 }
