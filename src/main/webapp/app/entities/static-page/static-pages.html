@@ -19,8 +19,8 @@
 					callback="vm.transition()" valign="top">
 					<th jh-sort-by="id"><span>ID</span> <span
 						class="glyphicon glyphicon-sort"></span></th>
-					<th jh-sort-by="content"><span>Content</span> <span
-						class="glyphicon glyphicon-sort"></span></th>
+					<!-- <th jh-sort-by="content"><span>Content</span> <span
+						class="glyphicon glyphicon-sort"></span></th> -->
 					<th jh-sort-by="staticPageType.title"><span>Static Page
 							Type</span> <span class="glyphicon glyphicon-sort"></span></th>
 					<th></th>
@@ -30,7 +30,7 @@
 				<tr ng-repeat="staticPage in vm.staticPages track by staticPage.id"
 					valign="top">
 					<td><a ui-sref="static-page-detail({id:staticPage.id})">{{staticPage.id}}</a></td>
-					<td>{{staticPage.content}}</td>
+					<!-- <td>{{staticPage.content}}</td> -->
 					<td><a
 						ui-sref="static-page-type-detail({id:staticPage.staticPageType.id})">{{staticPage.staticPageType.title}}</a>
 					</td>
