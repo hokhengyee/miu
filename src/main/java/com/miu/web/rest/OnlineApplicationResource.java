@@ -31,100 +31,132 @@ import java.util.Optional;
 @RequestMapping("/api")
 public class OnlineApplicationResource {
 
-    private final Logger log = LoggerFactory.getLogger(OnlineApplicationResource.class);
-        
-    @Inject
-    private OnlineApplicationRepository onlineApplicationRepository;
+	private final Logger LOGGER = LoggerFactory.getLogger(OnlineApplicationResource.class);
 
-    /**
-     * POST  /online-applications : Create a new onlineApplication.
-     *
-     * @param onlineApplication the onlineApplication to create
-     * @return the ResponseEntity with status 201 (Created) and with body the new onlineApplication, or with status 400 (Bad Request) if the onlineApplication has already an ID
-     * @throws URISyntaxException if the Location URI syntax is incorrect
-     */
-    @PostMapping("/online-applications")
-    @Timed
-    public ResponseEntity<OnlineApplication> createOnlineApplication(@Valid @RequestBody OnlineApplication onlineApplication) throws URISyntaxException {
-        log.debug("REST request to save OnlineApplication : {}", onlineApplication);
-        if (onlineApplication.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("onlineApplication", "idexists", "A new onlineApplication cannot already have an ID")).body(null);
-        }
-        OnlineApplication result = onlineApplicationRepository.save(onlineApplication);
-        return ResponseEntity.created(new URI("/api/online-applications/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert("onlineApplication", result.getId().toString()))
-            .body(result);
-    }
+	@Inject
+	private OnlineApplicationRepository onlineApplicationRepository;
 
-    /**
-     * PUT  /online-applications : Updates an existing onlineApplication.
-     *
-     * @param onlineApplication the onlineApplication to update
-     * @return the ResponseEntity with status 200 (OK) and with body the updated onlineApplication,
-     * or with status 400 (Bad Request) if the onlineApplication is not valid,
-     * or with status 500 (Internal Server Error) if the onlineApplication couldnt be updated
-     * @throws URISyntaxException if the Location URI syntax is incorrect
-     */
-    @PutMapping("/online-applications")
-    @Timed
-    public ResponseEntity<OnlineApplication> updateOnlineApplication(@Valid @RequestBody OnlineApplication onlineApplication) throws URISyntaxException {
-        log.debug("REST request to update OnlineApplication : {}", onlineApplication);
-        if (onlineApplication.getId() == null) {
-            return createOnlineApplication(onlineApplication);
-        }
-        OnlineApplication result = onlineApplicationRepository.save(onlineApplication);
-        return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert("onlineApplication", onlineApplication.getId().toString()))
-            .body(result);
-    }
+	/**
+	 * POST /online-applications : Create a new onlineApplication.
+	 *
+	 * @param onlineApplication
+	 *            the onlineApplication to create
+	 * @return the ResponseEntity with status 201 (Created) and with body the
+	 *         new onlineApplication, or with status 400 (Bad Request) if the
+	 *         onlineApplication has already an ID
+	 * @throws URISyntaxException
+	 *             if the Location URI syntax is incorrect
+	 */
+	@PostMapping("/online-applications")
+	@Timed
+	public ResponseEntity<OnlineApplication> createOnlineApplication(
+			@Valid @RequestBody OnlineApplication onlineApplication) throws URISyntaxException {
+		LOGGER.debug("REST request to save OnlineApplication : {}", onlineApplication);
+		if (onlineApplication.getId() != null) {
+			return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("onlineApplication", "idexists",
+					"A new onlineApplication cannot already have an ID")).body(null);
+		}
 
-    /**
-     * GET  /online-applications : get all the onlineApplications.
-     *
-     * @param pageable the pagination information
-     * @return the ResponseEntity with status 200 (OK) and the list of onlineApplications in body
-     * @throws URISyntaxException if there is an error to generate the pagination HTTP headers
-     */
-    @GetMapping("/online-applications")
-    @Timed
-    public ResponseEntity<List<OnlineApplication>> getAllOnlineApplications(@ApiParam Pageable pageable)
-        throws URISyntaxException {
-        log.debug("REST request to get a page of OnlineApplications");
-        Page<OnlineApplication> page = onlineApplicationRepository.findAll(pageable);
-        HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/online-applications");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
-    }
+		OnlineApplication tmpOA = onlineApplicationRepository.findOAByMd5key(onlineApplication.getMd5key());
+		if (tmpOA != null) {
+			return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("onlineApplication", "idexists",
+					"This email has been registered. Please try a different email.")).body(null);
+		}
 
-    /**
-     * GET  /online-applications/:id : get the "id" onlineApplication.
-     *
-     * @param id the id of the onlineApplication to retrieve
-     * @return the ResponseEntity with status 200 (OK) and with body the onlineApplication, or with status 404 (Not Found)
-     */
-    @GetMapping("/online-applications/{id}")
-    @Timed
-    public ResponseEntity<OnlineApplication> getOnlineApplication(@PathVariable Long id) {
-        log.debug("REST request to get OnlineApplication : {}", id);
-        OnlineApplication onlineApplication = onlineApplicationRepository.findOne(id);
-        return Optional.ofNullable(onlineApplication)
-            .map(result -> new ResponseEntity<>(
-                result,
-                HttpStatus.OK))
-            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
-    }
+		OnlineApplication result = onlineApplicationRepository.save(onlineApplication);
+		return ResponseEntity.created(new URI("/api/online-applications/" + result.getId()))
+				.headers(HeaderUtil.createEntityCreationAlert("onlineApplication", result.getId().toString()))
+				.body(result);
+	}
 
-    /**
-     * DELETE  /online-applications/:id : delete the "id" onlineApplication.
-     *
-     * @param id the id of the onlineApplication to delete
-     * @return the ResponseEntity with status 200 (OK)
-     */
-    @DeleteMapping("/online-applications/{id}")
-    @Timed
-    public ResponseEntity<Void> deleteOnlineApplication(@PathVariable Long id) {
-        log.debug("REST request to delete OnlineApplication : {}", id);
-        onlineApplicationRepository.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("onlineApplication", id.toString())).build();
-    }
+	/**
+	 * DELETE /online-applications/:id : delete the "id" onlineApplication.
+	 *
+	 * @param id
+	 *            the id of the onlineApplication to delete
+	 * @return the ResponseEntity with status 200 (OK)
+	 */
+	@DeleteMapping("/online-applications/{id}")
+	@Timed
+	public ResponseEntity<Void> deleteOnlineApplication(@PathVariable Long id) {
+		LOGGER.debug("REST request to delete OnlineApplication : {}", id);
+		onlineApplicationRepository.delete(id);
+		return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("onlineApplication", id.toString()))
+				.build();
+	}
+
+	/**
+	 * GET /online-applications : get all the onlineApplications.
+	 *
+	 * @param pageable
+	 *            the pagination information
+	 * @return the ResponseEntity with status 200 (OK) and the list of
+	 *         onlineApplications in body
+	 * @throws URISyntaxException
+	 *             if there is an error to generate the pagination HTTP headers
+	 */
+	@GetMapping("/online-applications")
+	@Timed
+	public ResponseEntity<List<OnlineApplication>> getAllOnlineApplications(@ApiParam Pageable pageable)
+			throws URISyntaxException {
+		LOGGER.debug("REST request to get a page of OnlineApplications");
+		Page<OnlineApplication> page = onlineApplicationRepository.findAll(pageable);
+		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/online-applications");
+		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+	}
+
+	/**
+	 * GET /online-applications/:id : get the "id" onlineApplication.
+	 *
+	 * @param id
+	 *            the id of the onlineApplication to retrieve
+	 * @return the ResponseEntity with status 200 (OK) and with body the
+	 *         onlineApplication, or with status 404 (Not Found)
+	 */
+	@GetMapping("/online-applications/{id}")
+	@Timed
+	public ResponseEntity<OnlineApplication> getOnlineApplication(@PathVariable Long id) {
+		LOGGER.debug("REST request to get OnlineApplication : {}", id);
+		OnlineApplication onlineApplication = onlineApplicationRepository.findOne(id);
+		return Optional.ofNullable(onlineApplication).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+	}
+
+	/**
+	 * PUT /online-applications : Updates an existing onlineApplication.
+	 *
+	 * @param onlineApplication
+	 *            the onlineApplication to update
+	 * @return the ResponseEntity with status 200 (OK) and with body the updated
+	 *         onlineApplication, or with status 400 (Bad Request) if the
+	 *         onlineApplication is not valid, or with status 500 (Internal
+	 *         Server Error) if the onlineApplication couldnt be updated
+	 * @throws URISyntaxException
+	 *             if the Location URI syntax is incorrect
+	 */
+	@PutMapping("/online-applications")
+	@Timed
+	public ResponseEntity<OnlineApplication> updateOnlineApplication(
+			@Valid @RequestBody OnlineApplication onlineApplication) throws URISyntaxException {
+		LOGGER.debug("REST request to update OnlineApplication : {}", onlineApplication);
+
+		OnlineApplication tmpOA = onlineApplicationRepository.findOAByMd5key(onlineApplication.getMd5key());
+		LOGGER.error("tmpOA: " + tmpOA.toString());
+		if (tmpOA != null) {
+			return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("onlineApplication", "idexists",
+					"This email has been registered. Please try a different email.")).body(null);
+		}
+
+		if (onlineApplication.getId() == null) {
+			return createOnlineApplication(onlineApplication);
+		}
+
+		// OnlineApplication result =
+		// onlineApplicationRepository.save(onlineApplication);
+		OnlineApplication result = null;
+		return ResponseEntity.ok()
+				.headers(HeaderUtil.createEntityUpdateAlert("onlineApplication", onlineApplication.getId().toString()))
+				.body(result);
+	}
 
 }

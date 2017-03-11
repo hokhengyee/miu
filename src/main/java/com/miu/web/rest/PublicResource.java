@@ -140,6 +140,13 @@ public class PublicResource {
 					"A new onlineApplication cannot already have an ID")).body(null);
 		}
 
+		OnlineApplication tmpOA = onlineApplicationRepository.findOAByMd5key(onlineApplication.getMd5key());
+		LOGGER.error("tmpOA: " + tmpOA.toString());
+		if (tmpOA != null) {
+			return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("onlineApplication", "idexists",
+					"This email has been registered. Please try a different email.")).body(null);
+		}
+
 		OnlineApplication result = onlineApplicationRepository.save(onlineApplication);
 		return ResponseEntity.created(new URI("/api/online-applications/" + result.getId()))
 				.headers(HeaderUtil.createEntityCreationAlert("onlineApplication", result.getId().toString()))
