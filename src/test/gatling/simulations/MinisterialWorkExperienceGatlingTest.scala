@@ -67,7 +67,7 @@ class MinisterialWorkExperienceGatlingTest extends Simulation {
             .exec(http("Create new ministerialWorkExperience")
             .post("/api/ministerial-work-experiences")
             .headers(headers_http_authenticated)
-            .body(StringBody("""{"id":null, "nameOfMinistry1":"SAMPLE_TEXT", "areaOfMinistry1":"SAMPLE_TEXT", "nameOfMinistry2":"SAMPLE_TEXT", "areaOfMinistry2":"SAMPLE_TEXT", "nameOfMinistry3":"SAMPLE_TEXT", "areaOfMinistry3":"SAMPLE_TEXT", "nameOfMinistry4":"SAMPLE_TEXT", "areaOfMinistry4":"SAMPLE_TEXT", "md5Key":"SAMPLE_TEXT", "years1":null, "years2":null, "years3":null, "years4":null}""")).asJSON
+            .body(StringBody("""{"id":null, "nameOfMinistry2":"SAMPLE_TEXT", "areaOfMinistry2":"SAMPLE_TEXT", "nameOfMinistry3":"SAMPLE_TEXT", "areaOfMinistry3":"SAMPLE_TEXT", "nameOfMinistry4":"SAMPLE_TEXT", "areaOfMinistry4":"SAMPLE_TEXT", "md5Key":"SAMPLE_TEXT", "years2":null, "years3":null, "years4":null, "nameOfMinistry1":"SAMPLE_TEXT", "areaOfMinistry1":"SAMPLE_TEXT", "years1":null}""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_ministerialWorkExperience_url"))).exitHereIfFailed
             .pause(10)

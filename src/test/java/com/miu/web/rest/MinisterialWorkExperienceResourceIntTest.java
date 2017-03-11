@@ -37,12 +37,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = MiuApp.class)
 public class MinisterialWorkExperienceResourceIntTest {
 
-    private static final String DEFAULT_NAME_OF_MINISTRY_1 = "AAAAAAAAAA";
-    private static final String UPDATED_NAME_OF_MINISTRY_1 = "BBBBBBBBBB";
-
-    private static final String DEFAULT_AREA_OF_MINISTRY_1 = "AAAAAAAAAA";
-    private static final String UPDATED_AREA_OF_MINISTRY_1 = "BBBBBBBBBB";
-
     private static final String DEFAULT_NAME_OF_MINISTRY_2 = "AAAAAAAAAA";
     private static final String UPDATED_NAME_OF_MINISTRY_2 = "BBBBBBBBBB";
 
@@ -64,9 +58,6 @@ public class MinisterialWorkExperienceResourceIntTest {
     private static final String DEFAULT_MD_5_KEY = "AAAAAAAAAA";
     private static final String UPDATED_MD_5_KEY = "BBBBBBBBBB";
 
-    private static final Long DEFAULT_YEARS_1 = 1L;
-    private static final Long UPDATED_YEARS_1 = 2L;
-
     private static final Long DEFAULT_YEARS_2 = 1L;
     private static final Long UPDATED_YEARS_2 = 2L;
 
@@ -75,6 +66,15 @@ public class MinisterialWorkExperienceResourceIntTest {
 
     private static final Long DEFAULT_YEARS_4 = 1L;
     private static final Long UPDATED_YEARS_4 = 2L;
+
+    private static final String DEFAULT_NAME_OF_MINISTRY_1 = "AAAAAAAAAA";
+    private static final String UPDATED_NAME_OF_MINISTRY_1 = "BBBBBBBBBB";
+
+    private static final String DEFAULT_AREA_OF_MINISTRY_1 = "AAAAAAAAAA";
+    private static final String UPDATED_AREA_OF_MINISTRY_1 = "BBBBBBBBBB";
+
+    private static final Long DEFAULT_YEARS_1 = 1L;
+    private static final Long UPDATED_YEARS_1 = 2L;
 
     @Inject
     private MinisterialWorkExperienceRepository ministerialWorkExperienceRepository;
@@ -110,8 +110,6 @@ public class MinisterialWorkExperienceResourceIntTest {
      */
     public static MinisterialWorkExperience createEntity(EntityManager em) {
         MinisterialWorkExperience ministerialWorkExperience = new MinisterialWorkExperience()
-                .nameOfMinistry1(DEFAULT_NAME_OF_MINISTRY_1)
-                .areaOfMinistry1(DEFAULT_AREA_OF_MINISTRY_1)
                 .nameOfMinistry2(DEFAULT_NAME_OF_MINISTRY_2)
                 .areaOfMinistry2(DEFAULT_AREA_OF_MINISTRY_2)
                 .nameOfMinistry3(DEFAULT_NAME_OF_MINISTRY_3)
@@ -119,10 +117,12 @@ public class MinisterialWorkExperienceResourceIntTest {
                 .nameOfMinistry4(DEFAULT_NAME_OF_MINISTRY_4)
                 .areaOfMinistry4(DEFAULT_AREA_OF_MINISTRY_4)
                 .md5Key(DEFAULT_MD_5_KEY)
-                .years1(DEFAULT_YEARS_1)
                 .years2(DEFAULT_YEARS_2)
                 .years3(DEFAULT_YEARS_3)
-                .years4(DEFAULT_YEARS_4);
+                .years4(DEFAULT_YEARS_4)
+                .nameOfMinistry1(DEFAULT_NAME_OF_MINISTRY_1)
+                .areaOfMinistry1(DEFAULT_AREA_OF_MINISTRY_1)
+                .years1(DEFAULT_YEARS_1);
         return ministerialWorkExperience;
     }
 
@@ -147,8 +147,6 @@ public class MinisterialWorkExperienceResourceIntTest {
         List<MinisterialWorkExperience> ministerialWorkExperienceList = ministerialWorkExperienceRepository.findAll();
         assertThat(ministerialWorkExperienceList).hasSize(databaseSizeBeforeCreate + 1);
         MinisterialWorkExperience testMinisterialWorkExperience = ministerialWorkExperienceList.get(ministerialWorkExperienceList.size() - 1);
-        assertThat(testMinisterialWorkExperience.getNameOfMinistry1()).isEqualTo(DEFAULT_NAME_OF_MINISTRY_1);
-        assertThat(testMinisterialWorkExperience.getAreaOfMinistry1()).isEqualTo(DEFAULT_AREA_OF_MINISTRY_1);
         assertThat(testMinisterialWorkExperience.getNameOfMinistry2()).isEqualTo(DEFAULT_NAME_OF_MINISTRY_2);
         assertThat(testMinisterialWorkExperience.getAreaOfMinistry2()).isEqualTo(DEFAULT_AREA_OF_MINISTRY_2);
         assertThat(testMinisterialWorkExperience.getNameOfMinistry3()).isEqualTo(DEFAULT_NAME_OF_MINISTRY_3);
@@ -156,10 +154,12 @@ public class MinisterialWorkExperienceResourceIntTest {
         assertThat(testMinisterialWorkExperience.getNameOfMinistry4()).isEqualTo(DEFAULT_NAME_OF_MINISTRY_4);
         assertThat(testMinisterialWorkExperience.getAreaOfMinistry4()).isEqualTo(DEFAULT_AREA_OF_MINISTRY_4);
         assertThat(testMinisterialWorkExperience.getMd5Key()).isEqualTo(DEFAULT_MD_5_KEY);
-        assertThat(testMinisterialWorkExperience.getYears1()).isEqualTo(DEFAULT_YEARS_1);
         assertThat(testMinisterialWorkExperience.getYears2()).isEqualTo(DEFAULT_YEARS_2);
         assertThat(testMinisterialWorkExperience.getYears3()).isEqualTo(DEFAULT_YEARS_3);
         assertThat(testMinisterialWorkExperience.getYears4()).isEqualTo(DEFAULT_YEARS_4);
+        assertThat(testMinisterialWorkExperience.getNameOfMinistry1()).isEqualTo(DEFAULT_NAME_OF_MINISTRY_1);
+        assertThat(testMinisterialWorkExperience.getAreaOfMinistry1()).isEqualTo(DEFAULT_AREA_OF_MINISTRY_1);
+        assertThat(testMinisterialWorkExperience.getYears1()).isEqualTo(DEFAULT_YEARS_1);
     }
 
     @Test
@@ -184,60 +184,6 @@ public class MinisterialWorkExperienceResourceIntTest {
 
     @Test
     @Transactional
-    public void checkNameOfMinistry1IsRequired() throws Exception {
-        int databaseSizeBeforeTest = ministerialWorkExperienceRepository.findAll().size();
-        // set the field null
-        ministerialWorkExperience.setNameOfMinistry1(null);
-
-        // Create the MinisterialWorkExperience, which fails.
-
-        restMinisterialWorkExperienceMockMvc.perform(post("/api/ministerial-work-experiences")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(ministerialWorkExperience)))
-            .andExpect(status().isBadRequest());
-
-        List<MinisterialWorkExperience> ministerialWorkExperienceList = ministerialWorkExperienceRepository.findAll();
-        assertThat(ministerialWorkExperienceList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    public void checkAreaOfMinistry1IsRequired() throws Exception {
-        int databaseSizeBeforeTest = ministerialWorkExperienceRepository.findAll().size();
-        // set the field null
-        ministerialWorkExperience.setAreaOfMinistry1(null);
-
-        // Create the MinisterialWorkExperience, which fails.
-
-        restMinisterialWorkExperienceMockMvc.perform(post("/api/ministerial-work-experiences")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(ministerialWorkExperience)))
-            .andExpect(status().isBadRequest());
-
-        List<MinisterialWorkExperience> ministerialWorkExperienceList = ministerialWorkExperienceRepository.findAll();
-        assertThat(ministerialWorkExperienceList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    public void checkYears1IsRequired() throws Exception {
-        int databaseSizeBeforeTest = ministerialWorkExperienceRepository.findAll().size();
-        // set the field null
-        ministerialWorkExperience.setYears1(null);
-
-        // Create the MinisterialWorkExperience, which fails.
-
-        restMinisterialWorkExperienceMockMvc.perform(post("/api/ministerial-work-experiences")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(ministerialWorkExperience)))
-            .andExpect(status().isBadRequest());
-
-        List<MinisterialWorkExperience> ministerialWorkExperienceList = ministerialWorkExperienceRepository.findAll();
-        assertThat(ministerialWorkExperienceList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void getAllMinisterialWorkExperiences() throws Exception {
         // Initialize the database
         ministerialWorkExperienceRepository.saveAndFlush(ministerialWorkExperience);
@@ -247,8 +193,6 @@ public class MinisterialWorkExperienceResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(ministerialWorkExperience.getId().intValue())))
-            .andExpect(jsonPath("$.[*].nameOfMinistry1").value(hasItem(DEFAULT_NAME_OF_MINISTRY_1.toString())))
-            .andExpect(jsonPath("$.[*].areaOfMinistry1").value(hasItem(DEFAULT_AREA_OF_MINISTRY_1.toString())))
             .andExpect(jsonPath("$.[*].nameOfMinistry2").value(hasItem(DEFAULT_NAME_OF_MINISTRY_2.toString())))
             .andExpect(jsonPath("$.[*].areaOfMinistry2").value(hasItem(DEFAULT_AREA_OF_MINISTRY_2.toString())))
             .andExpect(jsonPath("$.[*].nameOfMinistry3").value(hasItem(DEFAULT_NAME_OF_MINISTRY_3.toString())))
@@ -256,10 +200,12 @@ public class MinisterialWorkExperienceResourceIntTest {
             .andExpect(jsonPath("$.[*].nameOfMinistry4").value(hasItem(DEFAULT_NAME_OF_MINISTRY_4.toString())))
             .andExpect(jsonPath("$.[*].areaOfMinistry4").value(hasItem(DEFAULT_AREA_OF_MINISTRY_4.toString())))
             .andExpect(jsonPath("$.[*].md5Key").value(hasItem(DEFAULT_MD_5_KEY.toString())))
-            .andExpect(jsonPath("$.[*].years1").value(hasItem(DEFAULT_YEARS_1.intValue())))
             .andExpect(jsonPath("$.[*].years2").value(hasItem(DEFAULT_YEARS_2.intValue())))
             .andExpect(jsonPath("$.[*].years3").value(hasItem(DEFAULT_YEARS_3.intValue())))
-            .andExpect(jsonPath("$.[*].years4").value(hasItem(DEFAULT_YEARS_4.intValue())));
+            .andExpect(jsonPath("$.[*].years4").value(hasItem(DEFAULT_YEARS_4.intValue())))
+            .andExpect(jsonPath("$.[*].nameOfMinistry1").value(hasItem(DEFAULT_NAME_OF_MINISTRY_1.toString())))
+            .andExpect(jsonPath("$.[*].areaOfMinistry1").value(hasItem(DEFAULT_AREA_OF_MINISTRY_1.toString())))
+            .andExpect(jsonPath("$.[*].years1").value(hasItem(DEFAULT_YEARS_1.intValue())));
     }
 
     @Test
@@ -273,8 +219,6 @@ public class MinisterialWorkExperienceResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(ministerialWorkExperience.getId().intValue()))
-            .andExpect(jsonPath("$.nameOfMinistry1").value(DEFAULT_NAME_OF_MINISTRY_1.toString()))
-            .andExpect(jsonPath("$.areaOfMinistry1").value(DEFAULT_AREA_OF_MINISTRY_1.toString()))
             .andExpect(jsonPath("$.nameOfMinistry2").value(DEFAULT_NAME_OF_MINISTRY_2.toString()))
             .andExpect(jsonPath("$.areaOfMinistry2").value(DEFAULT_AREA_OF_MINISTRY_2.toString()))
             .andExpect(jsonPath("$.nameOfMinistry3").value(DEFAULT_NAME_OF_MINISTRY_3.toString()))
@@ -282,10 +226,12 @@ public class MinisterialWorkExperienceResourceIntTest {
             .andExpect(jsonPath("$.nameOfMinistry4").value(DEFAULT_NAME_OF_MINISTRY_4.toString()))
             .andExpect(jsonPath("$.areaOfMinistry4").value(DEFAULT_AREA_OF_MINISTRY_4.toString()))
             .andExpect(jsonPath("$.md5Key").value(DEFAULT_MD_5_KEY.toString()))
-            .andExpect(jsonPath("$.years1").value(DEFAULT_YEARS_1.intValue()))
             .andExpect(jsonPath("$.years2").value(DEFAULT_YEARS_2.intValue()))
             .andExpect(jsonPath("$.years3").value(DEFAULT_YEARS_3.intValue()))
-            .andExpect(jsonPath("$.years4").value(DEFAULT_YEARS_4.intValue()));
+            .andExpect(jsonPath("$.years4").value(DEFAULT_YEARS_4.intValue()))
+            .andExpect(jsonPath("$.nameOfMinistry1").value(DEFAULT_NAME_OF_MINISTRY_1.toString()))
+            .andExpect(jsonPath("$.areaOfMinistry1").value(DEFAULT_AREA_OF_MINISTRY_1.toString()))
+            .andExpect(jsonPath("$.years1").value(DEFAULT_YEARS_1.intValue()));
     }
 
     @Test
@@ -306,8 +252,6 @@ public class MinisterialWorkExperienceResourceIntTest {
         // Update the ministerialWorkExperience
         MinisterialWorkExperience updatedMinisterialWorkExperience = ministerialWorkExperienceRepository.findOne(ministerialWorkExperience.getId());
         updatedMinisterialWorkExperience
-                .nameOfMinistry1(UPDATED_NAME_OF_MINISTRY_1)
-                .areaOfMinistry1(UPDATED_AREA_OF_MINISTRY_1)
                 .nameOfMinistry2(UPDATED_NAME_OF_MINISTRY_2)
                 .areaOfMinistry2(UPDATED_AREA_OF_MINISTRY_2)
                 .nameOfMinistry3(UPDATED_NAME_OF_MINISTRY_3)
@@ -315,10 +259,12 @@ public class MinisterialWorkExperienceResourceIntTest {
                 .nameOfMinistry4(UPDATED_NAME_OF_MINISTRY_4)
                 .areaOfMinistry4(UPDATED_AREA_OF_MINISTRY_4)
                 .md5Key(UPDATED_MD_5_KEY)
-                .years1(UPDATED_YEARS_1)
                 .years2(UPDATED_YEARS_2)
                 .years3(UPDATED_YEARS_3)
-                .years4(UPDATED_YEARS_4);
+                .years4(UPDATED_YEARS_4)
+                .nameOfMinistry1(UPDATED_NAME_OF_MINISTRY_1)
+                .areaOfMinistry1(UPDATED_AREA_OF_MINISTRY_1)
+                .years1(UPDATED_YEARS_1);
 
         restMinisterialWorkExperienceMockMvc.perform(put("/api/ministerial-work-experiences")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -329,8 +275,6 @@ public class MinisterialWorkExperienceResourceIntTest {
         List<MinisterialWorkExperience> ministerialWorkExperienceList = ministerialWorkExperienceRepository.findAll();
         assertThat(ministerialWorkExperienceList).hasSize(databaseSizeBeforeUpdate);
         MinisterialWorkExperience testMinisterialWorkExperience = ministerialWorkExperienceList.get(ministerialWorkExperienceList.size() - 1);
-        assertThat(testMinisterialWorkExperience.getNameOfMinistry1()).isEqualTo(UPDATED_NAME_OF_MINISTRY_1);
-        assertThat(testMinisterialWorkExperience.getAreaOfMinistry1()).isEqualTo(UPDATED_AREA_OF_MINISTRY_1);
         assertThat(testMinisterialWorkExperience.getNameOfMinistry2()).isEqualTo(UPDATED_NAME_OF_MINISTRY_2);
         assertThat(testMinisterialWorkExperience.getAreaOfMinistry2()).isEqualTo(UPDATED_AREA_OF_MINISTRY_2);
         assertThat(testMinisterialWorkExperience.getNameOfMinistry3()).isEqualTo(UPDATED_NAME_OF_MINISTRY_3);
@@ -338,10 +282,12 @@ public class MinisterialWorkExperienceResourceIntTest {
         assertThat(testMinisterialWorkExperience.getNameOfMinistry4()).isEqualTo(UPDATED_NAME_OF_MINISTRY_4);
         assertThat(testMinisterialWorkExperience.getAreaOfMinistry4()).isEqualTo(UPDATED_AREA_OF_MINISTRY_4);
         assertThat(testMinisterialWorkExperience.getMd5Key()).isEqualTo(UPDATED_MD_5_KEY);
-        assertThat(testMinisterialWorkExperience.getYears1()).isEqualTo(UPDATED_YEARS_1);
         assertThat(testMinisterialWorkExperience.getYears2()).isEqualTo(UPDATED_YEARS_2);
         assertThat(testMinisterialWorkExperience.getYears3()).isEqualTo(UPDATED_YEARS_3);
         assertThat(testMinisterialWorkExperience.getYears4()).isEqualTo(UPDATED_YEARS_4);
+        assertThat(testMinisterialWorkExperience.getNameOfMinistry1()).isEqualTo(UPDATED_NAME_OF_MINISTRY_1);
+        assertThat(testMinisterialWorkExperience.getAreaOfMinistry1()).isEqualTo(UPDATED_AREA_OF_MINISTRY_1);
+        assertThat(testMinisterialWorkExperience.getYears1()).isEqualTo(UPDATED_YEARS_1);
     }
 
     @Test

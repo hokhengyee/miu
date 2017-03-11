@@ -115,8 +115,6 @@
                     resolve: {
                         entity: function () {
                             return {
-                                nameOfMinistry1: null,
-                                areaOfMinistry1: null,
                                 nameOfMinistry2: null,
                                 areaOfMinistry2: null,
                                 nameOfMinistry3: null,
@@ -124,10 +122,12 @@
                                 nameOfMinistry4: null,
                                 areaOfMinistry4: null,
                                 md5Key: null,
-                                years1: null,
                                 years2: null,
                                 years3: null,
                                 years4: null,
+                                nameOfMinistry1: null,
+                                areaOfMinistry1: null,
+                                years1: null,
                                 id: null
                             };
                         }

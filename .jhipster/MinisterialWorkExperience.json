@@ -3,24 +3,6 @@
     "relationships": [],
     "fields": [
         {
-            "fieldName": "nameOfMinistry1",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "required",
-                "maxlength"
-            ],
-            "fieldValidateRulesMaxlength": "1000"
-        },
-        {
-            "fieldName": "areaOfMinistry1",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "required",
-                "maxlength"
-            ],
-            "fieldValidateRulesMaxlength": "1000"
-        },
-        {
             "fieldName": "nameOfMinistry2",
             "fieldType": "String",
             "fieldValidateRules": [
@@ -73,17 +55,6 @@
             "fieldType": "String"
         },
         {
-            "fieldName": "years1",
-            "fieldType": "Long",
-            "fieldValidateRules": [
-                "required",
-                "min",
-                "max"
-            ],
-            "fieldValidateRulesMin": "1",
-            "fieldValidateRulesMax": "100"
-        },
-        {
             "fieldName": "years2",
             "fieldType": "Long",
             "fieldValidateRules": [
@@ -105,6 +76,32 @@
         },
         {
             "fieldName": "years4",
+            "fieldType": "Long",
+            "fieldValidateRules": [
+                "min",
+                "max"
+            ],
+            "fieldValidateRulesMin": "1",
+            "fieldValidateRulesMax": "100"
+        },
+        {
+            "fieldName": "nameOfMinistry1",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": "1000"
+        },
+        {
+            "fieldName": "areaOfMinistry1",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": "1000"
+        },
+        {
+            "fieldName": "years1",
             "fieldType": "Long",
             "fieldValidateRules": [
                 "min",

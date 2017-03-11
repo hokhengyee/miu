@@ -22,16 +22,6 @@ public class MinisterialWorkExperience implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotNull
-    @Size(max = 1000)
-    @Column(name = "name_of_ministry_1", length = 1000, nullable = false)
-    private String nameOfMinistry1;
-
-    @NotNull
-    @Size(max = 1000)
-    @Column(name = "area_of_ministry_1", length = 1000, nullable = false)
-    private String areaOfMinistry1;
-
     @Size(max = 1000)
     @Column(name = "name_of_ministry_2", length = 1000)
     private String nameOfMinistry2;
@@ -59,12 +49,6 @@ public class MinisterialWorkExperience implements Serializable {
     @Column(name = "md_5_key")
     private String md5Key;
 
-    @NotNull
-    @Min(value = 1)
-    @Max(value = 100)
-    @Column(name = "years_1", nullable = false)
-    private Long years1;
-
     @Min(value = 1)
     @Max(value = 100)
     @Column(name = "years_2")
@@ -80,38 +64,25 @@ public class MinisterialWorkExperience implements Serializable {
     @Column(name = "years_4")
     private Long years4;
 
+    @Size(max = 1000)
+    @Column(name = "name_of_ministry_1", length = 1000)
+    private String nameOfMinistry1;
+
+    @Size(max = 1000)
+    @Column(name = "area_of_ministry_1", length = 1000)
+    private String areaOfMinistry1;
+
+    @Min(value = 1)
+    @Max(value = 100)
+    @Column(name = "years_1")
+    private Long years1;
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getNameOfMinistry1() {
-        return nameOfMinistry1;
-    }
-
-    public MinisterialWorkExperience nameOfMinistry1(String nameOfMinistry1) {
-        this.nameOfMinistry1 = nameOfMinistry1;
-        return this;
-    }
-
-    public void setNameOfMinistry1(String nameOfMinistry1) {
-        this.nameOfMinistry1 = nameOfMinistry1;
-    }
-
-    public String getAreaOfMinistry1() {
-        return areaOfMinistry1;
-    }
-
-    public MinisterialWorkExperience areaOfMinistry1(String areaOfMinistry1) {
-        this.areaOfMinistry1 = areaOfMinistry1;
-        return this;
-    }
-
-    public void setAreaOfMinistry1(String areaOfMinistry1) {
-        this.areaOfMinistry1 = areaOfMinistry1;
     }
 
     public String getNameOfMinistry2() {
@@ -205,19 +176,6 @@ public class MinisterialWorkExperience implements Serializable {
         this.md5Key = md5Key;
     }
 
-    public Long getYears1() {
-        return years1;
-    }
-
-    public MinisterialWorkExperience years1(Long years1) {
-        this.years1 = years1;
-        return this;
-    }
-
-    public void setYears1(Long years1) {
-        this.years1 = years1;
-    }
-
     public Long getYears2() {
         return years2;
     }
@@ -257,6 +215,45 @@ public class MinisterialWorkExperience implements Serializable {
         this.years4 = years4;
     }
 
+    public String getNameOfMinistry1() {
+        return nameOfMinistry1;
+    }
+
+    public MinisterialWorkExperience nameOfMinistry1(String nameOfMinistry1) {
+        this.nameOfMinistry1 = nameOfMinistry1;
+        return this;
+    }
+
+    public void setNameOfMinistry1(String nameOfMinistry1) {
+        this.nameOfMinistry1 = nameOfMinistry1;
+    }
+
+    public String getAreaOfMinistry1() {
+        return areaOfMinistry1;
+    }
+
+    public MinisterialWorkExperience areaOfMinistry1(String areaOfMinistry1) {
+        this.areaOfMinistry1 = areaOfMinistry1;
+        return this;
+    }
+
+    public void setAreaOfMinistry1(String areaOfMinistry1) {
+        this.areaOfMinistry1 = areaOfMinistry1;
+    }
+
+    public Long getYears1() {
+        return years1;
+    }
+
+    public MinisterialWorkExperience years1(Long years1) {
+        this.years1 = years1;
+        return this;
+    }
+
+    public void setYears1(Long years1) {
+        this.years1 = years1;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -281,8 +278,6 @@ public class MinisterialWorkExperience implements Serializable {
     public String toString() {
         return "MinisterialWorkExperience{" +
             "id=" + id +
-            ", nameOfMinistry1='" + nameOfMinistry1 + "'" +
-            ", areaOfMinistry1='" + areaOfMinistry1 + "'" +
             ", nameOfMinistry2='" + nameOfMinistry2 + "'" +
             ", areaOfMinistry2='" + areaOfMinistry2 + "'" +
             ", nameOfMinistry3='" + nameOfMinistry3 + "'" +
@@ -290,10 +285,12 @@ public class MinisterialWorkExperience implements Serializable {
             ", nameOfMinistry4='" + nameOfMinistry4 + "'" +
             ", areaOfMinistry4='" + areaOfMinistry4 + "'" +
             ", md5Key='" + md5Key + "'" +
-            ", years1='" + years1 + "'" +
             ", years2='" + years2 + "'" +
             ", years3='" + years3 + "'" +
             ", years4='" + years4 + "'" +
+            ", nameOfMinistry1='" + nameOfMinistry1 + "'" +
+            ", areaOfMinistry1='" + areaOfMinistry1 + "'" +
+            ", years1='" + years1 + "'" +
             '}';
     }
 }

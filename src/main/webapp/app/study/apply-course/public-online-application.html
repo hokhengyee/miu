@@ -221,7 +221,7 @@
 													type="text" class="form-control" name="nameOfInstitution1"
 													id="field_nameOfInstitution1"
 													ng-model="vm.registrationAcademicDetails.nameOfInstitution1"
-													required ng-maxlength="1000" />
+													ng-maxlength="1000" />
 												<div ng-show="editForm.nameOfInstitution1.$invalid">
 													<p class="help-block"
 														ng-show="editForm.nameOfInstitution1.$error.maxlength">This
@@ -236,7 +236,7 @@
 													class="form-control" name="examPassed1"
 													id="field_examPassed1"
 													ng-model="vm.registrationAcademicDetails.examPassed1"
-													required ng-maxlength="1000" />
+													ng-maxlength="1000" />
 												<div ng-show="editForm.examPassed1.$invalid">
 													<p class="help-block"
 														ng-show="editForm.examPassed1.$error.maxlength">This
@@ -249,8 +249,8 @@
 												<label class="control-label" for="field_year1"
 													ng-show="false">Year 1</label> <input type="number"
 													class="form-control" name="year1" id="field_year1"
-													ng-model="vm.registrationAcademicDetails.year1" required
-													min="1900" max="9999" />
+													ng-model="vm.registrationAcademicDetails.year1" min="1900"
+													max="9999" />
 												<div ng-show="editForm.year1.$invalid">
 													<p class="help-block" ng-show="editForm.year1.$error.min"
 														translate-value-min="1900">This field should be more
@@ -268,7 +268,7 @@
 												<label class="control-label" for="field_grade1"
 													ng-show="false">Grade 1</label> <input type="text"
 													class="form-control" name="grade1" id="field_grade1"
-													ng-model="vm.registrationAcademicDetails.grade1" required />
+													ng-model="vm.registrationAcademicDetails.grade1" />
 											</div>
 										</td>
 									</tr>
@@ -479,11 +479,8 @@
 											type="text" class="form-control" name="nameOfMinistry1"
 											id="field_nameOfMinistry1"
 											ng-model="vm.ministerialWorkExperience.nameOfMinistry1"
-											required ng-maxlength="1000" />
+											ng-maxlength="1000" />
 											<div ng-show="editForm.nameOfMinistry1.$invalid">
-												<p class="help-block"
-													ng-show="editForm.nameOfMinistry1.$error.required">This
-													field is required.</p>
 												<p class="help-block"
 													ng-show="editForm.nameOfMinistry1.$error.maxlength">This
 													field cannot be longer than 1000 characters.</p>
@@ -495,11 +492,8 @@
 											type="text" class="form-control" name="areaOfMinistry1"
 											id="field_areaOfMinistry1"
 											ng-model="vm.ministerialWorkExperience.areaOfMinistry1"
-											required ng-maxlength="1000" />
+											ng-maxlength="1000" />
 											<div ng-show="editForm.areaOfMinistry1.$invalid">
-												<p class="help-block"
-													ng-show="editForm.areaOfMinistry1.$error.required">This
-													field is required.</p>
 												<p class="help-block"
 													ng-show="editForm.areaOfMinistry1.$error.maxlength">This
 													field cannot be longer than 1000 characters.</p>
@@ -509,12 +503,9 @@
 											<!-- <label class="control-label" for="field_years1">Years
 												1</label> --> <input type="number" class="form-control"
 											name="years1" id="field_years1"
-											ng-model="vm.ministerialWorkExperience.years1" required
-											min="1" max="100" />
+											ng-model="vm.ministerialWorkExperience.years1" min="1"
+											max="100" />
 											<div ng-show="editForm.years1.$invalid">
-												<p class="help-block"
-													ng-show="editForm.years1.$error.required">This field is
-													required.</p>
 												<p class="help-block" ng-show="editForm.years1.$error.min"
 													translate-value-min="1">This field should be more than
 													0.</p>
