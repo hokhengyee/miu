@@ -1,101 +1,142 @@
-
 <div>
-    <h2><span>Online Application</span> {{vm.onlineApplication.id}}</h2>
-    <hr>
-    <jhi-alert-error></jhi-alert-error>
-    <dl class="dl-horizontal jh-entity-details">
-        <dt><span>Date Of Birth</span></dt>
-        <dd>
-            <span>{{vm.onlineApplication.dateOfBirth | date:'mediumDate'}}</span>
-        </dd>
-        <dt><span>Telephone</span></dt>
-        <dd>
-            <span>{{vm.onlineApplication.telephone}}</span>
-        </dd>
-        <dt><span>Email</span></dt>
-        <dd>
-            <span>{{vm.onlineApplication.email}}</span>
-        </dd>
-        <dt><span>City</span></dt>
-        <dd>
-            <span>{{vm.onlineApplication.city}}</span>
-        </dd>
-        <dt><span>State</span></dt>
-        <dd>
-            <span>{{vm.onlineApplication.state}}</span>
-        </dd>
-        <dt><span>Country</span></dt>
-        <dd>
-            <span>{{vm.onlineApplication.country}}</span>
-        </dd>
-        <dt><span>Postcode</span></dt>
-        <dd>
-            <span>{{vm.onlineApplication.postcode}}</span>
-        </dd>
-        <dt><span>Registration Datetime</span></dt>
-        <dd>
-            <span>{{vm.onlineApplication.registrationDatetime | date:'medium'}}</span>
-        </dd>
-        <dt><span>Surname</span></dt>
-        <dd>
-            <span>{{vm.onlineApplication.surname}}</span>
-        </dd>
-        <dt><span>Given Name</span></dt>
-        <dd>
-            <span>{{vm.onlineApplication.givenName}}</span>
-        </dd>
-        <dt><span>Address</span></dt>
-        <dd>
-            <span>{{vm.onlineApplication.address}}</span>
-        </dd>
-        <dt><span>Profile Photo</span></dt>
-        <dd>
-            <div ng-if="vm.onlineApplication.profilePhoto">
-                <a ng-click="vm.openFile(vm.onlineApplication.profilePhotoContentType, vm.onlineApplication.profilePhoto)">
-                    <img data-ng-src="{{'data:' + vm.onlineApplication.profilePhotoContentType + ';base64,' + vm.onlineApplication.profilePhoto}}" style="max-width: 100%;" alt="onlineApplication image"/>
-                </a>
-                {{vm.onlineApplication.profilePhotoContentType}}, {{vm.byteSize(vm.onlineApplication.profilePhoto)}}
-            </div>
-        </dd>
-        <dt><span>Academic Certificate</span></dt>
-        <dd>
-            <div ng-if="vm.onlineApplication.academicCertificate">
-                <a ng-click="vm.openFile(vm.onlineApplication.academicCertificateContentType, vm.onlineApplication.academicCertificate)">open</a>
-                {{vm.onlineApplication.academicCertificateContentType}}, {{vm.byteSize(vm.onlineApplication.academicCertificate)}}
-            </div>
-        </dd>
-        <dt><span>Letter Of Recommendation</span></dt>
-        <dd>
-            <div ng-if="vm.onlineApplication.letterOfRecommendation">
-                <a ng-click="vm.openFile(vm.onlineApplication.letterOfRecommendationContentType, vm.onlineApplication.letterOfRecommendation)">open</a>
-                {{vm.onlineApplication.letterOfRecommendationContentType}}, {{vm.byteSize(vm.onlineApplication.letterOfRecommendation)}}
-            </div>
-        </dd>
-        <dt><span>Profile Document</span></dt>
-        <dd>
-            <div ng-if="vm.onlineApplication.profileDocument">
-                <a ng-click="vm.openFile(vm.onlineApplication.profileDocumentContentType, vm.onlineApplication.profileDocument)">open</a>
-                {{vm.onlineApplication.profileDocumentContentType}}, {{vm.byteSize(vm.onlineApplication.profileDocument)}}
-            </div>
-        </dd>
-        <dt><span>Md 5 Key</span></dt>
-        <dd>
-            <span>{{vm.onlineApplication.md5key}}</span>
-        </dd>
-        <dt><span>Course</span></dt>
-        <dd>
-            <a ui-sref="course-detail({id:vm.onlineApplication.course.id})">{{vm.onlineApplication.course.title}}</a>
-        </dd>
-    </dl>
 
-    <button type="submit"
-            ui-sref="{{ vm.previousState }}"
-            class="btn btn-info">
-        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span> Back</span>
-    </button>
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<h3 class="panel-title">
+				<span>Online Application</span> {{vm.onlineApplication.id}}
+			</h3>
+		</div>
+		<table class="table table-bordered">
+			<tr>
+				<th width="300px">Registration Datetime</th>
+				<td>{{vm.onlineApplication.registrationDatetime |
+					date:'medium'}}</td>
+			</tr>
+			<tr>
+				<th>Course</th>
+				<td>{{vm.onlineApplication.course.title}}</td>
+			</tr>
+			<tr>
+				<th>Email</th>
+				<td>{{vm.onlineApplication.email}}</td>
+			</tr>
+			<tr>
+				<th>Surname</th>
+				<td>{{vm.onlineApplication.surname}}</td>
+			</tr>
+			<tr>
+				<th>Given Name</th>
+				<td>{{vm.onlineApplication.givenName}}</td>
+			</tr>
+			<tr>
+				<th>Date Of Birth</th>
+				<td>{{vm.onlineApplication.dateOfBirth | date:'mediumDate'}}</td>
+			</tr>
+			<tr>
+				<th>Telephone</th>
+				<td>{{vm.onlineApplication.telephone}}</td>
+			</tr>
+			<tr>
+				<th>Address</th>
+				<td>{{vm.onlineApplication.address}}</td>
+			</tr>
+			<tr>
+				<th>City</th>
+				<td>{{vm.onlineApplication.city}}</td>
+			</tr>
+			<tr>
+				<th>State</th>
+				<td>{{vm.onlineApplication.state}}</td>
+			</tr>
+			<tr>
+				<th>Country</th>
+				<td>{{vm.onlineApplication.country}}</td>
+			</tr>
+			<tr>
+				<th>Postcode</th>
+				<td>{{vm.onlineApplication.postcode}}</td>
+			</tr>
+			<tr>
+				<th>Profile Photo</th>
+				<td><div ng-if="vm.onlineApplication.profilePhoto">
+						<a
+							ng-click="vm.openFile(vm.onlineApplication.profilePhotoContentType, vm.onlineApplication.profilePhoto)">
+							<img
+							data-ng-src="{{'data:' + vm.onlineApplication.profilePhotoContentType + ';base64,' + vm.onlineApplication.profilePhoto}}"
+							style="max-width: 100%;" alt="onlineApplication image" />
+						</a> {{vm.onlineApplication.profilePhotoContentType}},
+						{{vm.byteSize(vm.onlineApplication.profilePhoto)}}
+					</div></td>
+			</tr>
+			<tr>
+				<th>Academic Certificate</th>
+				<td><div ng-if="vm.onlineApplication.academicCertificate">
+						<a
+							ng-click="vm.openFile(vm.onlineApplication.academicCertificateContentType, vm.onlineApplication.academicCertificate)">open</a>
+						{{vm.onlineApplication.academicCertificateContentType}},
+						{{vm.byteSize(vm.onlineApplication.academicCertificate)}}
+					</div></td>
+			</tr>
+			<tr>
+				<th>Letter Of Recommendation</th>
+				<td>
+					<div ng-if="vm.onlineApplication.letterOfRecommendation">
+						<a
+							ng-click="vm.openFile(vm.onlineApplication.letterOfRecommendationContentType, vm.onlineApplication.letterOfRecommendation)">open</a>
+						{{vm.onlineApplication.letterOfRecommendationContentType}},
+						{{vm.byteSize(vm.onlineApplication.letterOfRecommendation)}}
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<th>Profile Document</th>
+				<td>
+					<div ng-if="vm.onlineApplication.profileDocument">
+						<a
+							ng-click="vm.openFile(vm.onlineApplication.profileDocumentContentType, vm.onlineApplication.profileDocument)">open</a>
+						{{vm.onlineApplication.profileDocumentContentType}},
+						{{vm.byteSize(vm.onlineApplication.profileDocument)}}
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<th>Md5 Key</th>
+				<td>{{vm.onlineApplication.md5key}}</td>
+			</tr>
+		</table>
+		<div class="panel-body">
+			<jhi-alert-error></jhi-alert-error>
 
-    <button type="button" ui-sref="online-application-detail.edit({id:vm.onlineApplication.id})" class="btn btn-primary">
-        <span class="glyphicon glyphicon-pencil"></span>
-        <span class="hidden-xs hidden-sm"> Edit</span>
-    </button>
+			<!-- Academic Details -->
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">Academic Details</h3>
+				</div>
+				<div class="panel-body">Panel content</div>
+			</div>
+			<!-- Academic Details -->
+
+			<!-- Ministerial Work Experience -->
+			<div class="panel panel-primary">
+				<div class="panel-heading">
+					<h3 class="panel-title">Ministerial Work Experience</h3>
+				</div>
+				<div class="panel-body">Panel content</div>
+			</div>
+			<!-- Ministerial Work Experience -->
+
+			<button type="submit" ui-sref="{{ vm.previousState }}"
+				class="btn btn-info">
+				<span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span>
+					Back</span>
+			</button>
+
+			<!-- <button type="button"
+				ui-sref="online-application-detail.edit({id:vm.onlineApplication.id})"
+				class="btn btn-primary">
+				<span class="glyphicon glyphicon-pencil"></span> <span
+					class="hidden-xs hidden-sm"> Edit</span>
+			</button> -->
+		</div>
+	</div>
 </div>
