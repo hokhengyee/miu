@@ -9,17 +9,17 @@
 
     function stateConfig($stateProvider) {
         $stateProvider
-        .state('online-application', {
+        .state('registration-academic-details', {
             parent: 'entity',
-            url: '/online-application?page&sort&search',
+            url: '/registration-academic-details?page&sort&search',
             data: {
                 authorities: ['ROLE_USER'],
-                pageTitle: 'OnlineApplications'
+                pageTitle: 'RegistrationAcademicDetails'
             },
             views: {
                 'content@': {
-                    templateUrl: 'app/entities/online-application/online-applications.html',
-                    controller: 'OnlineApplicationController',
+                    templateUrl: 'app/entities/registration-academic-details/registration-academic-details.html',
+                    controller: 'RegistrationAcademicDetailsController',
                     controllerAs: 'vm'
                 }
             },
@@ -46,27 +46,27 @@
                 }]
             }
         })
-        .state('online-application-detail', {
+        .state('registration-academic-details-detail', {
             parent: 'entity',
-            url: '/online-application/{id}',
+            url: '/registration-academic-details/{id}',
             data: {
                 authorities: ['ROLE_USER'],
-                pageTitle: 'OnlineApplication'
+                pageTitle: 'RegistrationAcademicDetails'
             },
             views: {
                 'content@': {
-                    templateUrl: 'app/entities/online-application/online-application-detail.html',
-                    controller: 'OnlineApplicationDetailController',
+                    templateUrl: 'app/entities/registration-academic-details/registration-academic-details-detail.html',
+                    controller: 'RegistrationAcademicDetailsDetailController',
                     controllerAs: 'vm'
                 }
             },
             resolve: {
-                entity: ['$stateParams', 'OnlineApplication', function($stateParams, OnlineApplication) {
-                    return OnlineApplication.get({id : $stateParams.id}).$promise;
+                entity: ['$stateParams', 'RegistrationAcademicDetails', function($stateParams, RegistrationAcademicDetails) {
+                    return RegistrationAcademicDetails.get({id : $stateParams.id}).$promise;
                 }],
                 previousState: ["$state", function ($state) {
                     var currentStateData = {
-                        name: $state.current.name || 'online-application',
+                        name: $state.current.name || 'registration-academic-details',
                         params: $state.params,
                         url: $state.href($state.current.name, $state.params)
                     };
@@ -74,22 +74,22 @@
                 }]
             }
         })
-        .state('online-application-detail.edit', {
-            parent: 'online-application-detail',
+        .state('registration-academic-details-detail.edit', {
+            parent: 'registration-academic-details-detail',
             url: '/detail/edit',
             data: {
                 authorities: ['ROLE_USER']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
-                    templateUrl: 'app/entities/online-application/online-application-dialog.html',
-                    controller: 'OnlineApplicationDialogController',
+                    templateUrl: 'app/entities/registration-academic-details/registration-academic-details-dialog.html',
+                    controller: 'RegistrationAcademicDetailsDialogController',
                     controllerAs: 'vm',
                     backdrop: 'static',
                     size: 'lg',
                     resolve: {
-                        entity: ['OnlineApplication', function(OnlineApplication) {
-                            return OnlineApplication.get({id : $stateParams.id}).$promise;
+                        entity: ['RegistrationAcademicDetails', function(RegistrationAcademicDetails) {
+                            return RegistrationAcademicDetails.get({id : $stateParams.id}).$promise;
                         }]
                     }
                 }).result.then(function() {
@@ -99,97 +99,94 @@
                 });
             }]
         })
-        .state('online-application.new', {
-            parent: 'online-application',
+        .state('registration-academic-details.new', {
+            parent: 'registration-academic-details',
             url: '/new',
             data: {
                 authorities: ['ROLE_USER']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
-                    templateUrl: 'app/entities/online-application/online-application-dialog.html',
-                    controller: 'OnlineApplicationDialogController',
+                    templateUrl: 'app/entities/registration-academic-details/registration-academic-details-dialog.html',
+                    controller: 'RegistrationAcademicDetailsDialogController',
                     controllerAs: 'vm',
                     backdrop: 'static',
                     size: 'lg',
                     resolve: {
                         entity: function () {
                             return {
-                                dateOfBirth: null,
-                                telephone: null,
-                                email: null,
-                                city: null,
-                                state: null,
-                                country: null,
-                                postcode: null,
-                                registrationDatetime: null,
-                                surname: null,
-                                givenName: null,
-                                address: null,
-                                profilePhoto: null,
-                                profilePhotoContentType: null,
-                                academicCertificate: null,
-                                academicCertificateContentType: null,
-                                letterOfRecommendation: null,
-                                letterOfRecommendationContentType: null,
-                                profileDocument: null,
-                                profileDocumentContentType: null,
+                                nameOfInstitution1: null,
+                                year1: null,
+                                grade1: null,
+                                nameOfInstitution2: null,
+                                examPassed2: null,
+                                year2: null,
+                                grade2: null,
+                                nameOfInstitution3: null,
+                                examPassed3: null,
+                                year3: null,
+                                grade3: null,
+                                nameOfInstitution4: null,
+                                examPassed4: null,
+                                year4: null,
+                                grade4: null,
+                                examPassed1: null,
                                 md5key: null,
                                 id: null
                             };
                         }
                     }
                 }).result.then(function() {
-                    $state.go('online-application', null, { reload: 'online-application' });
+                    $state.go('registration-academic-details', null, { reload: 'registration-academic-details' });
                 }, function() {
-                    $state.go('online-application');
+                    $state.go('registration-academic-details');
                 });
             }]
         })
-        .state('online-application.edit', {
-            parent: 'online-application',
+        .state('registration-academic-details.edit', {
+            parent: 'registration-academic-details',
             url: '/{id}/edit',
             data: {
                 authorities: ['ROLE_USER']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
-                    templateUrl: 'app/entities/online-application/online-application-dialog.html',
-                    controller: 'OnlineApplicationDialogController',
+                    templateUrl: 'app/entities/registration-academic-details/registration-academic-details-dialog.html',
+                    controller: 'RegistrationAcademicDetailsDialogController',
                     controllerAs: 'vm',
                     backdrop: 'static',
                     size: 'lg',
                     resolve: {
-                        entity: ['OnlineApplication', function(OnlineApplication) {
-                            return OnlineApplication.get({id : $stateParams.id}).$promise;
+                        entity: ['RegistrationAcademicDetails', function(RegistrationAcademicDetails) {
+                            return RegistrationAcademicDetails.get({id : $stateParams.id}).$promise;
                         }]
                     }
                 }).result.then(function() {
-                    $state.go('online-application', null, { reload: 'online-application' });
+                    $state.go('registration-academic-details', null, { reload: 'registration-academic-details' });
                 }, function() {
                     $state.go('^');
                 });
             }]
         })
-        .state('online-application.delete', {
-            parent: 'online-application',
+        .state('registration-academic-details.delete', {
+            parent: 'registration-academic-details',
             url: '/{id}/delete',
             data: {
                 authorities: ['ROLE_USER']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
-                    templateUrl: 'app/entities/online-application/online-application-delete-dialog.html',
-                    controller: 'OnlineApplicationDeleteController',
+                    templateUrl: 'app/entities/registration-academic-details/registration-academic-details-delete-dialog.html',
+                    controller: 'RegistrationAcademicDetailsDeleteController',
                     controllerAs: 'vm',
                     size: 'md',
                     resolve: {
-                        entity: ['OnlineApplication', function(OnlineApplication) {
-                            return OnlineApplication.get({id : $stateParams.id}).$promise;
+                        entity: ['RegistrationAcademicDetails', function(RegistrationAcademicDetails) {
+                            return RegistrationAcademicDetails.get({id : $stateParams.id}).$promise;
                         }]
                     }
                 }).result.then(function() {
-                    $state.go('online-application', null, { reload: 'online-application' });
+                    $state.go('registration-academic-details', null, { reload: 'registration-academic-details' });
                 }, function() {
                     $state.go('^');
                 });

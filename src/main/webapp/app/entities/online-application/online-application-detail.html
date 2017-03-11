@@ -48,13 +48,6 @@
         <dd>
             <span>{{vm.onlineApplication.address}}</span>
         </dd>
-        <dt><span>Application Form</span></dt>
-        <dd>
-            <div ng-if="vm.onlineApplication.applicationForm">
-                <a ng-click="vm.openFile(vm.onlineApplication.applicationFormContentType, vm.onlineApplication.applicationForm)">open</a>
-                {{vm.onlineApplication.applicationFormContentType}}, {{vm.byteSize(vm.onlineApplication.applicationForm)}}
-            </div>
-        </dd>
         <dt><span>Profile Photo</span></dt>
         <dd>
             <div ng-if="vm.onlineApplication.profilePhoto">
@@ -84,6 +77,10 @@
                 <a ng-click="vm.openFile(vm.onlineApplication.profileDocumentContentType, vm.onlineApplication.profileDocument)">open</a>
                 {{vm.onlineApplication.profileDocumentContentType}}, {{vm.byteSize(vm.onlineApplication.profileDocument)}}
             </div>
+        </dd>
+        <dt><span>Md 5 Key</span></dt>
+        <dd>
+            <span>{{vm.onlineApplication.md5key}}</span>
         </dd>
         <dt><span>Course</span></dt>
         <dd>

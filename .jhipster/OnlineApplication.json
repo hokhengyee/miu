@@ -103,14 +103,6 @@
             "fieldValidateRulesMaxlength": "3000"
         },
         {
-            "fieldName": "applicationForm",
-            "fieldType": "byte[]",
-            "fieldTypeBlobContent": "any",
-            "fieldValidateRules": [
-                "required"
-            ]
-        },
-        {
             "fieldName": "profilePhoto",
             "fieldType": "byte[]",
             "fieldTypeBlobContent": "image"
@@ -129,6 +121,10 @@
             "fieldName": "profileDocument",
             "fieldType": "byte[]",
             "fieldTypeBlobContent": "any"
+        },
+        {
+            "fieldName": "md5key",
+            "fieldType": "String"
         }
     ],
     "changelogDate": "20170108055311",

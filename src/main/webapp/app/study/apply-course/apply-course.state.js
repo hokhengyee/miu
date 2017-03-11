@@ -39,6 +39,47 @@
                         address: null,
                         applicationForm: null,
                         applicationFormContentType: null,
+                        md5key: null,
+                        id: null
+                    };
+                },
+                entity2: function () {
+                    return {
+                        nameOfInstitution1: null,
+                        year1: null,
+                        grade1: null,
+                        nameOfInstitution2: null,
+                        examPassed2: null,
+                        year2: null,
+                        grade2: null,
+                        nameOfInstitution3: null,
+                        examPassed3: null,
+                        year3: null,
+                        grade3: null,
+                        nameOfInstitution4: null,
+                        examPassed4: null,
+                        year4: null,
+                        grade4: null,
+                        examPassed1: null,
+                        md5key: null,
+                        id: null
+                    };
+                },
+                entity3: function () {
+                    return {
+                        nameOfMinistry1: null,
+                        areaOfMinistry1: null,
+                        years1: null,
+                        nameOfMinistry2: null,
+                        areaOfMinistry2: null,
+                        years2: null,
+                        nameOfMinistry3: null,
+                        areaOfMinistry3: null,
+                        years3: null,
+                        nameOfMinistry4: null,
+                        areaOfMinistry4: null,
+                        years4: null,
+                        md5Key: null,
                         id: null
                     };
                 }

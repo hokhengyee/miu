@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,9 +30,11 @@ import com.miu.domain.Course;
 import com.miu.domain.EntryQualification;
 import com.miu.domain.Gallery;
 import com.miu.domain.LecturerProfile;
+import com.miu.domain.MinisterialWorkExperience;
 import com.miu.domain.Module;
 import com.miu.domain.NewsAndEvent;
 import com.miu.domain.OnlineApplication;
+import com.miu.domain.RegistrationAcademicDetails;
 import com.miu.domain.ResearchPaper;
 import com.miu.domain.StaticPage;
 import com.miu.repository.AdjunctFacultyRepository;
@@ -39,9 +42,11 @@ import com.miu.repository.CourseRepository;
 import com.miu.repository.EntryQualificationRepository;
 import com.miu.repository.GalleryRepository;
 import com.miu.repository.LecturerProfileRepository;
+import com.miu.repository.MinisterialWorkExperienceRepository;
 import com.miu.repository.ModuleRepository;
 import com.miu.repository.NewsAndEventRepository;
 import com.miu.repository.OnlineApplicationRepository;
+import com.miu.repository.RegistrationAcademicDetailsRepository;
 import com.miu.repository.ResearchPaperRepository;
 import com.miu.repository.StaticPageRepository;
 import com.miu.web.rest.util.HeaderUtil;
@@ -74,6 +79,9 @@ public class PublicResource {
 	private final Logger LOGGER = LoggerFactory.getLogger(PublicResource.class);
 
 	@Inject
+	private MinisterialWorkExperienceRepository ministerialWorkExperienceRepository;
+
+	@Inject
 	private ModuleRepository moduleRepository;
 
 	@Inject
@@ -83,10 +91,28 @@ public class PublicResource {
 	private OnlineApplicationRepository onlineApplicationRepository;
 
 	@Inject
+	private RegistrationAcademicDetailsRepository registrationAcademicDetailsRepository;
+
+	@Inject
 	private ResearchPaperRepository researchPaperRepository;
 
 	@Inject
 	private StaticPageRepository staticPageRepository;
+
+	@PostMapping("/ministerial-work-experiences")
+	@Timed
+	public ResponseEntity<MinisterialWorkExperience> createMinisterialWorkExperience(
+			@Valid @RequestBody MinisterialWorkExperience ministerialWorkExperience) throws URISyntaxException {
+		LOGGER.debug("REST request to save MinisterialWorkExperience : {}", ministerialWorkExperience);
+		if (ministerialWorkExperience.getId() != null) {
+			return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("ministerialWorkExperience",
+					"idexists", "A new ministerialWorkExperience cannot already have an ID")).body(null);
+		}
+		MinisterialWorkExperience result = ministerialWorkExperienceRepository.save(ministerialWorkExperience);
+		return ResponseEntity.created(new URI("/api/ministerial-work-experiences/" + result.getId()))
+				.headers(HeaderUtil.createEntityCreationAlert("ministerialWorkExperience", result.getId().toString()))
+				.body(result);
+	}
 
 	/**
 	 * POST /online-applications : Create a new onlineApplication.
@@ -117,6 +143,21 @@ public class PublicResource {
 		OnlineApplication result = onlineApplicationRepository.save(onlineApplication);
 		return ResponseEntity.created(new URI("/api/online-applications/" + result.getId()))
 				.headers(HeaderUtil.createEntityCreationAlert("onlineApplication", result.getId().toString()))
+				.body(result);
+	}
+
+	@PostMapping("/registration-academic-details")
+	@Timed
+	public ResponseEntity<RegistrationAcademicDetails> createRegistrationAcademicDetails(
+			@Valid @RequestBody RegistrationAcademicDetails registrationAcademicDetails) throws URISyntaxException {
+		LOGGER.debug("REST request to save RegistrationAcademicDetails : {}", registrationAcademicDetails);
+		if (registrationAcademicDetails.getId() != null) {
+			return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("registrationAcademicDetails",
+					"idexists", "A new registrationAcademicDetails cannot already have an ID")).body(null);
+		}
+		RegistrationAcademicDetails result = registrationAcademicDetailsRepository.save(registrationAcademicDetails);
+		return ResponseEntity.created(new URI("/api/registration-academic-details/" + result.getId()))
+				.headers(HeaderUtil.createEntityCreationAlert("registrationAcademicDetails", result.getId().toString()))
 				.body(result);
 	}
 
@@ -204,6 +245,16 @@ public class PublicResource {
 		Page<NewsAndEvent> page = newsAndEventRepository.findAllByOrderByStartDTDesc(pageable);
 		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/news-and-events");
 		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+	}
+
+	@GetMapping("/online-applications")
+	@Timed
+	public ResponseEntity<List<OnlineApplication>> getAllOnlineApplications(@ApiParam Pageable pageable)
+			throws URISyntaxException {
+		LOGGER.debug("REST request to get a page of OnlineApplications");
+		List<OnlineApplication> oaList = onlineApplicationRepository.findAll();
+		HttpHeaders headers = new HttpHeaders();
+		return new ResponseEntity<>(oaList, headers, HttpStatus.OK);
 	}
 
 	@GetMapping("/alumni")
@@ -384,4 +435,33 @@ public class PublicResource {
 		HttpHeaders headers = new HttpHeaders();
 		return new ResponseEntity<>(page, headers, HttpStatus.OK);
 	}
+
+	@PutMapping("/ministerial-work-experiences")
+	@Timed
+	public ResponseEntity<MinisterialWorkExperience> updateMinisterialWorkExperience(
+			@Valid @RequestBody MinisterialWorkExperience ministerialWorkExperience) throws URISyntaxException {
+		LOGGER.debug("REST request to update MinisterialWorkExperience : {}", ministerialWorkExperience);
+		if (ministerialWorkExperience.getId() == null) {
+			return createMinisterialWorkExperience(ministerialWorkExperience);
+		}
+
+		MinisterialWorkExperience result = ministerialWorkExperienceRepository.save(ministerialWorkExperience);
+		return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert("ministerialWorkExperience",
+				ministerialWorkExperience.getId().toString())).body(result);
+	}
+
+	@PutMapping("/registration-academic-details")
+	@Timed
+	public ResponseEntity<RegistrationAcademicDetails> updateRegistrationAcademicDetails(
+			@Valid @RequestBody RegistrationAcademicDetails registrationAcademicDetails) throws URISyntaxException {
+		LOGGER.debug("REST request to update RegistrationAcademicDetails : {}", registrationAcademicDetails);
+		if (registrationAcademicDetails.getId() == null) {
+			return createRegistrationAcademicDetails(registrationAcademicDetails);
+		}
+
+		RegistrationAcademicDetails result = registrationAcademicDetailsRepository.save(registrationAcademicDetails);
+		return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert("registrationAcademicDetails",
+				registrationAcademicDetails.getId().toString())).body(result);
+	}
+
 }

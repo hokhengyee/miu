@@ -33,6 +33,8 @@
     <include file="classpath:config/liquibase/changelog/20170217161812_added_entity_StudentOtherResult.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20170218064239_added_entity_StudentResearchPaperResult.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20170225121659_added_entity_AdjunctFaculty.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170306141333_added_entity_RegistrationAcademicDetails.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170311032058_added_entity_MinisterialWorkExperience.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-changelog - JHipster will add liquibase changelogs here -->
     <include file="classpath:config/liquibase/changelog/20161219050608_added_entity_constraints_Module.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20161219064046_added_entity_constraints_ModuleType.xml" relativeToChangelogFile="false"/>
@@ -50,5 +52,6 @@
     <include file="classpath:config/liquibase/changelog/20170217161812_added_entity_constraints_StudentOtherResult.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20170218064239_added_entity_constraints_StudentResearchPaperResult.xml" relativeToChangelogFile="false"/>
     <include file="classpath:config/liquibase/changelog/20170225121659_added_entity_constraints_AdjunctFaculty.xml" relativeToChangelogFile="false"/>
+    <include file="classpath:config/liquibase/changelog/20170306141333_added_entity_constraints_RegistrationAcademicDetails.xml" relativeToChangelogFile="false"/>
     <!-- jhipster-needle-liquibase-add-constraints-changelog - JHipster will add liquibase constraints changelogs here -->
 </databaseChangeLog>

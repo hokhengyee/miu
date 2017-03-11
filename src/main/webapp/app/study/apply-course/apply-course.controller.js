@@ -5,14 +5,29 @@
 			ApplyCourseController);
 
 	ApplyCourseController.$inject = [ '$timeout', '$scope', '$stateParams',
-			'DataUtils', 'entity', 'PublicOnlineApplication', 'PublicCourse',
-			'$state' ];
+			'DataUtils', 'entity', 'entity2', 'entity3',
+			'PublicOnlineApplication', 'PublicCourse',
+			'PublicRegistrationAcademicDetails',
+			'PublicMinisterialWorkExperience', 'md5', '$state' ];
 
 	function ApplyCourseController($timeout, $scope, $stateParams, DataUtils,
-			entity, PublicOnlineApplication, PublicCourse, $state) {
+			entity, entity2, entity3, PublicOnlineApplication, PublicCourse,
+			PublicRegistrationAcademicDetails, PublicMinisterialWorkExperience,
+			md5, $state) {
 		var vm = this;
 
+		$scope.$watch('vm.onlineApplication.email', function() {
+			$scope.md5key = md5.createHash(vm.onlineApplication.email || '');
+			vm.onlineApplication.md5key = $scope.md5key;
+			vm.registrationAcademicDetails.md5key = $scope.md5key;
+			vm.ministerialWorkExperience.md5Key = $scope.md5key;
+		})
+
 		vm.onlineApplication = entity;
+		vm.registrationAcademicDetails = entity2;
+		vm.ministerialWorkExperience = entity3;
+		vm.onlineapplications = PublicOnlineApplication.query();
+
 		vm.datePickerOpenStatus = {};
 		vm.openCalendar = openCalendar;
 		vm.byteSize = DataUtils.byteSize;
@@ -21,20 +36,57 @@
 		vm.courses = PublicCourse.query();
 		vm.error = false;
 
+		vm.surname = null;
+		vm.givenName = null;
+
 		$timeout(function() {
 			angular.element('.form-group:eq(1)>input').focus();
 		});
 
 		function save() {
-			PublicOnlineApplication.save(vm.onlineApplication, onSaveSuccess,
-					onSaveError);
+			vm.surname = vm.onlineApplication.surname;
+			vm.givenName = vm.onlineApplication.givenName;
+			PublicOnlineApplication.save(vm.onlineApplication, onSaveSuccess1,
+					onSaveError1);
 		}
 
-		function onSaveSuccess(result) {
+		function saveAcademicDetails() {
+			PublicRegistrationAcademicDetails.save(
+					vm.registrationAcademicDetails, onSaveSuccess2,
+					onSaveError2);
+		}
+
+		function saveMWE() {
+			PublicMinisterialWorkExperience.save(vm.ministerialWorkExperience,
+					onSaveSuccess3, onSaveError3);
+		}
+
+		function onSaveSuccess1(result) {
+			console.log("Saved Online Application...");
+			saveAcademicDetails();
+		}
+
+		function onSaveError1() {
+			// vm.isSaving = false;
+			vm.error = true;
+		}
+
+		function onSaveSuccess2(result) {
+			console.log("Saved Academic Details ...");
+			saveMWE();
+		}
+
+		function onSaveError2() {
+			// vm.isSaving = false;
+			vm.error = true;
+		}
+
+		function onSaveSuccess3(result) {
+			console.log("Saved Ministerial Work Experience ...");
 			$state.go('public-online-application-success');
 		}
 
-		function onSaveError() {
+		function onSaveError3() {
 			// vm.isSaving = false;
 			vm.error = true;
 		}

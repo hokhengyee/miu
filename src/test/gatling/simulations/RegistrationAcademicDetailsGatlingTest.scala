@@ -7,9 +7,9 @@ import org.slf4j.LoggerFactory
 import scala.concurrent.duration._
 
 /**
- * Performance test for the OnlineApplication entity.
+ * Performance test for the RegistrationAcademicDetails entity.
  */
-class OnlineApplicationGatlingTest extends Simulation {
+class RegistrationAcademicDetailsGatlingTest extends Simulation {
 
     val context: LoggerContext = LoggerFactory.getILoggerFactory.asInstanceOf[LoggerContext]
     // Log all HTTP requests
@@ -37,7 +37,7 @@ class OnlineApplicationGatlingTest extends Simulation {
         "X-XSRF-TOKEN" -> "${xsrf_token}"
     )
 
-    val scn = scenario("Test the OnlineApplication entity")
+    val scn = scenario("Test the RegistrationAcademicDetails entity")
         .exec(http("First unauthenticated request")
         .get("/api/account")
         .headers(headers_http)
@@ -59,26 +59,26 @@ class OnlineApplicationGatlingTest extends Simulation {
         .check(status.is(200)))
         .pause(10)
         .repeat(2) {
-            exec(http("Get all onlineApplications")
-            .get("/api/online-applications")
+            exec(http("Get all registrationAcademicDetails")
+            .get("/api/registration-academic-details")
             .headers(headers_http_authenticated)
             .check(status.is(200)))
             .pause(10 seconds, 20 seconds)
-            .exec(http("Create new onlineApplication")
-            .post("/api/online-applications")
+            .exec(http("Create new registrationAcademicDetails")
+            .post("/api/registration-academic-details")
             .headers(headers_http_authenticated)
-            .body(StringBody("""{"id":null, "dateOfBirth":"2020-01-01T00:00:00.000Z", "telephone":"SAMPLE_TEXT", "email":"SAMPLE_TEXT", "city":"SAMPLE_TEXT", "state":"SAMPLE_TEXT", "country":"SAMPLE_TEXT", "postcode":"SAMPLE_TEXT", "registrationDatetime":"2020-01-01T00:00:00.000Z", "surname":"SAMPLE_TEXT", "givenName":"SAMPLE_TEXT", "address":"SAMPLE_TEXT", "profilePhoto":null, "academicCertificate":null, "letterOfRecommendation":null, "profileDocument":null, "md5key":"SAMPLE_TEXT"}""")).asJSON
+            .body(StringBody("""{"id":null, "nameOfInstitution1":"SAMPLE_TEXT", "year1":null, "grade1":"SAMPLE_TEXT", "nameOfInstitution2":"SAMPLE_TEXT", "examPassed2":"SAMPLE_TEXT", "year2":null, "grade2":"SAMPLE_TEXT", "nameOfInstitution3":"SAMPLE_TEXT", "examPassed3":"SAMPLE_TEXT", "year3":null, "grade3":"SAMPLE_TEXT", "nameOfInstitution4":"SAMPLE_TEXT", "examPassed4":"SAMPLE_TEXT", "year4":null, "grade4":"SAMPLE_TEXT", "examPassed1":"SAMPLE_TEXT", "md5key":"SAMPLE_TEXT"}""")).asJSON
             .check(status.is(201))
-            .check(headerRegex("Location", "(.*)").saveAs("new_onlineApplication_url"))).exitHereIfFailed
+            .check(headerRegex("Location", "(.*)").saveAs("new_registrationAcademicDetails_url"))).exitHereIfFailed
             .pause(10)
             .repeat(5) {
-                exec(http("Get created onlineApplication")
-                .get("${new_onlineApplication_url}")
+                exec(http("Get created registrationAcademicDetails")
+                .get("${new_registrationAcademicDetails_url}")
                 .headers(headers_http_authenticated))
                 .pause(10)
             }
-            .exec(http("Delete created onlineApplication")
-            .delete("${new_onlineApplication_url}")
+            .exec(http("Delete created registrationAcademicDetails")
+            .delete("${new_registrationAcademicDetails_url}")
             .headers(headers_http_authenticated))
             .pause(10)
         }

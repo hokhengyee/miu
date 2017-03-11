@@ -9,17 +9,17 @@
 
     function stateConfig($stateProvider) {
         $stateProvider
-        .state('online-application', {
+        .state('ministerial-work-experience', {
             parent: 'entity',
-            url: '/online-application?page&sort&search',
+            url: '/ministerial-work-experience?page&sort&search',
             data: {
                 authorities: ['ROLE_USER'],
-                pageTitle: 'OnlineApplications'
+                pageTitle: 'MinisterialWorkExperiences'
             },
             views: {
                 'content@': {
-                    templateUrl: 'app/entities/online-application/online-applications.html',
-                    controller: 'OnlineApplicationController',
+                    templateUrl: 'app/entities/ministerial-work-experience/ministerial-work-experiences.html',
+                    controller: 'MinisterialWorkExperienceController',
                     controllerAs: 'vm'
                 }
             },
@@ -46,27 +46,27 @@
                 }]
             }
         })
-        .state('online-application-detail', {
+        .state('ministerial-work-experience-detail', {
             parent: 'entity',
-            url: '/online-application/{id}',
+            url: '/ministerial-work-experience/{id}',
             data: {
                 authorities: ['ROLE_USER'],
-                pageTitle: 'OnlineApplication'
+                pageTitle: 'MinisterialWorkExperience'
             },
             views: {
                 'content@': {
-                    templateUrl: 'app/entities/online-application/online-application-detail.html',
-                    controller: 'OnlineApplicationDetailController',
+                    templateUrl: 'app/entities/ministerial-work-experience/ministerial-work-experience-detail.html',
+                    controller: 'MinisterialWorkExperienceDetailController',
                     controllerAs: 'vm'
                 }
             },
             resolve: {
-                entity: ['$stateParams', 'OnlineApplication', function($stateParams, OnlineApplication) {
-                    return OnlineApplication.get({id : $stateParams.id}).$promise;
+                entity: ['$stateParams', 'MinisterialWorkExperience', function($stateParams, MinisterialWorkExperience) {
+                    return MinisterialWorkExperience.get({id : $stateParams.id}).$promise;
                 }],
                 previousState: ["$state", function ($state) {
                     var currentStateData = {
-                        name: $state.current.name || 'online-application',
+                        name: $state.current.name || 'ministerial-work-experience',
                         params: $state.params,
                         url: $state.href($state.current.name, $state.params)
                     };
@@ -74,22 +74,22 @@
                 }]
             }
         })
-        .state('online-application-detail.edit', {
-            parent: 'online-application-detail',
+        .state('ministerial-work-experience-detail.edit', {
+            parent: 'ministerial-work-experience-detail',
             url: '/detail/edit',
             data: {
                 authorities: ['ROLE_USER']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
-                    templateUrl: 'app/entities/online-application/online-application-dialog.html',
-                    controller: 'OnlineApplicationDialogController',
+                    templateUrl: 'app/entities/ministerial-work-experience/ministerial-work-experience-dialog.html',
+                    controller: 'MinisterialWorkExperienceDialogController',
                     controllerAs: 'vm',
                     backdrop: 'static',
                     size: 'lg',
                     resolve: {
-                        entity: ['OnlineApplication', function(OnlineApplication) {
-                            return OnlineApplication.get({id : $stateParams.id}).$promise;
+                        entity: ['MinisterialWorkExperience', function(MinisterialWorkExperience) {
+                            return MinisterialWorkExperience.get({id : $stateParams.id}).$promise;
                         }]
                     }
                 }).result.then(function() {
@@ -99,97 +99,90 @@
                 });
             }]
         })
-        .state('online-application.new', {
-            parent: 'online-application',
+        .state('ministerial-work-experience.new', {
+            parent: 'ministerial-work-experience',
             url: '/new',
             data: {
                 authorities: ['ROLE_USER']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
-                    templateUrl: 'app/entities/online-application/online-application-dialog.html',
-                    controller: 'OnlineApplicationDialogController',
+                    templateUrl: 'app/entities/ministerial-work-experience/ministerial-work-experience-dialog.html',
+                    controller: 'MinisterialWorkExperienceDialogController',
                     controllerAs: 'vm',
                     backdrop: 'static',
                     size: 'lg',
                     resolve: {
                         entity: function () {
                             return {
-                                dateOfBirth: null,
-                                telephone: null,
-                                email: null,
-                                city: null,
-                                state: null,
-                                country: null,
-                                postcode: null,
-                                registrationDatetime: null,
-                                surname: null,
-                                givenName: null,
-                                address: null,
-                                profilePhoto: null,
-                                profilePhotoContentType: null,
-                                academicCertificate: null,
-                                academicCertificateContentType: null,
-                                letterOfRecommendation: null,
-                                letterOfRecommendationContentType: null,
-                                profileDocument: null,
-                                profileDocumentContentType: null,
-                                md5key: null,
+                                nameOfMinistry1: null,
+                                areaOfMinistry1: null,
+                                nameOfMinistry2: null,
+                                areaOfMinistry2: null,
+                                nameOfMinistry3: null,
+                                areaOfMinistry3: null,
+                                nameOfMinistry4: null,
+                                areaOfMinistry4: null,
+                                md5Key: null,
+                                years1: null,
+                                years2: null,
+                                years3: null,
+                                years4: null,
                                 id: null
                             };
                         }
                     }
                 }).result.then(function() {
-                    $state.go('online-application', null, { reload: 'online-application' });
+                    $state.go('ministerial-work-experience', null, { reload: 'ministerial-work-experience' });
                 }, function() {
-                    $state.go('online-application');
+                    $state.go('ministerial-work-experience');
                 });
             }]
         })
-        .state('online-application.edit', {
-            parent: 'online-application',
+        .state('ministerial-work-experience.edit', {
+            parent: 'ministerial-work-experience',
             url: '/{id}/edit',
             data: {
                 authorities: ['ROLE_USER']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
-                    templateUrl: 'app/entities/online-application/online-application-dialog.html',
-                    controller: 'OnlineApplicationDialogController',
+                    templateUrl: 'app/entities/ministerial-work-experience/ministerial-work-experience-dialog.html',
+                    controller: 'MinisterialWorkExperienceDialogController',
                     controllerAs: 'vm',
                     backdrop: 'static',
                     size: 'lg',
                     resolve: {
-                        entity: ['OnlineApplication', function(OnlineApplication) {
-                            return OnlineApplication.get({id : $stateParams.id}).$promise;
+                        entity: ['MinisterialWorkExperience', function(MinisterialWorkExperience) {
+                            return MinisterialWorkExperience.get({id : $stateParams.id}).$promise;
                         }]
                     }
                 }).result.then(function() {
-                    $state.go('online-application', null, { reload: 'online-application' });
+                    $state.go('ministerial-work-experience', null, { reload: 'ministerial-work-experience' });
                 }, function() {
                     $state.go('^');
                 });
             }]
         })
-        .state('online-application.delete', {
-            parent: 'online-application',
+        .state('ministerial-work-experience.delete', {
+            parent: 'ministerial-work-experience',
             url: '/{id}/delete',
             data: {
                 authorities: ['ROLE_USER']
             },
             onEnter: ['$stateParams', '$state', '$uibModal', function($stateParams, $state, $uibModal) {
                 $uibModal.open({
-                    templateUrl: 'app/entities/online-application/online-application-delete-dialog.html',
-                    controller: 'OnlineApplicationDeleteController',
+                    templateUrl: 'app/entities/ministerial-work-experience/ministerial-work-experience-delete-dialog.html',
+                    controller: 'MinisterialWorkExperienceDeleteController',
                     controllerAs: 'vm',
                     size: 'md',
                     resolve: {
-                        entity: ['OnlineApplication', function(OnlineApplication) {
-                            return OnlineApplication.get({id : $stateParams.id}).$promise;
+                        entity: ['MinisterialWorkExperience', function(MinisterialWorkExperience) {
+                            return MinisterialWorkExperience.get({id : $stateParams.id}).$promise;
                         }]
                     }
                 }).result.then(function() {
-                    $state.go('online-application', null, { reload: 'online-application' });
+                    $state.go('ministerial-work-experience', null, { reload: 'ministerial-work-experience' });
                 }, function() {
                     $state.go('^');
                 });

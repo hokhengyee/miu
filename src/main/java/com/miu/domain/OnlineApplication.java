@@ -75,14 +75,6 @@ public class OnlineApplication implements Serializable {
     @Column(name = "address", length = 3000, nullable = false)
     private String address;
 
-    @NotNull
-    @Lob
-    @Column(name = "application_form", nullable = false)
-    private byte[] applicationForm;
-
-    @Column(name = "application_form_content_type", nullable = false)
-    private String applicationFormContentType;
-
     @Lob
     @Column(name = "profile_photo")
     private byte[] profilePhoto;
@@ -110,6 +102,9 @@ public class OnlineApplication implements Serializable {
 
     @Column(name = "profile_document_content_type")
     private String profileDocumentContentType;
+
+    @Column(name = "md_5_key")
+    private String md5key;
 
     @ManyToOne
     @NotNull
@@ -266,32 +261,6 @@ public class OnlineApplication implements Serializable {
         this.address = address;
     }
 
-    public byte[] getApplicationForm() {
-        return applicationForm;
-    }
-
-    public OnlineApplication applicationForm(byte[] applicationForm) {
-        this.applicationForm = applicationForm;
-        return this;
-    }
-
-    public void setApplicationForm(byte[] applicationForm) {
-        this.applicationForm = applicationForm;
-    }
-
-    public String getApplicationFormContentType() {
-        return applicationFormContentType;
-    }
-
-    public OnlineApplication applicationFormContentType(String applicationFormContentType) {
-        this.applicationFormContentType = applicationFormContentType;
-        return this;
-    }
-
-    public void setApplicationFormContentType(String applicationFormContentType) {
-        this.applicationFormContentType = applicationFormContentType;
-    }
-
     public byte[] getProfilePhoto() {
         return profilePhoto;
     }
@@ -396,6 +365,19 @@ public class OnlineApplication implements Serializable {
         this.profileDocumentContentType = profileDocumentContentType;
     }
 
+    public String getMd5key() {
+        return md5key;
+    }
+
+    public OnlineApplication md5key(String md5key) {
+        this.md5key = md5key;
+        return this;
+    }
+
+    public void setMd5key(String md5key) {
+        this.md5key = md5key;
+    }
+
     public Course getCourse() {
         return course;
     }
@@ -444,8 +426,6 @@ public class OnlineApplication implements Serializable {
             ", surname='" + surname + "'" +
             ", givenName='" + givenName + "'" +
             ", address='" + address + "'" +
-            ", applicationForm='" + applicationForm + "'" +
-            ", applicationFormContentType='" + applicationFormContentType + "'" +
             ", profilePhoto='" + profilePhoto + "'" +
             ", profilePhotoContentType='" + profilePhotoContentType + "'" +
             ", academicCertificate='" + academicCertificate + "'" +
@@ -454,6 +434,7 @@ public class OnlineApplication implements Serializable {
             ", letterOfRecommendationContentType='" + letterOfRecommendationContentType + "'" +
             ", profileDocument='" + profileDocument + "'" +
             ", profileDocumentContentType='" + profileDocumentContentType + "'" +
+            ", md5key='" + md5key + "'" +
             '}';
     }
 }

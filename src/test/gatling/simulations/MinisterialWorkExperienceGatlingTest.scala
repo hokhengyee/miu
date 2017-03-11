@@ -7,9 +7,9 @@ import org.slf4j.LoggerFactory
 import scala.concurrent.duration._
 
 /**
- * Performance test for the OnlineApplication entity.
+ * Performance test for the MinisterialWorkExperience entity.
  */
-class OnlineApplicationGatlingTest extends Simulation {
+class MinisterialWorkExperienceGatlingTest extends Simulation {
 
     val context: LoggerContext = LoggerFactory.getILoggerFactory.asInstanceOf[LoggerContext]
     // Log all HTTP requests
@@ -37,7 +37,7 @@ class OnlineApplicationGatlingTest extends Simulation {
         "X-XSRF-TOKEN" -> "${xsrf_token}"
     )
 
-    val scn = scenario("Test the OnlineApplication entity")
+    val scn = scenario("Test the MinisterialWorkExperience entity")
         .exec(http("First unauthenticated request")
         .get("/api/account")
         .headers(headers_http)
@@ -59,26 +59,26 @@ class OnlineApplicationGatlingTest extends Simulation {
         .check(status.is(200)))
         .pause(10)
         .repeat(2) {
-            exec(http("Get all onlineApplications")
-            .get("/api/online-applications")
+            exec(http("Get all ministerialWorkExperiences")
+            .get("/api/ministerial-work-experiences")
             .headers(headers_http_authenticated)
             .check(status.is(200)))
             .pause(10 seconds, 20 seconds)
-            .exec(http("Create new onlineApplication")
-            .post("/api/online-applications")
+            .exec(http("Create new ministerialWorkExperience")
+            .post("/api/ministerial-work-experiences")
             .headers(headers_http_authenticated)
-            .body(StringBody("""{"id":null, "dateOfBirth":"2020-01-01T00:00:00.000Z", "telephone":"SAMPLE_TEXT", "email":"SAMPLE_TEXT", "city":"SAMPLE_TEXT", "state":"SAMPLE_TEXT", "country":"SAMPLE_TEXT", "postcode":"SAMPLE_TEXT", "registrationDatetime":"2020-01-01T00:00:00.000Z", "surname":"SAMPLE_TEXT", "givenName":"SAMPLE_TEXT", "address":"SAMPLE_TEXT", "profilePhoto":null, "academicCertificate":null, "letterOfRecommendation":null, "profileDocument":null, "md5key":"SAMPLE_TEXT"}""")).asJSON
+            .body(StringBody("""{"id":null, "nameOfMinistry1":"SAMPLE_TEXT", "areaOfMinistry1":"SAMPLE_TEXT", "nameOfMinistry2":"SAMPLE_TEXT", "areaOfMinistry2":"SAMPLE_TEXT", "nameOfMinistry3":"SAMPLE_TEXT", "areaOfMinistry3":"SAMPLE_TEXT", "nameOfMinistry4":"SAMPLE_TEXT", "areaOfMinistry4":"SAMPLE_TEXT", "md5Key":"SAMPLE_TEXT", "years1":null, "years2":null, "years3":null, "years4":null}""")).asJSON
             .check(status.is(201))
-            .check(headerRegex("Location", "(.*)").saveAs("new_onlineApplication_url"))).exitHereIfFailed
+            .check(headerRegex("Location", "(.*)").saveAs("new_ministerialWorkExperience_url"))).exitHereIfFailed
             .pause(10)
             .repeat(5) {
-                exec(http("Get created onlineApplication")
-                .get("${new_onlineApplication_url}")
+                exec(http("Get created ministerialWorkExperience")
+                .get("${new_ministerialWorkExperience_url}")
                 .headers(headers_http_authenticated))
                 .pause(10)
             }
-            .exec(http("Delete created onlineApplication")
-            .delete("${new_onlineApplication_url}")
+            .exec(http("Delete created ministerialWorkExperience")
+            .delete("${new_ministerialWorkExperience_url}")
             .headers(headers_http_authenticated))
             .pause(10)
         }
