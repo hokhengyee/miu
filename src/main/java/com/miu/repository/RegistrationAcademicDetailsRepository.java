@@ -1,15 +1,16 @@
 package com.miu.repository;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+
 import com.miu.domain.RegistrationAcademicDetails;
-
-import org.springframework.data.jpa.repository.*;
-
-import java.util.List;
 
 /**
  * Spring Data JPA repository for the RegistrationAcademicDetails entity.
  */
-@SuppressWarnings("unused")
-public interface RegistrationAcademicDetailsRepository extends JpaRepository<RegistrationAcademicDetails,Long> {
+public interface RegistrationAcademicDetailsRepository extends JpaRepository<RegistrationAcademicDetails, Long> {
+
+	@Query("SELECT rad FROM RegistrationAcademicDetails rad WHERE rad.md5key = ?1")
+	RegistrationAcademicDetails findRADByMd5key(String md5key);
 
 }

@@ -99,7 +99,7 @@
 					</div>
 				</td>
 			</tr>
-			<tr>
+			<tr ng-show="hidden">
 				<th>Md5 Key</th>
 				<td>{{vm.onlineApplication.md5key}}</td>
 			</tr>
@@ -112,7 +112,40 @@
 				<div class="panel-heading">
 					<h3 class="panel-title">Academic Details</h3>
 				</div>
-				<div class="panel-body">Panel content</div>
+				<div class="panel-body" ng-show="vm.academicDetails == null">No
+					Content.</div>
+				<table ng-show="vm.academicDetails" class="table table-bordered">
+					<tr class="info">
+						<th>Name Of Institution</th>
+						<th>Exam Passed</th>
+						<th width="100px">Year</th>
+						<th width="50px">Grade</th>
+					</tr>
+					<tr>
+						<td>{{vm.academicDetails.nameOfInstitution1}}</td>
+						<td>{{vm.academicDetails.examPassed1}}</td>
+						<td>{{vm.academicDetails.year1}}</td>
+						<td>{{vm.academicDetails.grade1}}</td>
+					</tr>
+					<tr>
+						<td>{{vm.academicDetails.nameOfInstitution2}}</td>
+						<td>{{vm.academicDetails.examPassed2}}</td>
+						<td>{{vm.academicDetails.year2}}</td>
+						<td>{{vm.academicDetails.grade2}}</td>
+					</tr>
+					<tr>
+						<td>{{vm.academicDetails.nameOfInstitution3}}</td>
+						<td>{{vm.academicDetails.examPassed3}}</td>
+						<td>{{vm.academicDetails.year3}}</td>
+						<td>{{vm.academicDetails.grade3}}</td>
+					</tr>
+					<tr>
+						<td>{{vm.academicDetails.nameOfInstitution4}}</td>
+						<td>{{vm.academicDetails.examPassed4}}</td>
+						<td>{{vm.academicDetails.year4}}</td>
+						<td>{{vm.academicDetails.grade4}}</td>
+					</tr>
+				</table>
 			</div>
 			<!-- Academic Details -->
 
@@ -121,7 +154,34 @@
 				<div class="panel-heading">
 					<h3 class="panel-title">Ministerial Work Experience</h3>
 				</div>
-				<div class="panel-body">Panel content</div>
+				<div class="panel-body" ng-show="vm.mwe == null">No Content.</div>
+				<table ng-show="vm.mwe" class="table table-bordered">
+					<tr class="info">
+						<th>Name Of Ministry</th>
+						<th>Area in Ministry</th>
+						<th width="100px">No. of Years</th>
+					</tr>
+					<tr>
+						<td>{{vm.mwe.nameOfMinistry1}}</td>
+						<td>{{vm.mwe.areaOfMinistry1}}</td>
+						<td>{{vm.mwe.years1}}</td>
+					</tr>
+					<tr>
+						<td>{{vm.mwe.nameOfMinistry2}}</td>
+						<td>{{vm.mwe.areaOfMinistry2}}</td>
+						<td>{{vm.mwe.years2}}</td>
+					</tr>
+					<tr>
+						<td>{{vm.mwe.nameOfMinistry3}}</td>
+						<td>{{vm.mwe.areaOfMinistry3}}</td>
+						<td>{{vm.mwe.years3}}</td>
+					</tr>
+					<tr>
+						<td>{{vm.mwe.nameOfMinistry4}}</td>
+						<td>{{vm.mwe.areaOfMinistry4}}</td>
+						<td>{{vm.mwe.years4}}</td>
+					</tr>
+				</table>
 			</div>
 			<!-- Ministerial Work Experience -->
 

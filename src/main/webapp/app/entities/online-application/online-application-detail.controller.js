@@ -1,23 +1,36 @@
 (function() {
-    'use strict';
+	'use strict';
 
-    angular
-        .module('miuApp')
-        .controller('OnlineApplicationDetailController', OnlineApplicationDetailController);
+	angular.module('miuApp').controller('OnlineApplicationDetailController',
+			OnlineApplicationDetailController);
 
-    OnlineApplicationDetailController.$inject = ['$scope', '$rootScope', '$stateParams', 'previousState', 'DataUtils', 'entity', 'OnlineApplication', 'Course'];
+	OnlineApplicationDetailController.$inject = [ '$scope', '$rootScope',
+			'$stateParams', 'previousState', 'DataUtils', 'entity',
+			'OnlineApplication', 'Course', 'OAAcademicDetails',
+			'OAMinisterialWorkExperience' ];
 
-    function OnlineApplicationDetailController($scope, $rootScope, $stateParams, previousState, DataUtils, entity, OnlineApplication, Course) {
-        var vm = this;
+	function OnlineApplicationDetailController($scope, $rootScope,
+			$stateParams, previousState, DataUtils, entity, OnlineApplication,
+			Course, OAAcademicDetails, OAMinisterialWorkExperience) {
+		var vm = this;
 
-        vm.onlineApplication = entity;
-        vm.previousState = previousState.name;
-        vm.byteSize = DataUtils.byteSize;
-        vm.openFile = DataUtils.openFile;
+		vm.onlineApplication = entity;
+		vm.previousState = previousState.name;
+		vm.byteSize = DataUtils.byteSize;
+		vm.openFile = DataUtils.openFile;
 
-        var unsubscribe = $rootScope.$on('miuApp:onlineApplicationUpdate', function(event, result) {
-            vm.onlineApplication = result;
-        });
-        $scope.$on('$destroy', unsubscribe);
-    }
+		vm.academicDetails = OAAcademicDetails.get({
+			md5key : vm.onlineApplication.md5key
+		});
+
+		vm.mwe = OAMinisterialWorkExperience.get({
+			md5key : vm.onlineApplication.md5key
+		})
+
+		var unsubscribe = $rootScope.$on('miuApp:onlineApplicationUpdate',
+				function(event, result) {
+					vm.onlineApplication = result;
+				});
+		$scope.$on('$destroy', unsubscribe);
+	}
 })();
