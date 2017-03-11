@@ -224,9 +224,6 @@
 													required ng-maxlength="1000" />
 												<div ng-show="editForm.nameOfInstitution1.$invalid">
 													<p class="help-block"
-														ng-show="editForm.nameOfInstitution1.$error.required">This
-														field is required.</p>
-													<p class="help-block"
 														ng-show="editForm.nameOfInstitution1.$error.maxlength">This
 														field cannot be longer than 1000 characters.</p>
 												</div>
@@ -242,9 +239,6 @@
 													required ng-maxlength="1000" />
 												<div ng-show="editForm.examPassed1.$invalid">
 													<p class="help-block"
-														ng-show="editForm.examPassed1.$error.required">This
-														field is required.</p>
-													<p class="help-block"
 														ng-show="editForm.examPassed1.$error.maxlength">This
 														field cannot be longer than 1000 characters.</p>
 												</div>
@@ -258,9 +252,6 @@
 													ng-model="vm.registrationAcademicDetails.year1" required
 													min="1900" max="9999" />
 												<div ng-show="editForm.year1.$invalid">
-													<p class="help-block"
-														ng-show="editForm.year1.$error.required">This field is
-														required.</p>
 													<p class="help-block" ng-show="editForm.year1.$error.min"
 														translate-value-min="1900">This field should be more
 														than 1900.</p>
@@ -278,11 +269,6 @@
 													ng-show="false">Grade 1</label> <input type="text"
 													class="form-control" name="grade1" id="field_grade1"
 													ng-model="vm.registrationAcademicDetails.grade1" required />
-												<div ng-show="editForm.grade1.$invalid">
-													<p class="help-block"
-														ng-show="editForm.grade1.$error.required">This field
-														is required.</p>
-												</div>
 											</div>
 										</td>
 									</tr>

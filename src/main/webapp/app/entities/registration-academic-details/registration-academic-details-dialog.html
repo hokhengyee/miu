@@ -16,47 +16,6 @@
 				readonly />
 		</div>
 		<div class="form-group">
-			<label class="control-label" for="field_nameOfInstitution1">Name
-				Of Institution 1</label> <input type="text" class="form-control"
-				name="nameOfInstitution1" id="field_nameOfInstitution1"
-				ng-model="vm.registrationAcademicDetails.nameOfInstitution1"
-				required ng-maxlength="1000" />
-			<div ng-show="editForm.nameOfInstitution1.$invalid">
-				<p class="help-block"
-					ng-show="editForm.nameOfInstitution1.$error.required">This
-					field is required.</p>
-				<p class="help-block"
-					ng-show="editForm.nameOfInstitution1.$error.maxlength">This
-					field cannot be longer than 1000 characters.</p>
-			</div>
-		</div>
-		<div class="form-group">
-			<label class="control-label" for="field_year1">Year 1</label> <input
-				type="number" class="form-control" name="year1" id="field_year1"
-				ng-model="vm.registrationAcademicDetails.year1" required min="1900"
-				max="9999" />
-			<div ng-show="editForm.year1.$invalid">
-				<p class="help-block" ng-show="editForm.year1.$error.required">
-					This field is required.</p>
-				<p class="help-block" ng-show="editForm.year1.$error.min"
-					translate-value-min="1900">This field should be more than 1900.
-				</p>
-				<p class="help-block" ng-show="editForm.year1.$error.max">This
-					field cannot be more than 9999.</p>
-				<p class="help-block" ng-show="editForm.year1.$error.number">
-					This field should be a number.</p>
-			</div>
-		</div>
-		<div class="form-group">
-			<label class="control-label" for="field_grade1">Grade 1</label> <input
-				type="text" class="form-control" name="grade1" id="field_grade1"
-				ng-model="vm.registrationAcademicDetails.grade1" required />
-			<div ng-show="editForm.grade1.$invalid">
-				<p class="help-block" ng-show="editForm.grade1.$error.required">
-					This field is required.</p>
-			</div>
-		</div>
-		<div class="form-group">
 			<label class="control-label" for="field_nameOfInstitution2">Name
 				Of Institution 2</label> <input type="text" class="form-control"
 				name="nameOfInstitution2" id="field_nameOfInstitution2"
@@ -189,23 +148,53 @@
 				ng-model="vm.registrationAcademicDetails.grade4" />
 		</div>
 		<div class="form-group">
+			<label class="control-label" for="field_md5key">Md 5 Key</label> <input
+				type="text" class="form-control" name="md5key" id="field_md5key"
+				ng-model="vm.registrationAcademicDetails.md5key" />
+		</div>
+		<div class="form-group">
+			<label class="control-label" for="field_nameOfInstitution1">Name
+				Of Institution 1</label> <input type="text" class="form-control"
+				name="nameOfInstitution1" id="field_nameOfInstitution1"
+				ng-model="vm.registrationAcademicDetails.nameOfInstitution1"
+				ng-maxlength="1000" />
+			<div ng-show="editForm.nameOfInstitution1.$invalid">
+				<p class="help-block"
+					ng-show="editForm.nameOfInstitution1.$error.maxlength">This
+					field cannot be longer than 1000 characters.</p>
+			</div>
+		</div>
+		<div class="form-group">
 			<label class="control-label" for="field_examPassed1">Exam
 				Passed 1</label> <input type="text" class="form-control" name="examPassed1"
 				id="field_examPassed1"
-				ng-model="vm.registrationAcademicDetails.examPassed1" required
+				ng-model="vm.registrationAcademicDetails.examPassed1"
 				ng-maxlength="1000" />
 			<div ng-show="editForm.examPassed1.$invalid">
-				<p class="help-block" ng-show="editForm.examPassed1.$error.required">
-					This field is required.</p>
 				<p class="help-block"
 					ng-show="editForm.examPassed1.$error.maxlength">This field
 					cannot be longer than 1000 characters.</p>
 			</div>
 		</div>
 		<div class="form-group">
-			<label class="control-label" for="field_md5key">Md 5 Key</label> <input
-				type="text" class="form-control" name="md5key" id="field_md5key"
-				ng-model="vm.registrationAcademicDetails.md5key" />
+			<label class="control-label" for="field_year1">Year 1</label> <input
+				type="number" class="form-control" name="year1" id="field_year1"
+				ng-model="vm.registrationAcademicDetails.year1" min="1900"
+				max="9999" />
+			<div ng-show="editForm.year1.$invalid">
+				<p class="help-block" ng-show="editForm.year1.$error.min"
+					translate-value-min="1900">This field should be more than 1900.
+				</p>
+				<p class="help-block" ng-show="editForm.year1.$error.max">This
+					field cannot be more than 9999.</p>
+				<p class="help-block" ng-show="editForm.year1.$error.number">
+					This field should be a number.</p>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label" for="field_grade1">Grade 1</label> <input
+				type="text" class="form-control" name="grade1" id="field_grade1"
+				ng-model="vm.registrationAcademicDetails.grade1" />
 		</div>
 
 	</div>

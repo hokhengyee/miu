@@ -24,18 +24,6 @@
             <column name="id" type="bigint" autoIncrement="${autoIncrement}">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="name_of_institution_1" type="varchar(1000)">
-                <constraints nullable="false" />
-            </column>
-            
-            <column name="year_1" type="bigint">
-                <constraints nullable="false" />
-            </column>
-            
-            <column name="grade_1" type="varchar(255)">
-                <constraints nullable="false" />
-            </column>
-            
             <column name="name_of_institution_2" type="varchar(1000)">
                 <constraints nullable="true" />
             </column>
@@ -84,11 +72,23 @@
                 <constraints nullable="true" />
             </column>
             
-            <column name="exam_passed_1" type="varchar(1000)">
-                <constraints nullable="false" />
+            <column name="md_5_key" type="varchar(255)">
+                <constraints nullable="true" />
             </column>
             
-            <column name="md_5_key" type="varchar(255)">
+            <column name="name_of_institution_1" type="varchar(1000)">
+                <constraints nullable="true" />
+            </column>
+            
+            <column name="exam_passed_1" type="varchar(1000)">
+                <constraints nullable="true" />
+            </column>
+            
+            <column name="year_1" type="bigint">
+                <constraints nullable="true" />
+            </column>
+            
+            <column name="grade_1" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
             

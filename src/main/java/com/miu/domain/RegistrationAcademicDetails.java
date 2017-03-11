@@ -22,21 +22,6 @@ public class RegistrationAcademicDetails implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotNull
-    @Size(max = 1000)
-    @Column(name = "name_of_institution_1", length = 1000, nullable = false)
-    private String nameOfInstitution1;
-
-    @NotNull
-    @Min(value = 1900)
-    @Max(value = 9999)
-    @Column(name = "year_1", nullable = false)
-    private Long year1;
-
-    @NotNull
-    @Column(name = "grade_1", nullable = false)
-    private String grade1;
-
     @Size(max = 1000)
     @Column(name = "name_of_institution_2", length = 1000)
     private String nameOfInstitution2;
@@ -85,13 +70,24 @@ public class RegistrationAcademicDetails implements Serializable {
     @Column(name = "grade_4")
     private String grade4;
 
-    @NotNull
-    @Size(max = 1000)
-    @Column(name = "exam_passed_1", length = 1000, nullable = false)
-    private String examPassed1;
-
     @Column(name = "md_5_key")
     private String md5key;
+
+    @Size(max = 1000)
+    @Column(name = "name_of_institution_1", length = 1000)
+    private String nameOfInstitution1;
+
+    @Size(max = 1000)
+    @Column(name = "exam_passed_1", length = 1000)
+    private String examPassed1;
+
+    @Min(value = 1900)
+    @Max(value = 9999)
+    @Column(name = "year_1")
+    private Long year1;
+
+    @Column(name = "grade_1")
+    private String grade1;
 
     public Long getId() {
         return id;
@@ -99,45 +95,6 @@ public class RegistrationAcademicDetails implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getNameOfInstitution1() {
-        return nameOfInstitution1;
-    }
-
-    public RegistrationAcademicDetails nameOfInstitution1(String nameOfInstitution1) {
-        this.nameOfInstitution1 = nameOfInstitution1;
-        return this;
-    }
-
-    public void setNameOfInstitution1(String nameOfInstitution1) {
-        this.nameOfInstitution1 = nameOfInstitution1;
-    }
-
-    public Long getYear1() {
-        return year1;
-    }
-
-    public RegistrationAcademicDetails year1(Long year1) {
-        this.year1 = year1;
-        return this;
-    }
-
-    public void setYear1(Long year1) {
-        this.year1 = year1;
-    }
-
-    public String getGrade1() {
-        return grade1;
-    }
-
-    public RegistrationAcademicDetails grade1(String grade1) {
-        this.grade1 = grade1;
-        return this;
-    }
-
-    public void setGrade1(String grade1) {
-        this.grade1 = grade1;
     }
 
     public String getNameOfInstitution2() {
@@ -296,6 +253,32 @@ public class RegistrationAcademicDetails implements Serializable {
         this.grade4 = grade4;
     }
 
+    public String getMd5key() {
+        return md5key;
+    }
+
+    public RegistrationAcademicDetails md5key(String md5key) {
+        this.md5key = md5key;
+        return this;
+    }
+
+    public void setMd5key(String md5key) {
+        this.md5key = md5key;
+    }
+
+    public String getNameOfInstitution1() {
+        return nameOfInstitution1;
+    }
+
+    public RegistrationAcademicDetails nameOfInstitution1(String nameOfInstitution1) {
+        this.nameOfInstitution1 = nameOfInstitution1;
+        return this;
+    }
+
+    public void setNameOfInstitution1(String nameOfInstitution1) {
+        this.nameOfInstitution1 = nameOfInstitution1;
+    }
+
     public String getExamPassed1() {
         return examPassed1;
     }
@@ -309,17 +292,30 @@ public class RegistrationAcademicDetails implements Serializable {
         this.examPassed1 = examPassed1;
     }
 
-    public String getMd5key() {
-        return md5key;
+    public Long getYear1() {
+        return year1;
     }
 
-    public RegistrationAcademicDetails md5key(String md5key) {
-        this.md5key = md5key;
+    public RegistrationAcademicDetails year1(Long year1) {
+        this.year1 = year1;
         return this;
     }
 
-    public void setMd5key(String md5key) {
-        this.md5key = md5key;
+    public void setYear1(Long year1) {
+        this.year1 = year1;
+    }
+
+    public String getGrade1() {
+        return grade1;
+    }
+
+    public RegistrationAcademicDetails grade1(String grade1) {
+        this.grade1 = grade1;
+        return this;
+    }
+
+    public void setGrade1(String grade1) {
+        this.grade1 = grade1;
     }
 
     @Override
@@ -346,9 +342,6 @@ public class RegistrationAcademicDetails implements Serializable {
     public String toString() {
         return "RegistrationAcademicDetails{" +
             "id=" + id +
-            ", nameOfInstitution1='" + nameOfInstitution1 + "'" +
-            ", year1='" + year1 + "'" +
-            ", grade1='" + grade1 + "'" +
             ", nameOfInstitution2='" + nameOfInstitution2 + "'" +
             ", examPassed2='" + examPassed2 + "'" +
             ", year2='" + year2 + "'" +
@@ -361,8 +354,11 @@ public class RegistrationAcademicDetails implements Serializable {
             ", examPassed4='" + examPassed4 + "'" +
             ", year4='" + year4 + "'" +
             ", grade4='" + grade4 + "'" +
-            ", examPassed1='" + examPassed1 + "'" +
             ", md5key='" + md5key + "'" +
+            ", nameOfInstitution1='" + nameOfInstitution1 + "'" +
+            ", examPassed1='" + examPassed1 + "'" +
+            ", year1='" + year1 + "'" +
+            ", grade1='" + grade1 + "'" +
             '}';
     }
 }

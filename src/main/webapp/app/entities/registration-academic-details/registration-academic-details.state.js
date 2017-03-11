@@ -115,9 +115,6 @@
                     resolve: {
                         entity: function () {
                             return {
-                                nameOfInstitution1: null,
-                                year1: null,
-                                grade1: null,
                                 nameOfInstitution2: null,
                                 examPassed2: null,
                                 year2: null,
@@ -130,8 +127,11 @@
                                 examPassed4: null,
                                 year4: null,
                                 grade4: null,
-                                examPassed1: null,
                                 md5key: null,
+                                nameOfInstitution1: null,
+                                examPassed1: null,
+                                year1: null,
+                                grade1: null,
                                 id: null
                             };
                         }

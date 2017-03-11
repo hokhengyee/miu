@@ -67,7 +67,7 @@ class RegistrationAcademicDetailsGatlingTest extends Simulation {
             .exec(http("Create new registrationAcademicDetails")
             .post("/api/registration-academic-details")
             .headers(headers_http_authenticated)
-            .body(StringBody("""{"id":null, "nameOfInstitution1":"SAMPLE_TEXT", "year1":null, "grade1":"SAMPLE_TEXT", "nameOfInstitution2":"SAMPLE_TEXT", "examPassed2":"SAMPLE_TEXT", "year2":null, "grade2":"SAMPLE_TEXT", "nameOfInstitution3":"SAMPLE_TEXT", "examPassed3":"SAMPLE_TEXT", "year3":null, "grade3":"SAMPLE_TEXT", "nameOfInstitution4":"SAMPLE_TEXT", "examPassed4":"SAMPLE_TEXT", "year4":null, "grade4":"SAMPLE_TEXT", "examPassed1":"SAMPLE_TEXT", "md5key":"SAMPLE_TEXT"}""")).asJSON
+            .body(StringBody("""{"id":null, "nameOfInstitution2":"SAMPLE_TEXT", "examPassed2":"SAMPLE_TEXT", "year2":null, "grade2":"SAMPLE_TEXT", "nameOfInstitution3":"SAMPLE_TEXT", "examPassed3":"SAMPLE_TEXT", "year3":null, "grade3":"SAMPLE_TEXT", "nameOfInstitution4":"SAMPLE_TEXT", "examPassed4":"SAMPLE_TEXT", "year4":null, "grade4":"SAMPLE_TEXT", "md5key":"SAMPLE_TEXT", "nameOfInstitution1":"SAMPLE_TEXT", "examPassed1":"SAMPLE_TEXT", "year1":null, "grade1":"SAMPLE_TEXT"}""")).asJSON
             .check(status.is(201))
             .check(headerRegex("Location", "(.*)").saveAs("new_registrationAcademicDetails_url"))).exitHereIfFailed
             .pause(10)

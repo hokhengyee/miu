@@ -3,33 +3,6 @@
     "relationships": [],
     "fields": [
         {
-            "fieldName": "nameOfInstitution1",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "required",
-                "maxlength"
-            ],
-            "fieldValidateRulesMaxlength": "1000"
-        },
-        {
-            "fieldName": "year1",
-            "fieldType": "Long",
-            "fieldValidateRules": [
-                "required",
-                "min",
-                "max"
-            ],
-            "fieldValidateRulesMin": "1900",
-            "fieldValidateRulesMax": "9999"
-        },
-        {
-            "fieldName": "grade1",
-            "fieldType": "String",
-            "fieldValidateRules": [
-                "required"
-            ]
-        },
-        {
             "fieldName": "nameOfInstitution2",
             "fieldType": "String",
             "fieldValidateRules": [
@@ -120,16 +93,37 @@
             "fieldType": "String"
         },
         {
-            "fieldName": "examPassed1",
+            "fieldName": "md5key",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "nameOfInstitution1",
             "fieldType": "String",
             "fieldValidateRules": [
-                "required",
                 "maxlength"
             ],
             "fieldValidateRulesMaxlength": "1000"
         },
         {
-            "fieldName": "md5key",
+            "fieldName": "examPassed1",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": "1000"
+        },
+        {
+            "fieldName": "year1",
+            "fieldType": "Long",
+            "fieldValidateRules": [
+                "min",
+                "max"
+            ],
+            "fieldValidateRulesMin": "1900",
+            "fieldValidateRulesMax": "9999"
+        },
+        {
+            "fieldName": "grade1",
             "fieldType": "String"
         }
     ],

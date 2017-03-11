@@ -17,9 +17,10 @@
 								<img class="logo-img" src="content/images/logo-miu.png"
 									alt="logo" />
 							</div>
-							<div class="col-md-8" style="margin-top: 10px; text-align: left">
-								<span>Millennium International University <br /> <span
-									class="navbar-sub">Delaware USA</span></span>
+							<div class="col-md-8" style="text-align: left">
+								<span><div>Millennium International University</div> <span
+									class="navbar-sub">Incorporated and Certified by the
+										Dept. of State Secretary of the State of Delaware</span></span>
 							</div>
 						</div>
 					</a>
@@ -94,7 +95,8 @@
 								ng-click="vm.collapseNavbar()"> <span
 									class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Grading</span>
 							</a></li>
-							<li ui-sref-active="active"><a ui-sref="public-online-application"
+							<li ui-sref-active="active"><a
+								ui-sref="public-online-application"
 								ng-click="vm.collapseNavbar()"> <span
 									class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Online
 										Application</span>
@@ -209,11 +211,11 @@
 									class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Course
 										Access</span>
 							</a></li>
-							<li ui-sref-active="active"><a ui-sref="module-type"
+							<!-- <li ui-sref-active="active"><a ui-sref="module-type"
 								ng-click="vm.collapseNavbar()"> <span
 									class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Module
 										Type</span>
-							</a></li>
+							</a></li> -->
 							<li ui-sref-active="active"><a
 								ui-sref="external-online-resource"
 								ng-click="vm.collapseNavbar()"> <span
@@ -272,30 +274,28 @@
 									class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Adjunct
 										Faculty</span>
 							</a></li>
-<li ui-sref-active="active">
-                            <a ui-sref="online-application" ng-click="vm.collapseNavbar()">
-                                <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
-                                <span >Online Application</span>
-                            </a>
-                        </li>
-<li ui-sref-active="active">
-                            <a ui-sref="student-profile" ng-click="vm.collapseNavbar()">
-                                <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
-                                <span >Student Profile</span>
-                            </a>
-                        </li>
-<li ui-sref-active="active">
-                            <a ui-sref="registration-academic-details" ng-click="vm.collapseNavbar()">
-                                <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
-                                <span >Registration Academic Details</span>
-                            </a>
-                        </li>
-<li ui-sref-active="active">
-                            <a ui-sref="ministerial-work-experience" ng-click="vm.collapseNavbar()">
-                                <span class="glyphicon glyphicon-asterisk"></span>&nbsp;
-                                <span >Ministerial Work Experience</span>
-                            </a>
-                        </li>
+							<li ui-sref-active="active"><a ui-sref="online-application"
+								ng-click="vm.collapseNavbar()"> <span
+									class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Online
+										Application</span>
+							</a></li>
+							<li ui-sref-active="active"><a ui-sref="student-profile"
+								ng-click="vm.collapseNavbar()"> <span
+									class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Student
+										Profile</span>
+							</a></li>
+							<li ui-sref-active="active"><a
+								ui-sref="ministerial-work-experience"
+								ng-click="vm.collapseNavbar()"> <span
+									class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Ministerial
+										Work Experience</span>
+							</a></li>
+							<li ui-sref-active="active"><a
+								ui-sref="registration-academic-details"
+								ng-click="vm.collapseNavbar()"> <span
+									class="glyphicon glyphicon-asterisk"></span>&nbsp; <span>Registration
+										Academic Details</span>
+							</a></li>
 							<!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
 						</ul></li>
 					<li ng-class="{active: vm.$state.includes('account')}" uib-dropdown

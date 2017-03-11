@@ -37,15 +37,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = MiuApp.class)
 public class RegistrationAcademicDetailsResourceIntTest {
 
-    private static final String DEFAULT_NAME_OF_INSTITUTION_1 = "AAAAAAAAAA";
-    private static final String UPDATED_NAME_OF_INSTITUTION_1 = "BBBBBBBBBB";
-
-    private static final Long DEFAULT_YEAR_1 = 1900L;
-    private static final Long UPDATED_YEAR_1 = 1901L;
-
-    private static final String DEFAULT_GRADE_1 = "AAAAAAAAAA";
-    private static final String UPDATED_GRADE_1 = "BBBBBBBBBB";
-
     private static final String DEFAULT_NAME_OF_INSTITUTION_2 = "AAAAAAAAAA";
     private static final String UPDATED_NAME_OF_INSTITUTION_2 = "BBBBBBBBBB";
 
@@ -82,11 +73,20 @@ public class RegistrationAcademicDetailsResourceIntTest {
     private static final String DEFAULT_GRADE_4 = "AAAAAAAAAA";
     private static final String UPDATED_GRADE_4 = "BBBBBBBBBB";
 
+    private static final String DEFAULT_MD_5_KEY = "AAAAAAAAAA";
+    private static final String UPDATED_MD_5_KEY = "BBBBBBBBBB";
+
+    private static final String DEFAULT_NAME_OF_INSTITUTION_1 = "AAAAAAAAAA";
+    private static final String UPDATED_NAME_OF_INSTITUTION_1 = "BBBBBBBBBB";
+
     private static final String DEFAULT_EXAM_PASSED_1 = "AAAAAAAAAA";
     private static final String UPDATED_EXAM_PASSED_1 = "BBBBBBBBBB";
 
-    private static final String DEFAULT_MD_5_KEY = "AAAAAAAAAA";
-    private static final String UPDATED_MD_5_KEY = "BBBBBBBBBB";
+    private static final Long DEFAULT_YEAR_1 = 1900L;
+    private static final Long UPDATED_YEAR_1 = 1901L;
+
+    private static final String DEFAULT_GRADE_1 = "AAAAAAAAAA";
+    private static final String UPDATED_GRADE_1 = "BBBBBBBBBB";
 
     @Inject
     private RegistrationAcademicDetailsRepository registrationAcademicDetailsRepository;
@@ -122,9 +122,6 @@ public class RegistrationAcademicDetailsResourceIntTest {
      */
     public static RegistrationAcademicDetails createEntity(EntityManager em) {
         RegistrationAcademicDetails registrationAcademicDetails = new RegistrationAcademicDetails()
-                .nameOfInstitution1(DEFAULT_NAME_OF_INSTITUTION_1)
-                .year1(DEFAULT_YEAR_1)
-                .grade1(DEFAULT_GRADE_1)
                 .nameOfInstitution2(DEFAULT_NAME_OF_INSTITUTION_2)
                 .examPassed2(DEFAULT_EXAM_PASSED_2)
                 .year2(DEFAULT_YEAR_2)
@@ -137,8 +134,11 @@ public class RegistrationAcademicDetailsResourceIntTest {
                 .examPassed4(DEFAULT_EXAM_PASSED_4)
                 .year4(DEFAULT_YEAR_4)
                 .grade4(DEFAULT_GRADE_4)
+                .md5key(DEFAULT_MD_5_KEY)
+                .nameOfInstitution1(DEFAULT_NAME_OF_INSTITUTION_1)
                 .examPassed1(DEFAULT_EXAM_PASSED_1)
-                .md5key(DEFAULT_MD_5_KEY);
+                .year1(DEFAULT_YEAR_1)
+                .grade1(DEFAULT_GRADE_1);
         return registrationAcademicDetails;
     }
 
@@ -163,9 +163,6 @@ public class RegistrationAcademicDetailsResourceIntTest {
         List<RegistrationAcademicDetails> registrationAcademicDetailsList = registrationAcademicDetailsRepository.findAll();
         assertThat(registrationAcademicDetailsList).hasSize(databaseSizeBeforeCreate + 1);
         RegistrationAcademicDetails testRegistrationAcademicDetails = registrationAcademicDetailsList.get(registrationAcademicDetailsList.size() - 1);
-        assertThat(testRegistrationAcademicDetails.getNameOfInstitution1()).isEqualTo(DEFAULT_NAME_OF_INSTITUTION_1);
-        assertThat(testRegistrationAcademicDetails.getYear1()).isEqualTo(DEFAULT_YEAR_1);
-        assertThat(testRegistrationAcademicDetails.getGrade1()).isEqualTo(DEFAULT_GRADE_1);
         assertThat(testRegistrationAcademicDetails.getNameOfInstitution2()).isEqualTo(DEFAULT_NAME_OF_INSTITUTION_2);
         assertThat(testRegistrationAcademicDetails.getExamPassed2()).isEqualTo(DEFAULT_EXAM_PASSED_2);
         assertThat(testRegistrationAcademicDetails.getYear2()).isEqualTo(DEFAULT_YEAR_2);
@@ -178,8 +175,11 @@ public class RegistrationAcademicDetailsResourceIntTest {
         assertThat(testRegistrationAcademicDetails.getExamPassed4()).isEqualTo(DEFAULT_EXAM_PASSED_4);
         assertThat(testRegistrationAcademicDetails.getYear4()).isEqualTo(DEFAULT_YEAR_4);
         assertThat(testRegistrationAcademicDetails.getGrade4()).isEqualTo(DEFAULT_GRADE_4);
-        assertThat(testRegistrationAcademicDetails.getExamPassed1()).isEqualTo(DEFAULT_EXAM_PASSED_1);
         assertThat(testRegistrationAcademicDetails.getMd5key()).isEqualTo(DEFAULT_MD_5_KEY);
+        assertThat(testRegistrationAcademicDetails.getNameOfInstitution1()).isEqualTo(DEFAULT_NAME_OF_INSTITUTION_1);
+        assertThat(testRegistrationAcademicDetails.getExamPassed1()).isEqualTo(DEFAULT_EXAM_PASSED_1);
+        assertThat(testRegistrationAcademicDetails.getYear1()).isEqualTo(DEFAULT_YEAR_1);
+        assertThat(testRegistrationAcademicDetails.getGrade1()).isEqualTo(DEFAULT_GRADE_1);
     }
 
     @Test
@@ -204,78 +204,6 @@ public class RegistrationAcademicDetailsResourceIntTest {
 
     @Test
     @Transactional
-    public void checkNameOfInstitution1IsRequired() throws Exception {
-        int databaseSizeBeforeTest = registrationAcademicDetailsRepository.findAll().size();
-        // set the field null
-        registrationAcademicDetails.setNameOfInstitution1(null);
-
-        // Create the RegistrationAcademicDetails, which fails.
-
-        restRegistrationAcademicDetailsMockMvc.perform(post("/api/registration-academic-details")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(registrationAcademicDetails)))
-            .andExpect(status().isBadRequest());
-
-        List<RegistrationAcademicDetails> registrationAcademicDetailsList = registrationAcademicDetailsRepository.findAll();
-        assertThat(registrationAcademicDetailsList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    public void checkYear1IsRequired() throws Exception {
-        int databaseSizeBeforeTest = registrationAcademicDetailsRepository.findAll().size();
-        // set the field null
-        registrationAcademicDetails.setYear1(null);
-
-        // Create the RegistrationAcademicDetails, which fails.
-
-        restRegistrationAcademicDetailsMockMvc.perform(post("/api/registration-academic-details")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(registrationAcademicDetails)))
-            .andExpect(status().isBadRequest());
-
-        List<RegistrationAcademicDetails> registrationAcademicDetailsList = registrationAcademicDetailsRepository.findAll();
-        assertThat(registrationAcademicDetailsList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    public void checkGrade1IsRequired() throws Exception {
-        int databaseSizeBeforeTest = registrationAcademicDetailsRepository.findAll().size();
-        // set the field null
-        registrationAcademicDetails.setGrade1(null);
-
-        // Create the RegistrationAcademicDetails, which fails.
-
-        restRegistrationAcademicDetailsMockMvc.perform(post("/api/registration-academic-details")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(registrationAcademicDetails)))
-            .andExpect(status().isBadRequest());
-
-        List<RegistrationAcademicDetails> registrationAcademicDetailsList = registrationAcademicDetailsRepository.findAll();
-        assertThat(registrationAcademicDetailsList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
-    public void checkExamPassed1IsRequired() throws Exception {
-        int databaseSizeBeforeTest = registrationAcademicDetailsRepository.findAll().size();
-        // set the field null
-        registrationAcademicDetails.setExamPassed1(null);
-
-        // Create the RegistrationAcademicDetails, which fails.
-
-        restRegistrationAcademicDetailsMockMvc.perform(post("/api/registration-academic-details")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(registrationAcademicDetails)))
-            .andExpect(status().isBadRequest());
-
-        List<RegistrationAcademicDetails> registrationAcademicDetailsList = registrationAcademicDetailsRepository.findAll();
-        assertThat(registrationAcademicDetailsList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void getAllRegistrationAcademicDetails() throws Exception {
         // Initialize the database
         registrationAcademicDetailsRepository.saveAndFlush(registrationAcademicDetails);
@@ -285,9 +213,6 @@ public class RegistrationAcademicDetailsResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(registrationAcademicDetails.getId().intValue())))
-            .andExpect(jsonPath("$.[*].nameOfInstitution1").value(hasItem(DEFAULT_NAME_OF_INSTITUTION_1.toString())))
-            .andExpect(jsonPath("$.[*].year1").value(hasItem(DEFAULT_YEAR_1.intValue())))
-            .andExpect(jsonPath("$.[*].grade1").value(hasItem(DEFAULT_GRADE_1.toString())))
             .andExpect(jsonPath("$.[*].nameOfInstitution2").value(hasItem(DEFAULT_NAME_OF_INSTITUTION_2.toString())))
             .andExpect(jsonPath("$.[*].examPassed2").value(hasItem(DEFAULT_EXAM_PASSED_2.toString())))
             .andExpect(jsonPath("$.[*].year2").value(hasItem(DEFAULT_YEAR_2.intValue())))
@@ -300,8 +225,11 @@ public class RegistrationAcademicDetailsResourceIntTest {
             .andExpect(jsonPath("$.[*].examPassed4").value(hasItem(DEFAULT_EXAM_PASSED_4.toString())))
             .andExpect(jsonPath("$.[*].year4").value(hasItem(DEFAULT_YEAR_4.intValue())))
             .andExpect(jsonPath("$.[*].grade4").value(hasItem(DEFAULT_GRADE_4.toString())))
+            .andExpect(jsonPath("$.[*].md5key").value(hasItem(DEFAULT_MD_5_KEY.toString())))
+            .andExpect(jsonPath("$.[*].nameOfInstitution1").value(hasItem(DEFAULT_NAME_OF_INSTITUTION_1.toString())))
             .andExpect(jsonPath("$.[*].examPassed1").value(hasItem(DEFAULT_EXAM_PASSED_1.toString())))
-            .andExpect(jsonPath("$.[*].md5key").value(hasItem(DEFAULT_MD_5_KEY.toString())));
+            .andExpect(jsonPath("$.[*].year1").value(hasItem(DEFAULT_YEAR_1.intValue())))
+            .andExpect(jsonPath("$.[*].grade1").value(hasItem(DEFAULT_GRADE_1.toString())));
     }
 
     @Test
@@ -315,9 +243,6 @@ public class RegistrationAcademicDetailsResourceIntTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.id").value(registrationAcademicDetails.getId().intValue()))
-            .andExpect(jsonPath("$.nameOfInstitution1").value(DEFAULT_NAME_OF_INSTITUTION_1.toString()))
-            .andExpect(jsonPath("$.year1").value(DEFAULT_YEAR_1.intValue()))
-            .andExpect(jsonPath("$.grade1").value(DEFAULT_GRADE_1.toString()))
             .andExpect(jsonPath("$.nameOfInstitution2").value(DEFAULT_NAME_OF_INSTITUTION_2.toString()))
             .andExpect(jsonPath("$.examPassed2").value(DEFAULT_EXAM_PASSED_2.toString()))
             .andExpect(jsonPath("$.year2").value(DEFAULT_YEAR_2.intValue()))
@@ -330,8 +255,11 @@ public class RegistrationAcademicDetailsResourceIntTest {
             .andExpect(jsonPath("$.examPassed4").value(DEFAULT_EXAM_PASSED_4.toString()))
             .andExpect(jsonPath("$.year4").value(DEFAULT_YEAR_4.intValue()))
             .andExpect(jsonPath("$.grade4").value(DEFAULT_GRADE_4.toString()))
+            .andExpect(jsonPath("$.md5key").value(DEFAULT_MD_5_KEY.toString()))
+            .andExpect(jsonPath("$.nameOfInstitution1").value(DEFAULT_NAME_OF_INSTITUTION_1.toString()))
             .andExpect(jsonPath("$.examPassed1").value(DEFAULT_EXAM_PASSED_1.toString()))
-            .andExpect(jsonPath("$.md5key").value(DEFAULT_MD_5_KEY.toString()));
+            .andExpect(jsonPath("$.year1").value(DEFAULT_YEAR_1.intValue()))
+            .andExpect(jsonPath("$.grade1").value(DEFAULT_GRADE_1.toString()));
     }
 
     @Test
@@ -352,9 +280,6 @@ public class RegistrationAcademicDetailsResourceIntTest {
         // Update the registrationAcademicDetails
         RegistrationAcademicDetails updatedRegistrationAcademicDetails = registrationAcademicDetailsRepository.findOne(registrationAcademicDetails.getId());
         updatedRegistrationAcademicDetails
-                .nameOfInstitution1(UPDATED_NAME_OF_INSTITUTION_1)
-                .year1(UPDATED_YEAR_1)
-                .grade1(UPDATED_GRADE_1)
                 .nameOfInstitution2(UPDATED_NAME_OF_INSTITUTION_2)
                 .examPassed2(UPDATED_EXAM_PASSED_2)
                 .year2(UPDATED_YEAR_2)
@@ -367,8 +292,11 @@ public class RegistrationAcademicDetailsResourceIntTest {
                 .examPassed4(UPDATED_EXAM_PASSED_4)
                 .year4(UPDATED_YEAR_4)
                 .grade4(UPDATED_GRADE_4)
+                .md5key(UPDATED_MD_5_KEY)
+                .nameOfInstitution1(UPDATED_NAME_OF_INSTITUTION_1)
                 .examPassed1(UPDATED_EXAM_PASSED_1)
-                .md5key(UPDATED_MD_5_KEY);
+                .year1(UPDATED_YEAR_1)
+                .grade1(UPDATED_GRADE_1);
 
         restRegistrationAcademicDetailsMockMvc.perform(put("/api/registration-academic-details")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -379,9 +307,6 @@ public class RegistrationAcademicDetailsResourceIntTest {
         List<RegistrationAcademicDetails> registrationAcademicDetailsList = registrationAcademicDetailsRepository.findAll();
         assertThat(registrationAcademicDetailsList).hasSize(databaseSizeBeforeUpdate);
         RegistrationAcademicDetails testRegistrationAcademicDetails = registrationAcademicDetailsList.get(registrationAcademicDetailsList.size() - 1);
-        assertThat(testRegistrationAcademicDetails.getNameOfInstitution1()).isEqualTo(UPDATED_NAME_OF_INSTITUTION_1);
-        assertThat(testRegistrationAcademicDetails.getYear1()).isEqualTo(UPDATED_YEAR_1);
-        assertThat(testRegistrationAcademicDetails.getGrade1()).isEqualTo(UPDATED_GRADE_1);
         assertThat(testRegistrationAcademicDetails.getNameOfInstitution2()).isEqualTo(UPDATED_NAME_OF_INSTITUTION_2);
         assertThat(testRegistrationAcademicDetails.getExamPassed2()).isEqualTo(UPDATED_EXAM_PASSED_2);
         assertThat(testRegistrationAcademicDetails.getYear2()).isEqualTo(UPDATED_YEAR_2);
@@ -394,8 +319,11 @@ public class RegistrationAcademicDetailsResourceIntTest {
         assertThat(testRegistrationAcademicDetails.getExamPassed4()).isEqualTo(UPDATED_EXAM_PASSED_4);
         assertThat(testRegistrationAcademicDetails.getYear4()).isEqualTo(UPDATED_YEAR_4);
         assertThat(testRegistrationAcademicDetails.getGrade4()).isEqualTo(UPDATED_GRADE_4);
-        assertThat(testRegistrationAcademicDetails.getExamPassed1()).isEqualTo(UPDATED_EXAM_PASSED_1);
         assertThat(testRegistrationAcademicDetails.getMd5key()).isEqualTo(UPDATED_MD_5_KEY);
+        assertThat(testRegistrationAcademicDetails.getNameOfInstitution1()).isEqualTo(UPDATED_NAME_OF_INSTITUTION_1);
+        assertThat(testRegistrationAcademicDetails.getExamPassed1()).isEqualTo(UPDATED_EXAM_PASSED_1);
+        assertThat(testRegistrationAcademicDetails.getYear1()).isEqualTo(UPDATED_YEAR_1);
+        assertThat(testRegistrationAcademicDetails.getGrade1()).isEqualTo(UPDATED_GRADE_1);
     }
 
     @Test
