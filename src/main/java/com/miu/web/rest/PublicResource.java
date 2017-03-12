@@ -27,23 +27,23 @@ import org.springframework.web.bind.annotation.RestController;
 import com.codahale.metrics.annotation.Timed;
 import com.miu.domain.AdjunctFaculty;
 import com.miu.domain.Course;
+import com.miu.domain.CourseModule;
 import com.miu.domain.EntryQualification;
 import com.miu.domain.Gallery;
 import com.miu.domain.LecturerProfile;
 import com.miu.domain.MinisterialWorkExperience;
-import com.miu.domain.Module;
 import com.miu.domain.NewsAndEvent;
 import com.miu.domain.OnlineApplication;
 import com.miu.domain.RegistrationAcademicDetails;
 import com.miu.domain.ResearchPaper;
 import com.miu.domain.StaticPage;
 import com.miu.repository.AdjunctFacultyRepository;
+import com.miu.repository.CourseModuleRepository;
 import com.miu.repository.CourseRepository;
 import com.miu.repository.EntryQualificationRepository;
 import com.miu.repository.GalleryRepository;
 import com.miu.repository.LecturerProfileRepository;
 import com.miu.repository.MinisterialWorkExperienceRepository;
-import com.miu.repository.ModuleRepository;
 import com.miu.repository.NewsAndEventRepository;
 import com.miu.repository.OnlineApplicationRepository;
 import com.miu.repository.RegistrationAcademicDetailsRepository;
@@ -65,6 +65,9 @@ public class PublicResource {
 	private AdjunctFacultyRepository adjunctFacultyRepository;
 
 	@Inject
+	private CourseModuleRepository courseModuleRepository;
+
+	@Inject
 	private CourseRepository courseRepository;
 
 	@Inject
@@ -80,9 +83,6 @@ public class PublicResource {
 
 	@Inject
 	private MinisterialWorkExperienceRepository ministerialWorkExperienceRepository;
-
-	@Inject
-	private ModuleRepository moduleRepository;
 
 	@Inject
 	private NewsAndEventRepository newsAndEventRepository;
@@ -140,7 +140,7 @@ public class PublicResource {
 					"A new onlineApplication cannot already have an ID")).body(null);
 		}
 
-		OnlineApplication tmpOA = onlineApplicationRepository.findOAByMd5key(onlineApplication.getMd5key());		
+		OnlineApplication tmpOA = onlineApplicationRepository.findOAByMd5key(onlineApplication.getMd5key());
 		if (tmpOA != null) {
 			LOGGER.error("tmpOA: " + tmpOA.toString());
 			return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("onlineApplication", "idexists",
@@ -389,12 +389,11 @@ public class PublicResource {
 	 */
 	@GetMapping("/course/{id}/practical-ministry")
 	@Timed
-	public ResponseEntity<List<Module>> getPracticalMinistryModule(@PathVariable Long id) {
+	public ResponseEntity<List<CourseModule>> getPracticalMinistryModule(@PathVariable Long id) {
 		LOGGER.debug("REST request to get Modules from course : {}", id);
-		Course course = courseRepository.findOne(id);
-		List<Module> page = moduleRepository.getPracticalMinistry(course);
+		List<CourseModule> results = courseModuleRepository.getPracticalMinistry(id);
 		HttpHeaders headers = new HttpHeaders();
-		return new ResponseEntity<>(page, headers, HttpStatus.OK);
+		return new ResponseEntity<>(results, headers, HttpStatus.OK);
 	}
 
 	@GetMapping("/refund-policy")
@@ -435,12 +434,11 @@ public class PublicResource {
 	 */
 	@GetMapping("/course/{id}/theological")
 	@Timed
-	public ResponseEntity<List<Module>> getTheologicalModule(@PathVariable Long id) {
+	public ResponseEntity<List<CourseModule>> getTheologicalModule(@PathVariable Long id) {
 		LOGGER.debug("REST request to get Modules from course : {}", id);
-		Course course = courseRepository.findOne(id);
-		List<Module> page = moduleRepository.getTheological(course);
+		List<CourseModule> results = courseModuleRepository.getTheological(id);
 		HttpHeaders headers = new HttpHeaders();
-		return new ResponseEntity<>(page, headers, HttpStatus.OK);
+		return new ResponseEntity<>(results, headers, HttpStatus.OK);
 	}
 
 	@GetMapping("/video-gallery")

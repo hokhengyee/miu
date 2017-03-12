@@ -50,8 +50,8 @@
 			<h3 class="panel-title">Theological Module</h3>
 		</div>
 		<div class="panel-body">
-			<ul ng-repeat="module in vm.theological track by module.moduleOrder">
-				<li>{{ module.moduleCode }} - {{ module.title }}</li>
+			<ul ng-repeat="cm in vm.theological track by cm.displayOrder">
+				<li>{{ cm.module.moduleCode }} - {{ cm.module.title }}</li>
 			</ul>
 		</div>
 	</div>
@@ -62,8 +62,8 @@
 		</div>
 		<div class="panel-body">
 			<ul
-				ng-repeat="module in vm.practicalMinistry track by module.moduleOrder">
-				<li>{{ module.moduleCode }} - {{ module.title }}</li>
+				ng-repeat="cm in vm.practicalMinistry track by cm.displayOrder">
+				<li>{{ cm.module.moduleCode }} - {{ cm.module.title }}</li>
 			</ul>
 		</div>
 	</div>
