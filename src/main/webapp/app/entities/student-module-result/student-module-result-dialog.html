@@ -26,8 +26,8 @@
 				<input id="field_dateGraded" type="text" class="form-control"
 					name="dateGraded" uib-datepicker-popup="{{dateformat}}"
 					ng-model="vm.studentModuleResult.dateGraded"
-					is-open="vm.datePickerOpenStatus.dateGraded" />
-				<span class="input-group-btn">
+					is-open="vm.datePickerOpenStatus.dateGraded" /> <span
+					class="input-group-btn">
 					<button type="button" class="btn btn-default"
 						ng-click="vm.openCalendar('dateGraded')">
 						<i class="glyphicon glyphicon-calendar"></i>
@@ -57,7 +57,7 @@
 			<label for="field_module">Module</label> <select class="form-control"
 				id="field_module" name="module"
 				ng-model="vm.studentModuleResult.module"
-				ng-options="module as module.moduleCode for module in vm.modules track by module.id"
+				ng-options="module as module.title for module in vm.modules track by module.id"
 				required>
 				<option value=""></option>
 			</select>

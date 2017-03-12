@@ -23,8 +23,8 @@
 								</b>
 							</h4>
 						</div>
-						<div>{{ newsAndEvent.startDT | date:'medium' }} - {{
-							newsAndEvent.endDT | date:'medium' }}</div>
+						<div>{{ newsAndEvent.startDT | date:"MMM dd, yyyy h:mm a" }}
+							- {{ newsAndEvent.endDT | date:"MMM dd, yyyy h:mm a" }}</div>
 						<div>
 							<i>Venue: {{ newsAndEvent.venue }}</i>
 						</div>

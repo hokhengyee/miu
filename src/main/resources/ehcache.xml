@@ -82,5 +82,7 @@
 
     <cache alias="com.miu.domain.CourseMaterialAccess" uses-template="simple"/>
 
+    <cache alias="com.miu.domain.CourseModule" uses-template="simple"/>
+
     <!-- jhipster-needle-ehcache-add-entry -->
 </config>

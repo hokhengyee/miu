@@ -1,85 +1,93 @@
 
-<form name="editForm" role="form" novalidate ng-submit="vm.save()" show-validation>
+<form name="editForm" role="form" novalidate ng-submit="vm.save()"
+	show-validation>
 
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
-                ng-click="vm.clear()">&times;</button>
-        <h4 class="modal-title" id="myNewsAndEventLabel">Create or edit a News And Event</h4>
-    </div>
-    <div class="modal-body">
-        <jhi-alert-error></jhi-alert-error>
-        <div class="form-group" ng-show="vm.newsAndEvent.id">
-            <label for="id">ID</label>
-            <input type="text" class="form-control" id="id" name="id"
-                    ng-model="vm.newsAndEvent.id" readonly />
-        </div>
-        <div class="form-group">
-            <label class="control-label" for="field_title">Title</label>
-            <input type="text" class="form-control" name="title" id="field_title"
-                    ng-model="vm.newsAndEvent.title"
-                    required ng-maxlength="3000" />
-            <div ng-show="editForm.title.$invalid">
-                <p class="help-block"
-                    ng-show="editForm.title.$error.required">
-                    This field is required.
-                </p>
-                <p class="help-block"
-                    ng-show="editForm.title.$error.maxlength">
-                    This field cannot be longer than 3000 characters.
-                </p>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label" for="field_websiteLink">Website Link</label>
-            <input type="text" class="form-control" name="websiteLink" id="field_websiteLink"
-                    ng-model="vm.newsAndEvent.websiteLink"
-                    ng-maxlength="3000" />
-            <div ng-show="editForm.websiteLink.$invalid">
-                <p class="help-block"
-                    ng-show="editForm.websiteLink.$error.maxlength">
-                    This field cannot be longer than 3000 characters.
-                </p>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label" for="field_startDT">Start DT</label>
-                <div class="input-group">
-                    <input id="field_startDT" type="text" class="form-control" name="startDT" datetime-picker="{{dateformat}}" ng-model="vm.newsAndEvent.startDT" is-open="vm.datePickerOpenStatus.startDT"
-                      />
-                    <span class="input-group-btn">
-                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('startDT')"><i class="glyphicon glyphicon-calendar"></i></button>
-                    </span>
-                </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label" for="field_endDT">End DT</label>
-                <div class="input-group">
-                    <input id="field_endDT" type="text" class="form-control" name="endDT" datetime-picker="{{dateformat}}" ng-model="vm.newsAndEvent.endDT" is-open="vm.datePickerOpenStatus.endDT"
-                      />
-                    <span class="input-group-btn">
-                        <button type="button" class="btn btn-default" ng-click="vm.openCalendar('endDT')"><i class="glyphicon glyphicon-calendar"></i></button>
-                    </span>
-                </div>
-        </div>
-        <div class="form-group">
-            <label class="control-label" for="field_venue">Venue</label>
-            <input type="text" class="form-control" name="venue" id="field_venue"
-                    ng-model="vm.newsAndEvent.venue"
-                     />
-        </div>
-        <div class="form-group">
-            <label class="control-label" for="field_eventDetail">Event Detail</label>
-                <textarea class="form-control" name="eventDetail" id="field_eventDetail"
-                    ng-model="vm.newsAndEvent.eventDetail"  ></textarea>
-        </div>
+	<div class="modal-header">
+		<button type="button" class="close" data-dismiss="modal"
+			aria-hidden="true" ng-click="vm.clear()">&times;</button>
+		<h4 class="modal-title" id="myNewsAndEventLabel">Create or edit a
+			News And Event</h4>
+	</div>
+	<div class="modal-body">
+		<jhi-alert-error></jhi-alert-error>
+		<div class="form-group" ng-show="vm.newsAndEvent.id">
+			<label for="id">ID</label> <input type="text" class="form-control"
+				id="id" name="id" ng-model="vm.newsAndEvent.id" readonly />
+		</div>
+		<div class="form-group">
+			<label class="control-label" for="field_title">Title</label> <input
+				type="text" class="form-control" name="title" id="field_title"
+				ng-model="vm.newsAndEvent.title" required ng-maxlength="3000" />
+			<div ng-show="editForm.title.$invalid">
+				<p class="help-block" ng-show="editForm.title.$error.required">
+					This field is required.</p>
+				<p class="help-block" ng-show="editForm.title.$error.maxlength">
+					This field cannot be longer than 3000 characters.</p>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label" for="field_websiteLink">Website
+				Link</label> <input type="text" class="form-control" name="websiteLink"
+				id="field_websiteLink" ng-model="vm.newsAndEvent.websiteLink"
+				ng-maxlength="3000" />
+			<div ng-show="editForm.websiteLink.$invalid">
+				<p class="help-block"
+					ng-show="editForm.websiteLink.$error.maxlength">This field
+					cannot be longer than 3000 characters.</p>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label" for="field_startDT">Start DT</label>
+			<div class="input-group">
+				<input id="field_startDT" type="text" class="form-control"
+					name="startDT" datetime-picker="{{dateformat}}"
+					ng-model="vm.newsAndEvent.startDT"
+					is-open="vm.datePickerOpenStatus.startDT" /> <span
+					class="input-group-btn">
+					<button type="button" class="btn btn-default"
+						ng-click="vm.openCalendar('startDT')">
+						<i class="glyphicon glyphicon-calendar"></i>
+					</button>
+				</span>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label" for="field_endDT">End DT</label>
+			<div class="input-group">
+				<input id="field_endDT" type="text" class="form-control"
+					name="endDT" datetime-picker="{{dateformat}}"
+					ng-model="vm.newsAndEvent.endDT"
+					is-open="vm.datePickerOpenStatus.endDT" /> <span
+					class="input-group-btn">
+					<button type="button" class="btn btn-default"
+						ng-click="vm.openCalendar('endDT')">
+						<i class="glyphicon glyphicon-calendar"></i>
+					</button>
+				</span>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label" for="field_venue">Venue</label> <input
+				type="text" class="form-control" name="venue" id="field_venue"
+				ng-model="vm.newsAndEvent.venue" />
+		</div>
+		<div class="form-group">
+			<label class="control-label" for="field_eventDetail">Event
+				Detail</label>
+			<textarea class="form-control" name="eventDetail"
+				style="height: 300px" id="field_eventDetail"
+				ng-model="vm.newsAndEvent.eventDetail"></textarea>
+		</div>
 
-    </div>
-    <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.clear()">
-            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span>
-        </button>
-        <button type="submit" ng-disabled="editForm.$invalid || vm.isSaving" class="btn btn-primary">
-            <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Save</span>
-        </button>
-    </div>
+	</div>
+	<div class="modal-footer">
+		<button type="button" class="btn btn-default" data-dismiss="modal"
+			ng-click="vm.clear()">
+			<span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span>
+		</button>
+		<button type="submit" ng-disabled="editForm.$invalid || vm.isSaving"
+			class="btn btn-primary">
+			<span class="glyphicon glyphicon-save"></span>&nbsp;<span>Save</span>
+		</button>
+	</div>
 </form>

@@ -140,9 +140,9 @@ public class PublicResource {
 					"A new onlineApplication cannot already have an ID")).body(null);
 		}
 
-		OnlineApplication tmpOA = onlineApplicationRepository.findOAByMd5key(onlineApplication.getMd5key());
-		LOGGER.error("tmpOA: " + tmpOA.toString());
+		OnlineApplication tmpOA = onlineApplicationRepository.findOAByMd5key(onlineApplication.getMd5key());		
 		if (tmpOA != null) {
+			LOGGER.error("tmpOA: " + tmpOA.toString());
 			return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("onlineApplication", "idexists",
 					"This email has been registered. Please try a different email.")).body(null);
 		}

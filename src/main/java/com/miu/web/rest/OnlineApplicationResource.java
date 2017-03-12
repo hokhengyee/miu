@@ -59,6 +59,7 @@ public class OnlineApplicationResource {
 
 		OnlineApplication tmpOA = onlineApplicationRepository.findOAByMd5key(onlineApplication.getMd5key());
 		if (tmpOA != null) {
+			LOGGER.error("tmpOA: " + tmpOA.toString());
 			return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("onlineApplication", "idexists",
 					"This email has been registered. Please try a different email.")).body(null);
 		}
@@ -139,21 +140,11 @@ public class OnlineApplicationResource {
 	public ResponseEntity<OnlineApplication> updateOnlineApplication(
 			@Valid @RequestBody OnlineApplication onlineApplication) throws URISyntaxException {
 		LOGGER.debug("REST request to update OnlineApplication : {}", onlineApplication);
-
-		OnlineApplication tmpOA = onlineApplicationRepository.findOAByMd5key(onlineApplication.getMd5key());
-		LOGGER.error("tmpOA: " + tmpOA.toString());
-		if (tmpOA != null) {
-			return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("onlineApplication", "idexists",
-					"This email has been registered. Please try a different email.")).body(null);
-		}
-
 		if (onlineApplication.getId() == null) {
 			return createOnlineApplication(onlineApplication);
 		}
 
-		// OnlineApplication result =
-		// onlineApplicationRepository.save(onlineApplication);
-		OnlineApplication result = null;
+		OnlineApplication result = onlineApplicationRepository.save(onlineApplication);
 		return ResponseEntity.ok()
 				.headers(HeaderUtil.createEntityUpdateAlert("onlineApplication", onlineApplication.getId().toString()))
 				.body(result);
