@@ -6,10 +6,11 @@
 
 	PublicGalleryController.$inject = [ '$scope', '$state', 'DataUtils',
 			'PublicGallery', 'ParseLinks', 'AlertService',
-			'paginationConstants', 'pagingParams' ];
+			'paginationConstants', 'pagingParams', 'entity', '$sce' ];
 
 	function PublicGalleryController($scope, $state, DataUtils, PublicGallery,
-			ParseLinks, AlertService, paginationConstants, pagingParams) {
+			ParseLinks, AlertService, paginationConstants, pagingParams,
+			entity, $sce) {
 		var vm = this;
 
 		vm.loadPage = loadPage;
@@ -19,6 +20,9 @@
 		vm.itemsPerPage = paginationConstants.itemsPerPage;
 		vm.openFile = DataUtils.openFile;
 		vm.byteSize = DataUtils.byteSize;
+
+		vm.staticPage = entity;
+		vm.staticHtml = $sce.trustAsHtml(vm.staticPage.content);
 
 		loadAll();
 

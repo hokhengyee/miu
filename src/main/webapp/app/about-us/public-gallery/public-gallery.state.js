@@ -35,6 +35,12 @@
 								search : null
 							},
 							resolve : {
+								entity : [
+										'$stateParams',
+										'VideoGalleryMsg',
+										function($stateParams, VideoGalleryMsg) {
+											return VideoGalleryMsg.get().$promise;
+										} ],
 								pagingParams : [
 										'$stateParams',
 										'PaginationUtil',

@@ -443,6 +443,15 @@ public class PublicResource {
 		return new ResponseEntity<>(page, headers, HttpStatus.OK);
 	}
 
+	@GetMapping("/video-gallery")
+	@Timed
+	public ResponseEntity<StaticPage> getVideoGallery() throws URISyntaxException {
+		LOGGER.debug("REST request to get Video Gallery");
+		StaticPage staticPage = staticPageRepository.getStaticPageByTitle("Video Gallery");
+		return Optional.ofNullable(staticPage).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
+				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+	}
+
 	@PutMapping("/ministerial-work-experiences")
 	@Timed
 	public ResponseEntity<MinisterialWorkExperience> updateMinisterialWorkExperience(

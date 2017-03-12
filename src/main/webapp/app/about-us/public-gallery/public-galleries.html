@@ -3,7 +3,7 @@
 
 	<div class="panel panel-primary">
 		<div class="panel-heading">
-			<b>Gallery</b>
+			<b>Photo Gallery</b>
 		</div>
 		<div class="panel-body">
 			<div class="row">
@@ -26,5 +26,16 @@
 				ng-change="vm.transition()"></uib-pager>
 		</div>
 	</div>
+
+	<!-- Video  -->
+	<div class="panel panel-primary">
+		<div class="panel-heading">
+			<b>Video Gallery</b>
+		</div>
+		<div class="panel-body">
+			<span ng-bind-html="vm.staticHtml"></span>
+		</div>
+	</div>
+
 
 </div>
