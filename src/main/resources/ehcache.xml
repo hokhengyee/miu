@@ -80,5 +80,7 @@
 
     <cache alias="com.miu.domain.MinisterialWorkExperience" uses-template="simple"/>
 
+    <cache alias="com.miu.domain.CourseMaterialAccess" uses-template="simple"/>
+
     <!-- jhipster-needle-ehcache-add-entry -->
 </config>

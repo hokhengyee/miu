@@ -1,0 +1,31 @@
+
+<div>
+    <h2><span>Course Material Access</span> {{vm.courseMaterialAccess.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="dl-horizontal jh-entity-details">
+        <dt><span>Display Order</span></dt>
+        <dd>
+            <span>{{vm.courseMaterialAccess.displayOrder}}</span>
+        </dd>
+        <dt><span>Course</span></dt>
+        <dd>
+            <a ui-sref="course-detail({id:vm.courseMaterialAccess.course.id})">{{vm.courseMaterialAccess.course.title}}</a>
+        </dd>
+        <dt><span>Course Material</span></dt>
+        <dd>
+            <a ui-sref="course-material-detail({id:vm.courseMaterialAccess.courseMaterial.id})">{{vm.courseMaterialAccess.courseMaterial.title}}</a>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            ui-sref="{{ vm.previousState }}"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span> Back</span>
+    </button>
+
+    <button type="button" ui-sref="course-material-access-detail.edit({id:vm.courseMaterialAccess.id})" class="btn btn-primary">
+        <span class="glyphicon glyphicon-pencil"></span>
+        <span class="hidden-xs hidden-sm"> Edit</span>
+    </button>
+</div>

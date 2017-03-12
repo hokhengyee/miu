@@ -6,11 +6,12 @@
 
 	StudentProfileDialogController.$inject = [ '$timeout', '$scope',
 			'$stateParams', '$uibModalInstance', 'DataUtils', 'entity',
-			'StudentProfile', 'Salutation', 'Gender', 'StudentUser' ];
+			'StudentProfile', 'Salutation', 'Gender', 'StudentUser',
+			'LecturerUser' ];
 
 	function StudentProfileDialogController($timeout, $scope, $stateParams,
 			$uibModalInstance, DataUtils, entity, StudentProfile, Salutation,
-			Gender, StudentUser) {
+			Gender, StudentUser, LecturerUser) {
 		var vm = this;
 
 		vm.studentProfile = entity;
@@ -23,6 +24,7 @@
 		vm.salutations = Salutation.query();
 		vm.genders = Gender.query();
 		vm.users = StudentUser.query();
+		vm.lecturers = LecturerUser.query();
 
 		$timeout(function() {
 			angular.element('.form-group:eq(1)>input').focus();
