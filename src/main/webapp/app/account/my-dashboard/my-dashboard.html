@@ -127,21 +127,22 @@
 		</div>
 
 		<table class="table table-bordered"
-			ng-show="vm.courseMaterials.length > 0">
+			ng-show="vm.courseMaterialAcessList.length > 0">
 			<tbody>
 				<tr
-					ng-repeat="courseMaterial in vm.courseMaterials track by courseMaterial.displayOrder">
-					<td><b>{{courseMaterial.title}}</b><br />{{courseMaterial.description}}</td>
+					ng-repeat="item in vm.courseMaterialAcessList track by item.displayOrder">
+					<td><b>{{item.courseMaterial.title}}</b><br />{{item.courseMaterial.description}}</td>
 					<td width="50px"><a alt="Preview"
-						ng-show="courseMaterial.websiteLink" title="Preview"
-						href="{{courseMaterial.websiteLink}}" target="_blank"
+						ng-show="item.courseMaterial.websiteLink" title="Preview"
+						href="{{item.courseMaterial.websiteLink}}" target="_blank"
 						class="btn btn-primary"><i
 							class="glyphicon glyphicon-save-file" /></a></td>
 				</tr>
 			</tbody>
 		</table>
 
-		<div class="panel-body" ng-show="vm.courseMaterials.length == 0">
+		<div class="panel-body"
+			ng-show="vm.courseMaterialAcessList.length == 0">
 			<center>No materials currently available.</center>
 		</div>
 	</div>

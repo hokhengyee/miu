@@ -1,39 +1,54 @@
 
 <div>
-    <h2><span>Student Research Paper Result</span> {{vm.studentResearchPaperResult.id}}</h2>
-    <hr>
-    <jhi-alert-error></jhi-alert-error>
-    <dl class="dl-horizontal jh-entity-details">
-        <dt><span>Result</span></dt>
-        <dd>
-            <span>{{vm.studentResearchPaperResult.result}}</span>
-        </dd>
-        <dt><span>Date Graded</span></dt>
-        <dd>
-            <span>{{vm.studentResearchPaperResult.dateGraded | date:'mediumDate'}}</span>
-        </dd>
-        <dt><span>Result Order</span></dt>
-        <dd>
-            <span>{{vm.studentResearchPaperResult.resultOrder}}</span>
-        </dd>
-        <dt><span>Research Paper</span></dt>
-        <dd>
-            <a ui-sref="research-paper-detail({id:vm.studentResearchPaperResult.researchPaper.id})">{{vm.studentResearchPaperResult.researchPaper.title}}</a>
-        </dd>
-        <dt><span>User</span></dt>
-        <dd>
-            {{vm.studentResearchPaperResult.user.login}}
-        </dd>
-    </dl>
+	<h2>
+		<span>Student Research Paper Result</span>
+		{{vm.studentResearchPaperResult.id}}
+	</h2>
+	<hr>
+	<jhi-alert-error></jhi-alert-error>
+	<dl class="dl-horizontal jh-entity-details">
+		<dt>
+			<span>Result</span>
+		</dt>
+		<dd>
+			<span>{{vm.studentResearchPaperResult.result}}</span>
+		</dd>
+		<dt>
+			<span>Date Graded</span>
+		</dt>
+		<dd>
+			<span>{{vm.studentResearchPaperResult.dateGraded |
+				date:'mediumDate'}}</span>
+		</dd>
+		<dt>
+			<span>Result Order</span>
+		</dt>
+		<dd>
+			<span>{{vm.studentResearchPaperResult.resultOrder}}</span>
+		</dd>
+		<dt>
+			<span>Research Paper</span>
+		</dt>
+		<dd>
+			<a
+				ui-sref="research-paper-detail({id:vm.studentResearchPaperResult.researchPaper.id})">{{vm.studentResearchPaperResult.researchPaper.title}}</a>
+		</dd>
+		<dt>
+			<span>Student</span>
+		</dt>
+		<dd>{{vm.studentResearchPaperResult.user.login}}</dd>
+	</dl>
 
-    <button type="submit"
-            ui-sref="{{ vm.previousState }}"
-            class="btn btn-info">
-        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span> Back</span>
-    </button>
+	<button type="submit" ui-sref="{{ vm.previousState }}"
+		class="btn btn-info">
+		<span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span>
+			Back</span>
+	</button>
 
-    <button type="button" ui-sref="student-research-paper-result-detail.edit({id:vm.studentResearchPaperResult.id})" class="btn btn-primary">
-        <span class="glyphicon glyphicon-pencil"></span>
-        <span class="hidden-xs hidden-sm"> Edit</span>
-    </button>
+	<button type="button"
+		ui-sref="student-research-paper-result-detail.edit({id:vm.studentResearchPaperResult.id})"
+		class="btn btn-primary">
+		<span class="glyphicon glyphicon-pencil"></span> <span
+			class="hidden-xs hidden-sm"> Edit</span>
+	</button>
 </div>

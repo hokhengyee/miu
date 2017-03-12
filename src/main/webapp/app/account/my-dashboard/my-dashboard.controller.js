@@ -19,7 +19,7 @@
 		vm.courseAccess = null;
 		vm.course = null;
 		vm.commonResources = [];
-		vm.courseMaterials = [];
+		vm.courseMaterialAcessList = [];
 		vm.openFile = DataUtils.openFile;
 
 		getNewsAndEvents();
@@ -41,7 +41,7 @@
 					MyCourseMaterials.get({
 						id : courseID
 					}, function(result) {
-						vm.courseMaterials = result;
+						vm.courseMaterialAcessList = result;
 					});
 				}
 			});

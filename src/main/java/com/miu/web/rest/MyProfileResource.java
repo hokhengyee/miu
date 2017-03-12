@@ -27,9 +27,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 import com.miu.config.Constants;
-import com.miu.domain.Course;
 import com.miu.domain.CourseAccess;
-import com.miu.domain.CourseMaterial;
+import com.miu.domain.CourseMaterialAccess;
 import com.miu.domain.ForumRoom;
 import com.miu.domain.ForumRoomMessage;
 import com.miu.domain.LecturerProfile;
@@ -40,8 +39,7 @@ import com.miu.domain.StudentProfile;
 import com.miu.domain.StudentResearchPaperResult;
 import com.miu.domain.User;
 import com.miu.repository.CourseAccessRepository;
-import com.miu.repository.CourseMaterialRepository;
-import com.miu.repository.CourseRepository;
+import com.miu.repository.CourseMaterialAccessRepository;
 import com.miu.repository.ForumRoomMessageRepository;
 import com.miu.repository.ForumRoomRepository;
 import com.miu.repository.LecturerProfileRepository;
@@ -101,10 +99,7 @@ public class MyProfileResource {
 	private CourseAccessRepository courseAccessRepository;
 
 	@Inject
-	private CourseMaterialRepository courseMaterialRepository;
-
-	@Inject
-	private CourseRepository courseRepository;
+	private CourseMaterialAccessRepository courseMaterialAccessRepository;
 
 	@Inject
 	private ForumRoomMessageRepository forumRoomMessageRepository;
@@ -232,10 +227,12 @@ public class MyProfileResource {
 
 	@GetMapping("/course/{id}/course-materials")
 	@Timed
-	public ResponseEntity<List<CourseMaterial>> getCourseMaterials(@PathVariable Long id) throws URISyntaxException {
+	public ResponseEntity<List<CourseMaterialAccess>> getCourseMaterials(@PathVariable Long id)
+			throws URISyntaxException {
 		LOGGER.debug("REST request to get Course Materials");
-		Course course = courseRepository.findOne(id);
-		List<CourseMaterial> courseMaterialList = courseMaterialRepository.getCourseMaterialByCourseTitle(course);
+		// Course course = courseRepository.findOne(id);
+		List<CourseMaterialAccess> courseMaterialList = courseMaterialAccessRepository
+				.findCourseMaterialAccessByCourse(id);
 		HttpHeaders headers = new HttpHeaders();
 		return new ResponseEntity<>(courseMaterialList, headers, HttpStatus.OK);
 	}

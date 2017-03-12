@@ -39,7 +39,7 @@ import io.swagger.annotations.ApiParam;
 @RequestMapping("/api")
 public class CourseMaterialAccessResource {
 
-	private final Logger log = LoggerFactory.getLogger(CourseMaterialAccessResource.class);
+	private final Logger LOGGER = LoggerFactory.getLogger(CourseMaterialAccessResource.class);
 
 	@Inject
 	private CourseMaterialAccessRepository courseMaterialAccessRepository;
@@ -59,7 +59,7 @@ public class CourseMaterialAccessResource {
 	@Timed
 	public ResponseEntity<CourseMaterialAccess> createCourseMaterialAccess(
 			@Valid @RequestBody CourseMaterialAccess courseMaterialAccess) throws URISyntaxException {
-		log.debug("REST request to save CourseMaterialAccess : {}", courseMaterialAccess);
+		LOGGER.debug("REST request to save CourseMaterialAccess : {}", courseMaterialAccess);
 		if (courseMaterialAccess.getId() != null) {
 			return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("courseMaterialAccess", "idexists",
 					"A new courseMaterialAccess cannot already have an ID")).body(null);
@@ -86,7 +86,7 @@ public class CourseMaterialAccessResource {
 	@Timed
 	public ResponseEntity<CourseMaterialAccess> updateCourseMaterialAccess(
 			@Valid @RequestBody CourseMaterialAccess courseMaterialAccess) throws URISyntaxException {
-		log.debug("REST request to update CourseMaterialAccess : {}", courseMaterialAccess);
+		LOGGER.debug("REST request to update CourseMaterialAccess : {}", courseMaterialAccess);
 		if (courseMaterialAccess.getId() == null) {
 			return createCourseMaterialAccess(courseMaterialAccess);
 		}
@@ -110,7 +110,7 @@ public class CourseMaterialAccessResource {
 	@Timed
 	public ResponseEntity<List<CourseMaterialAccess>> getAllCourseMaterialAccesses(@ApiParam Pageable pageable)
 			throws URISyntaxException {
-		log.debug("REST request to get a page of CourseMaterialAccesses");
+		LOGGER.debug("REST request to get a page of CourseMaterialAccesses");
 		Page<CourseMaterialAccess> page = courseMaterialAccessRepository.findAll(pageable);
 		HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/course-material-accesses");
 		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
@@ -127,7 +127,7 @@ public class CourseMaterialAccessResource {
 	@GetMapping("/course-material-accesses/{id}")
 	@Timed
 	public ResponseEntity<CourseMaterialAccess> getCourseMaterialAccess(@PathVariable Long id) {
-		log.debug("REST request to get CourseMaterialAccess : {}", id);
+		LOGGER.debug("REST request to get CourseMaterialAccess : {}", id);
 		CourseMaterialAccess courseMaterialAccess = courseMaterialAccessRepository.findOne(id);
 		return Optional.ofNullable(courseMaterialAccess).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
@@ -144,7 +144,7 @@ public class CourseMaterialAccessResource {
 	@DeleteMapping("/course-material-accesses/{id}")
 	@Timed
 	public ResponseEntity<Void> deleteCourseMaterialAccess(@PathVariable Long id) {
-		log.debug("REST request to delete CourseMaterialAccess : {}", id);
+		LOGGER.debug("REST request to delete CourseMaterialAccess : {}", id);
 		courseMaterialAccessRepository.delete(id);
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("courseMaterialAccess", id.toString()))
 				.build();
