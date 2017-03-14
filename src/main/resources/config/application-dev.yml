@@ -49,10 +49,17 @@ spring:
         jcache:
             config: ehcache.xml
     mail:
-        host:
-        port: 
-        username:
-        password:
+        host: smtpout.secureserver.net
+        port: 465
+        username: 
+        password: 
+        debug: true
+        properties.mail.smtp:
+            starttls.enable: true
+            starttls.required: true
+            ssl.enable: true
+        properties.mail.smtps:
+            auth: true            
     messages:
         cache-seconds: 1
     thymeleaf:
@@ -77,8 +84,8 @@ jhipster:
             # security key (this key should be unique for your application, and kept secret)
             key: miuwebsite
     mail: # specific JHipster mail property, for standard properties see MailProperties
-        from: miu@localhost
-        baseUrl: http://127.0.0.1:8080
+        from: info@miuedu.us
+        baseUrl: http://www.miuedu.us
     metrics: # DropWizard Metrics configuration, used by MetricsConfiguration
         jmx.enabled: true
         graphite:
