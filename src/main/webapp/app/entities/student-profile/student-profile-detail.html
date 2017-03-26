@@ -69,9 +69,10 @@
 							<td>{{vm.studentProfile.mailingAddress}}</td>
 						</tr>
 						<tr ng-show="vm.studentProfile != null">
-							<th>Supervisor</th>
+							<th>Course Mentor</th>
 							<td>{{vm.studentProfile.supervisor.firstName}}
-								{{vm.studentProfile.supervisor.lastName}}</td>
+								{{vm.studentProfile.supervisor.lastName}}&nbsp;(<a href="mailto:{{vm.studentProfile.supervisor.email}}">{{vm.studentProfile.supervisor.email}}</a>)
+							</td>
 						</tr>
 						<tr ng-show="vm.studentProfile != null">
 							<th>Application Date</th>
@@ -86,6 +87,11 @@
 						<tr ng-show="vm.studentProfile != null">
 							<th>Completion Date</th>
 							<td>{{vm.studentProfile.completionDate | date:'mediumDate'}}</td>
+						</tr>
+						<tr ng-show="vm.studentProfile != null">
+							<th>Extended Completion Date</th>
+							<td>{{vm.studentProfile.extendedCompletionDate |
+								date:'mediumDate'}}</td>
 						</tr>
 						<!-- Lecturer -->
 						<tr ng-show="vm.lecturerProfile != null">
