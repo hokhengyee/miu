@@ -68,7 +68,7 @@
 						{{vm.byteSize(vm.onlineApplication.profilePhoto)}}
 					</div></td>
 			</tr>
-			<tr>
+			<!-- 			<tr>
 				<th>Academic Certificate</th>
 				<td><div ng-if="vm.onlineApplication.academicCertificate">
 						<a
@@ -76,7 +76,7 @@
 						{{vm.onlineApplication.academicCertificateContentType}},
 						{{vm.byteSize(vm.onlineApplication.academicCertificate)}}
 					</div></td>
-			</tr>
+			</tr> -->
 			<tr>
 				<th>Letter Of Recommendation</th>
 				<td>
@@ -103,6 +103,43 @@
 				<th>Md5 Key</th>
 				<td>{{vm.onlineApplication.md5key}}</td>
 			</tr>
+
+			<!-- Academic Certificates -->
+			<tr>
+				<th><span>Academic Certificate 1</span></th>
+				<td>
+					<div ng-if="vm.academicCertificate.academicCertificate1">
+						<a
+							ng-click="vm.openFile(vm.academicCertificate.academicCertificate1ContentType, vm.academicCertificate.academicCertificate1)">open</a>
+						{{vm.academicCertificate.academicCertificate1ContentType}},
+						{{vm.byteSize(vm.academicCertificate.academicCertificate1)}}
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<th><span>Academic Certificate 2</span></th>
+				<td>
+					<div ng-if="vm.academicCertificate.academicCertificate2">
+						<a
+							ng-click="vm.openFile(vm.academicCertificate.academicCertificate2ContentType, vm.academicCertificate.academicCertificate2)">open</a>
+						{{vm.academicCertificate.academicCertificate2ContentType}},
+						{{vm.byteSize(vm.academicCertificate.academicCertificate2)}}
+					</div>
+				</td>
+			</tr>
+			<tr>
+				<th><span>Academic Certificate 3</span></th>
+				<td>
+					<div ng-if="vm.academicCertificate.academicCertificate3">
+						<a
+							ng-click="vm.openFile(vm.academicCertificate.academicCertificate3ContentType, vm.academicCertificate.academicCertificate3)">open</a>
+						{{vm.academicCertificate.academicCertificate3ContentType}},
+						{{vm.byteSize(vm.academicCertificate.academicCertificate3)}}
+					</div>
+				</td>
+			</tr>
+			<!-- End Academic Certificates -->
+
 		</table>
 		<div class="panel-body">
 			<jhi-alert-error></jhi-alert-error>

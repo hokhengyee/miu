@@ -1,0 +1,80 @@
+<div>
+	<h2>Academic Certificates</h2>
+	<jhi-alert></jhi-alert>
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-xs-4 no-padding-left">
+				<button class="btn btn-primary" ui-sref="academic-certificate.new">
+					<span class="glyphicon glyphicon-plus"></span> <span>
+						Create new Academic Certificate </span>
+				</button>
+			</div>
+		</div>
+	</div>
+	<br />
+	<div class="table-responsive">
+		<table class="jh-table table table-striped">
+			<thead>
+				<tr jh-sort="vm.predicate" ascending="vm.reverse"
+					callback="vm.transition()">
+					<th jh-sort-by="id"><span>ID</span> <span
+						class="glyphicon glyphicon-sort"></span></th>
+					<th jh-sort-by="md5Key"><span>Md 5 Key</span> <span
+						class="glyphicon glyphicon-sort"></span></th>
+					<!-- <th jh-sort-by="academicCertificate1"><span>Academic Certificate 1</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="academicCertificate2"><span>Academic Certificate 2</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="academicCertificate3"><span>Academic Certificate 3</span> <span class="glyphicon glyphicon-sort"></span></th> -->
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr
+					ng-repeat="academicCertificate in vm.academicCertificates track by academicCertificate.id">
+					<td><a
+						ui-sref="academic-certificate-detail({id:academicCertificate.id})">{{academicCertificate.id}}</a></td>
+					<td>{{academicCertificate.md5Key}}</td>
+					<!-- <td>
+                        <a ng-if="academicCertificate.academicCertificate1" ng-click="vm.openFile(academicCertificate.academicCertificate1ContentType, academicCertificate.academicCertificate1)">open</a>
+                        <span ng-if="academicCertificate.academicCertificate1">{{academicCertificate.academicCertificate1ContentType}}, {{vm.byteSize(academicCertificate.academicCertificate1)}}</span>
+                    </td>
+                    <td>
+                        <a ng-if="academicCertificate.academicCertificate2" ng-click="vm.openFile(academicCertificate.academicCertificate2ContentType, academicCertificate.academicCertificate2)">open</a>
+                        <span ng-if="academicCertificate.academicCertificate2">{{academicCertificate.academicCertificate2ContentType}}, {{vm.byteSize(academicCertificate.academicCertificate2)}}</span>
+                    </td>
+                    <td>
+                        <a ng-if="academicCertificate.academicCertificate3" ng-click="vm.openFile(academicCertificate.academicCertificate3ContentType, academicCertificate.academicCertificate3)">open</a>
+                        <span ng-if="academicCertificate.academicCertificate3">{{academicCertificate.academicCertificate3ContentType}}, {{vm.byteSize(academicCertificate.academicCertificate3)}}</span>
+                    </td> -->
+					<td class="text-right">
+						<div class="btn-group flex-btn-group-container">
+							<button type="submit"
+								ui-sref="academic-certificate-detail({id:academicCertificate.id})"
+								class="btn btn-info btn-sm">
+								<span class="glyphicon glyphicon-eye-open"></span> <span
+									class="hidden-xs hidden-sm"></span>
+							</button>
+							<button type="submit"
+								ui-sref="academic-certificate.edit({id:academicCertificate.id})"
+								class="btn btn-primary btn-sm">
+								<span class="glyphicon glyphicon-pencil"></span> <span
+									class="hidden-xs hidden-sm"></span>
+							</button>
+							<button type="submit"
+								ui-sref="academic-certificate.delete({id:academicCertificate.id})"
+								class="btn btn-danger btn-sm">
+								<span class="glyphicon glyphicon-remove-circle"></span> <span
+									class="hidden-xs hidden-sm"></span>
+							</button>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="text-center">
+		<jhi-item-count page="vm.page" total="vm.queryCount"
+			items-per-page="vm.itemsPerPage"></jhi-item-count>
+	</div>
+	<uib-pager total-items="vm.totalItems" ng-model="vm.page"
+		ng-change="vm.transition()"></uib-pager>
+</div>

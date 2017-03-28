@@ -82,6 +82,18 @@
                         md5Key: null,
                         id: null
                     };
+                },
+                entity4: function () {
+                    return {
+                        md5Key: null,
+                        academicCertificate1: null,
+                        academicCertificate1ContentType: null,
+                        academicCertificate2: null,
+                        academicCertificate2ContentType: null,
+                        academicCertificate3: null,
+                        academicCertificate3ContentType: null,
+                        id: null
+                    };
                 }
             }
         })        

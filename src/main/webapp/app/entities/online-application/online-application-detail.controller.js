@@ -7,11 +7,12 @@
 	OnlineApplicationDetailController.$inject = [ '$scope', '$rootScope',
 			'$stateParams', 'previousState', 'DataUtils', 'entity',
 			'OnlineApplication', 'Course', 'OAAcademicDetails',
-			'OAMinisterialWorkExperience' ];
+			'OAMinisterialWorkExperience', 'OAAcademicCertificate' ];
 
 	function OnlineApplicationDetailController($scope, $rootScope,
 			$stateParams, previousState, DataUtils, entity, OnlineApplication,
-			Course, OAAcademicDetails, OAMinisterialWorkExperience) {
+			Course, OAAcademicDetails, OAMinisterialWorkExperience,
+			OAAcademicCertificate) {
 		var vm = this;
 
 		vm.onlineApplication = entity;
@@ -24,6 +25,10 @@
 		});
 
 		vm.mwe = OAMinisterialWorkExperience.get({
+			md5key : vm.onlineApplication.md5key
+		})
+
+		vm.academicCertificate = OAAcademicCertificate.get({
 			md5key : vm.onlineApplication.md5key
 		})
 

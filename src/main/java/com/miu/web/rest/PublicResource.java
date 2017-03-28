@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
+import com.miu.domain.AcademicCertificate;
 import com.miu.domain.AdjunctFaculty;
 import com.miu.domain.Course;
 import com.miu.domain.CourseModule;
@@ -37,6 +38,7 @@ import com.miu.domain.OnlineApplication;
 import com.miu.domain.RegistrationAcademicDetails;
 import com.miu.domain.ResearchPaper;
 import com.miu.domain.StaticPage;
+import com.miu.repository.AcademicCertificateRepository;
 import com.miu.repository.AdjunctFacultyRepository;
 import com.miu.repository.CourseModuleRepository;
 import com.miu.repository.CourseRepository;
@@ -60,6 +62,9 @@ import io.swagger.annotations.ApiParam;
 @RestController
 @RequestMapping("/api/public")
 public class PublicResource {
+
+	@Inject
+	private AcademicCertificateRepository academicCertificateRepository;
 
 	@Inject
 	private AdjunctFacultyRepository adjunctFacultyRepository;
@@ -98,6 +103,21 @@ public class PublicResource {
 
 	@Inject
 	private StaticPageRepository staticPageRepository;
+
+	@PostMapping("/academic-certificates")
+	@Timed
+	public ResponseEntity<AcademicCertificate> createAcademicCertificate(
+			@RequestBody AcademicCertificate academicCertificate) throws URISyntaxException {
+		LOGGER.debug("REST request to save AcademicCertificate : {}", academicCertificate);
+		if (academicCertificate.getId() != null) {
+			return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("academicCertificate", "idexists",
+					"A new academicCertificate cannot already have an ID")).body(null);
+		}
+		AcademicCertificate result = academicCertificateRepository.save(academicCertificate);
+		return ResponseEntity.created(new URI("/api/academic-certificates/" + result.getId()))
+				.headers(HeaderUtil.createEntityCreationAlert("academicCertificate", result.getId().toString()))
+				.body(result);
+	}
 
 	@PostMapping("/ministerial-work-experiences")
 	@Timed
@@ -448,6 +468,20 @@ public class PublicResource {
 		StaticPage staticPage = staticPageRepository.getStaticPageByTitle("Video Gallery");
 		return Optional.ofNullable(staticPage).map(result -> new ResponseEntity<>(result, HttpStatus.OK))
 				.orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+	}
+
+	@PutMapping("/academic-certificates")
+	@Timed
+	public ResponseEntity<AcademicCertificate> updateAcademicCertificate(
+			@RequestBody AcademicCertificate academicCertificate) throws URISyntaxException {
+		LOGGER.debug("REST request to update AcademicCertificate : {}", academicCertificate);
+		if (academicCertificate.getId() == null) {
+			return createAcademicCertificate(academicCertificate);
+		}
+		AcademicCertificate result = academicCertificateRepository.save(academicCertificate);
+		return ResponseEntity.ok().headers(
+				HeaderUtil.createEntityUpdateAlert("academicCertificate", academicCertificate.getId().toString()))
+				.body(result);
 	}
 
 	@PutMapping("/ministerial-work-experiences")

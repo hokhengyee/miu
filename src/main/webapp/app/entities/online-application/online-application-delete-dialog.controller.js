@@ -6,10 +6,10 @@
         .controller('OnlineApplicationDeleteController',OnlineApplicationDeleteController);
 
     OnlineApplicationDeleteController.$inject = ['$uibModalInstance', 'entity', 'OnlineApplication', 'OAAcademicDetails',
-		'OAMinisterialWorkExperience'];
+		'OAMinisterialWorkExperience', 'OAAcademicCertificate'];
 
     function OnlineApplicationDeleteController($uibModalInstance, entity, OnlineApplication, OAAcademicDetails,
-			OAMinisterialWorkExperience) {
+			OAMinisterialWorkExperience, OAAcademicCertificate) {
         var vm = this;
 
         vm.onlineApplication = entity;
@@ -28,6 +28,10 @@
         	OAMinisterialWorkExperience.delete({md5key : vm.onlineApplication.md5key},
                     function () {
         				console.log("Deleted Ministerial Work Experience...");
+                    });
+        	OAAcademicCertificate.delete({md5key : vm.onlineApplication.md5key},
+                    function () {
+        				console.log("Deleted Academic Certificates...");
                     });
             OnlineApplication.delete({id: id},
                 function () {

@@ -5,15 +5,17 @@
 			ApplyCourseController);
 
 	ApplyCourseController.$inject = [ '$timeout', '$scope', '$stateParams',
-			'DataUtils', 'entity', 'entity2', 'entity3',
+			'DataUtils', 'entity', 'entity2', 'entity3', 'entity4',
 			'PublicOnlineApplication', 'PublicCourse',
 			'PublicRegistrationAcademicDetails',
-			'PublicMinisterialWorkExperience', 'md5', '$state' ];
+			'PublicMinisterialWorkExperience', 'PublicAcademicCertificate',
+			'md5', '$state' ];
 
 	function ApplyCourseController($timeout, $scope, $stateParams, DataUtils,
-			entity, entity2, entity3, PublicOnlineApplication, PublicCourse,
-			PublicRegistrationAcademicDetails, PublicMinisterialWorkExperience,
-			md5, $state) {
+			entity, entity2, entity3, entity4, PublicOnlineApplication,
+			PublicCourse, PublicRegistrationAcademicDetails,
+			PublicMinisterialWorkExperience, PublicAcademicCertificate, md5,
+			$state) {
 		var vm = this;
 
 		$scope.$watch('vm.onlineApplication.email', function() {
@@ -21,11 +23,13 @@
 			vm.onlineApplication.md5key = $scope.md5key;
 			vm.registrationAcademicDetails.md5key = $scope.md5key;
 			vm.ministerialWorkExperience.md5Key = $scope.md5key;
+			vm.academicCertificate.md5Key = $scope.md5key;
 		})
 
 		vm.onlineApplication = entity;
 		vm.registrationAcademicDetails = entity2;
 		vm.ministerialWorkExperience = entity3;
+		vm.academicCertificate = entity4;
 		vm.onlineapplications = PublicOnlineApplication.query();
 
 		vm.datePickerOpenStatus = {};
@@ -61,6 +65,11 @@
 					onSaveSuccess3, onSaveError3);
 		}
 
+		function saveAcademicCertificates() {
+			PublicAcademicCertificate.save(vm.academicCertificate,
+					onSaveSuccess4, onSaveError4);
+		}
+
 		function onSaveSuccess1(result) {
 			console.log("Saved Online Application...");
 			saveAcademicDetails();
@@ -83,10 +92,20 @@
 
 		function onSaveSuccess3(result) {
 			console.log("Saved Ministerial Work Experience ...");
-			$state.go('public-online-application-success');
+			saveAcademicCertificates();
 		}
 
 		function onSaveError3() {
+			// vm.isSaving = false;
+			vm.error = true;
+		}
+
+		function onSaveSuccess4(result) {
+			console.log("Saved Academic Certificates ...");
+			$state.go('public-online-application-success');
+		}
+
+		function onSaveError4() {
 			// vm.isSaving = false;
 			vm.error = true;
 		}
@@ -172,5 +191,49 @@
 			vm.datePickerOpenStatus[date] = true;
 		}
 
+		vm.setAcademicCertificate1 = function($file, academicCertificate) {
+			if ($file) {
+				DataUtils
+						.toBase64(
+								$file,
+								function(base64Data) {
+									$scope
+											.$apply(function() {
+												academicCertificate.academicCertificate1 = base64Data;
+												academicCertificate.academicCertificate1ContentType = $file.type;
+											});
+								});
+			}
+		};
+
+		vm.setAcademicCertificate2 = function($file, academicCertificate) {
+			if ($file) {
+				DataUtils
+						.toBase64(
+								$file,
+								function(base64Data) {
+									$scope
+											.$apply(function() {
+												academicCertificate.academicCertificate2 = base64Data;
+												academicCertificate.academicCertificate2ContentType = $file.type;
+											});
+								});
+			}
+		};
+
+		vm.setAcademicCertificate3 = function($file, academicCertificate) {
+			if ($file) {
+				DataUtils
+						.toBase64(
+								$file,
+								function(base64Data) {
+									$scope
+											.$apply(function() {
+												academicCertificate.academicCertificate3 = base64Data;
+												academicCertificate.academicCertificate3ContentType = $file.type;
+											});
+								});
+			}
+		};
 	}
 })();
