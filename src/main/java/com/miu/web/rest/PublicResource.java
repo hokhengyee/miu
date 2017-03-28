@@ -2,6 +2,7 @@ package com.miu.web.rest;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +36,7 @@ import com.miu.domain.LecturerProfile;
 import com.miu.domain.MinisterialWorkExperience;
 import com.miu.domain.NewsAndEvent;
 import com.miu.domain.OnlineApplication;
+import com.miu.domain.PageViewLog;
 import com.miu.domain.RegistrationAcademicDetails;
 import com.miu.domain.ResearchPaper;
 import com.miu.domain.StaticPage;
@@ -48,6 +50,7 @@ import com.miu.repository.LecturerProfileRepository;
 import com.miu.repository.MinisterialWorkExperienceRepository;
 import com.miu.repository.NewsAndEventRepository;
 import com.miu.repository.OnlineApplicationRepository;
+import com.miu.repository.PageViewLogRepository;
 import com.miu.repository.RegistrationAcademicDetailsRepository;
 import com.miu.repository.ResearchPaperRepository;
 import com.miu.repository.StaticPageRepository;
@@ -94,6 +97,9 @@ public class PublicResource {
 
 	@Inject
 	private OnlineApplicationRepository onlineApplicationRepository;
+
+	@Inject
+	private PageViewLogRepository pageViewLogRepository;
 
 	@Inject
 	private RegistrationAcademicDetailsRepository registrationAcademicDetailsRepository;
@@ -512,4 +518,28 @@ public class PublicResource {
 				registrationAcademicDetails.getId().toString())).body(result);
 	}
 
+	@GetMapping("/page-view-logs")
+	@Timed
+	public ResponseEntity<Void> updatePageViewLog() {
+		LOGGER.debug("REST request to log Homepage Visits");
+		// pageViewLogRepository.delete(id);
+
+		LocalDate dateToday = LocalDate.now();
+
+		PageViewLog tmpPVL = pageViewLogRepository.findByCreatedDate(dateToday);
+		if (tmpPVL != null) {
+			tmpPVL.setViews(tmpPVL.getViews() + 1);
+		}
+
+		else {
+			tmpPVL = new PageViewLog();
+			tmpPVL.setCreatedDate(dateToday);
+			tmpPVL.setViews(1L);
+		}
+
+		PageViewLog updatedPVL = pageViewLogRepository.save(tmpPVL);
+
+		return ResponseEntity.ok()
+				.headers(HeaderUtil.createEntityUpdateAlert("pageViewLog", updatedPVL.getViews().toString())).build();
+	}
 }

@@ -86,5 +86,7 @@
 
     <cache alias="com.miu.domain.AcademicCertificate" uses-template="simple"/>
 
+    <cache alias="com.miu.domain.PageViewLog" uses-template="simple"/>
+
     <!-- jhipster-needle-ehcache-add-entry -->
 </config>
