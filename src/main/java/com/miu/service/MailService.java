@@ -17,6 +17,7 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 
 import com.miu.config.JHipsterProperties;
+import com.miu.domain.OnlineApplication;
 import com.miu.domain.User;
 
 /**
@@ -29,6 +30,8 @@ import com.miu.domain.User;
 public class MailService {
 
 	private static final String BASE_URL = "baseUrl";
+
+	private static final String ONLINE_APPLICATION = "onlineApplication";
 
 	private static final String USER = "user";
 
@@ -45,6 +48,9 @@ public class MailService {
 
 	@Inject
 	private SpringTemplateEngine templateEngine;
+
+	@Inject
+	private UserService userService;
 
 	@Async
 	public void sendActivationEmail(User user) {
@@ -90,6 +96,20 @@ public class MailService {
 		catch (Exception e) {
 			LOGGER.warn("E-mail could not be sent to user '{}'", to, e);
 		}
+	}
+
+	@Async
+	public void sendOnlineApplicationEmail(OnlineApplication onlineApplication) {
+		User user = userService.getAdminUser();
+		LOGGER.debug("Sending Online Application e-mail to '{}'", user.getEmail());
+		Locale locale = Locale.forLanguageTag(user.getLangKey());
+		Context context = new Context(locale);
+		context.setVariable(USER, user);
+		context.setVariable(ONLINE_APPLICATION, onlineApplication);
+		context.setVariable(BASE_URL, jHipsterProperties.getMail().getBaseUrl());
+		String content = templateEngine.process("onlineApplicationEmail", context);
+		String subject = messageSource.getMessage("email.activation.title", null, locale);
+		sendEmail(user.getEmail(), subject, content, false, true);
 	}
 
 	@Async

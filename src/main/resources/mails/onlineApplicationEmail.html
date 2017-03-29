@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<title th:text="#{email.activation.title}">MIU creation</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<p th:text="#{email.activation.greeting(${user.login})}">Dear</p>
+	<p th:text="#{email.oa.text1}">Your MIU account has been created,
+		please click on the URL below to access it:</p>
+	<br />
+	<table>
+		<tr>
+			<th style="text-align: right">Online Application ID&nbsp;:&nbsp;</th>
+			<td><span th:text="|${onlineApplication.id}|">id</span></td>
+		</tr>
+		<tr>
+			<th style="text-align: right">Registration DateTime&nbsp;:&nbsp;</th>
+			<td><span th:text="|${onlineApplication.registrationDatetime}|">registrationDatetime</span></td>
+		</tr>
+		<tr>
+			<th style="text-align: right">Email&nbsp;:&nbsp;</th>
+			<td><span th:text="|${onlineApplication.email}|">email</span></td>
+		</tr>
+		<tr>
+			<th style="text-align: right">Full Name&nbsp;:&nbsp;</th>
+			<td><span th:text="|${onlineApplication.surname}|">surname</span>&nbsp;<span
+				th:text="|${onlineApplication.givenName}|">givenName</span></td>
+		</tr>
+	</table>
+	<br />
+	<p>
+		<span th:text="#{email.activation.text2}">Regards, </span> <br /> <em
+			th:text="#{email.signature}">Millennium International University
+			Admin.</em>
+	</p>
+</body>
+</html>

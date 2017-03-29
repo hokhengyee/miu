@@ -140,6 +140,11 @@ public class UserService {
 	}
 
 	@Transactional(readOnly = true)
+	public User getAdminUser() {
+		return userRepository.findAdminUser();
+	}
+
+	@Transactional(readOnly = true)
 	public User getUserWithAuthorities() {
 		Optional<User> optionalUser = userRepository.findOneByLogin(SecurityUtils.getCurrentUserLogin());
 		User user = null;

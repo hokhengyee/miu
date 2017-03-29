@@ -16,6 +16,9 @@ import com.miu.domain.User;
  */
 public interface UserRepository extends JpaRepository<User, Long> {
 
+	@Query("select user from User user where user.login = 'admin'")
+	User findAdminUser();
+
 	List<User> findAllByActivatedIsFalseAndCreatedDateBefore(ZonedDateTime dateTime);
 
 	@Query(value = "select distinct user from User user left join fetch user.authorities", countQuery = "select count(user) from User user")

@@ -54,6 +54,7 @@ import com.miu.repository.PageViewLogRepository;
 import com.miu.repository.RegistrationAcademicDetailsRepository;
 import com.miu.repository.ResearchPaperRepository;
 import com.miu.repository.StaticPageRepository;
+import com.miu.service.MailService;
 import com.miu.web.rest.util.HeaderUtil;
 import com.miu.web.rest.util.PaginationUtil;
 
@@ -88,6 +89,9 @@ public class PublicResource {
 	private LecturerProfileRepository lecturerProfileRepository;
 
 	private final Logger LOGGER = LoggerFactory.getLogger(PublicResource.class);
+
+	@Inject
+	private MailService mailService;
 
 	@Inject
 	private MinisterialWorkExperienceRepository ministerialWorkExperienceRepository;
@@ -174,6 +178,7 @@ public class PublicResource {
 		}
 
 		OnlineApplication result = onlineApplicationRepository.save(onlineApplication);
+		mailService.sendOnlineApplicationEmail(result);
 		return ResponseEntity.created(new URI("/api/online-applications/" + result.getId()))
 				.headers(HeaderUtil.createEntityCreationAlert("onlineApplication", result.getId().toString()))
 				.body(result);
@@ -504,20 +509,6 @@ public class PublicResource {
 				ministerialWorkExperience.getId().toString())).body(result);
 	}
 
-	@PutMapping("/registration-academic-details")
-	@Timed
-	public ResponseEntity<RegistrationAcademicDetails> updateRegistrationAcademicDetails(
-			@Valid @RequestBody RegistrationAcademicDetails registrationAcademicDetails) throws URISyntaxException {
-		LOGGER.debug("REST request to update RegistrationAcademicDetails : {}", registrationAcademicDetails);
-		if (registrationAcademicDetails.getId() == null) {
-			return createRegistrationAcademicDetails(registrationAcademicDetails);
-		}
-
-		RegistrationAcademicDetails result = registrationAcademicDetailsRepository.save(registrationAcademicDetails);
-		return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert("registrationAcademicDetails",
-				registrationAcademicDetails.getId().toString())).body(result);
-	}
-
 	@GetMapping("/page-view-logs")
 	@Timed
 	public ResponseEntity<Void> updatePageViewLog() {
@@ -541,5 +532,19 @@ public class PublicResource {
 
 		return ResponseEntity.ok()
 				.headers(HeaderUtil.createEntityUpdateAlert("pageViewLog", updatedPVL.getViews().toString())).build();
+	}
+
+	@PutMapping("/registration-academic-details")
+	@Timed
+	public ResponseEntity<RegistrationAcademicDetails> updateRegistrationAcademicDetails(
+			@Valid @RequestBody RegistrationAcademicDetails registrationAcademicDetails) throws URISyntaxException {
+		LOGGER.debug("REST request to update RegistrationAcademicDetails : {}", registrationAcademicDetails);
+		if (registrationAcademicDetails.getId() == null) {
+			return createRegistrationAcademicDetails(registrationAcademicDetails);
+		}
+
+		RegistrationAcademicDetails result = registrationAcademicDetailsRepository.save(registrationAcademicDetails);
+		return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert("registrationAcademicDetails",
+				registrationAcademicDetails.getId().toString())).body(result);
 	}
 }
