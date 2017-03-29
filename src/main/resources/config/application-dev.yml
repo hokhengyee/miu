@@ -51,8 +51,8 @@ spring:
     mail:
         host: smtpout.secureserver.net
         port: 465
-        username: info@miuedu.us
-        password: Zaq1@wsx
+        username:
+        password:
         debug: true
         properties.mail.smtp:
             starttls.enable: true
