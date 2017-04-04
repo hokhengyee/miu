@@ -25,8 +25,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 import com.miu.domain.AcademicCertificate;
-import com.miu.domain.MinisterialWorkExperience;
-import com.miu.domain.RegistrationAcademicDetails;
 import com.miu.repository.AcademicCertificateRepository;
 import com.miu.web.rest.util.HeaderUtil;
 import com.miu.web.rest.util.PaginationUtil;

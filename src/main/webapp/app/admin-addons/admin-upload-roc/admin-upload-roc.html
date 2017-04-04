@@ -1,0 +1,43 @@
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<h4 class="panel-title">Upload Record Of Certificate Template</h4>
+	</div>
+	<div class="panel-body">
+		<jhi-alert></jhi-alert>
+
+		<form name="uploadROCForm" role="form" novalidate
+			ng-submit="vm.save()">
+
+			<div class="form-group" ngf-drop
+				ngf-change="vm.setRocDto($file, vm.rocDto)">
+				<div>
+					<div ng-if="vm.rocDto.rocTemplate" class="help-block clearfix">
+						<a class="pull-left"
+							ng-click="vm.openFile(vm.rocDto.rocTemplateContentType, vm.rocDto.rocTemplate)">open</a><br>
+						<span class="pull-left">{{vm.rocDto.rocTemplateContentType}},
+							{{vm.byteSize(vm.rocDto.rocTemplate)}}</span>
+						<button type="button"
+							ng-click="vm.rocDto.rocTemplate=null;vm.rocDto.rocTemplateContentType=null;"
+							class="btn btn-default btn-xs pull-right">
+							<span class="glyphicon glyphicon-remove"></span>
+						</button>
+					</div>
+					<button type="button" ngf-select class="btn btn-default btn-block"
+						ngf-change="vm.setRocTemplate($file, vm.rocDto)">Add File</button>
+				</div>
+				<input type="hidden" class="form-control"
+					name="academicCertificate1" id="field_academicCertificate1"
+					ng-model="vm.rocDto.rocTemplate" /> <input type="hidden"
+					class="form-control" name="academicCertificate1ContentType"
+					id="field_academicCertificate1ContentType"
+					ng-model="vm.rocDto.rocTemplateContentType" />
+			</div>
+
+			<button type="submit" ng-disabled="editForm.$invalid || vm.isSaving"
+				class="btn btn-primary">
+				<span class="glyphicon glyphicon-save"></span>&nbsp;<span>Upload</span>
+			</button>
+
+		</form>
+	</div>
+</div>
