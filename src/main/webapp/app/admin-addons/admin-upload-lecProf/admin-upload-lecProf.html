@@ -1,0 +1,55 @@
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<h4 class="panel-title">Upload Lecturer Profile Template</h4>
+	</div>
+	<div class="panel-body">
+		<jhi-alert></jhi-alert>
+
+		<form name="uploadLecProfForm" role="form" novalidate
+			ng-submit="vm.save()">
+
+			<div class="form-group" ngf-drop
+				ngf-change="vm.setLecProfDto($file, vm.lecProfDto)">
+				<div class="form-group">
+					<label for="field_user">Lecturer User</label> <select
+						class="form-control" id="field_user" name="user"
+						ng-model="vm.lecProfDto.user"
+						ng-options="user as user.login for user in vm.users track by user.id"
+						required>
+						<option value=""></option>
+					</select>
+				</div>
+				<div>
+					<div ng-if="vm.lecProfDto.lecturerProfileTemplate"
+						class="help-block clearfix">
+						<a class="pull-left"
+							ng-click="vm.openFile(vm.lecProfDto.lecturerProfileTemplateContentType, vm.lecProfDto.lecturerProfileTemplate)">open</a><br>
+						<span class="pull-left">{{vm.lecProfDto.lecturerProfileTemplateContentType}},
+							{{vm.byteSize(vm.lecProfDto.lecturerProfileTemplate)}}</span>
+						<button type="button"
+							ng-click="vm.lecProfDto.lecturerProfileTemplate=null;vm.lecProfDto.lecturerProfileTemplateContentType=null;"
+							class="btn btn-default btn-xs pull-right">
+							<span class="glyphicon glyphicon-remove"></span>
+						</button>
+					</div>
+					<button type="button" ngf-select class="btn btn-default btn-block"
+						ngf-change="vm.setLectProfileTemplate($file, vm.lecProfDto)">Add
+						File</button>
+				</div>
+				<input type="hidden" class="form-control"
+					name="academicCertificate1" id="field_academicCertificate1"
+					ng-model="vm.lecProfDto.lecturerProfileTemplate" /> <input
+					type="hidden" class="form-control"
+					name="academicCertificate1ContentType"
+					id="field_academicCertificate1ContentType"
+					ng-model="vm.lecProfDto.lecturerProfileTemplateContentType" />
+			</div>
+
+			<button type="submit" ng-disabled="editForm.$invalid || vm.isSaving"
+				class="btn btn-primary">
+				<span class="glyphicon glyphicon-save"></span>&nbsp;<span>Upload</span>
+			</button>
+
+		</form>
+	</div>
+</div>

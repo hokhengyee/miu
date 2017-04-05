@@ -27,8 +27,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
+import com.miu.domain.LecturerProfile;
 import com.miu.domain.RecordOfCertificate;
+import com.miu.repository.LecturerProfileRepository;
 import com.miu.repository.RecordOfCertificateRepository;
+import com.miu.service.dto.LecturerProfileDto;
 import com.miu.service.dto.ROCDto;
 import com.miu.web.rest.util.HeaderUtil;
 
@@ -41,17 +44,121 @@ public class AutoLoadDataResource {
 
 	private final Logger LOGGER = LoggerFactory.getLogger(AutoLoadDataResource.class);
 
-	private static final String FILE_NAME = "/home/ho/github/miu/src/main/resources/RecordOfCertificate.xlsx";
+	@Inject
+	private LecturerProfileRepository lecturerProfileRepository;
 
 	@Inject
 	private RecordOfCertificateRepository recordOfCertificateRepository;
 
 	@GetMapping("/record-of-certificates")
 	@Timed
-	public ResponseEntity<ROCDto> getAcademicCertificate() {
+	public ResponseEntity<ROCDto> getAcademicCertificateDto() {
 		LOGGER.debug("REST request to get Upload ROC Dto : {}");
 		ROCDto result = new ROCDto();
 		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+
+	@GetMapping("/lecturer-profile")
+	@Timed
+	public ResponseEntity<LecturerProfileDto> getLecturerProfileDto() {
+		LOGGER.debug("REST request to get Upload Lecturer Profile Dto : {}");
+		LecturerProfileDto result = new LecturerProfileDto();
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+
+	@PostMapping("/lecturer-profile")
+	@Timed
+	public ResponseEntity<Void> loadLecturerProfileTemplate(@RequestBody LecturerProfileDto lpDto)
+			throws URISyntaxException {
+		LOGGER.debug("REST request to load Lecturer Profile.");
+
+		LecturerProfile lecProf = lecturerProfileRepository.findLecturerProfileByUser(lpDto.getUser());
+
+		LOGGER.info("Prof: " + lecProf.getUser().getLogin());
+
+		try {
+
+			InputStream excelFile = new ByteArrayInputStream(lpDto.getLecturerProfileTemplate());
+			Workbook workbook = new XSSFWorkbook(excelFile);
+			Sheet datatypeSheet = workbook.getSheetAt(0);
+			Iterator<Row> iterator = datatypeSheet.iterator();
+
+			List<String> tmpList = new ArrayList<String>();
+
+			while (iterator.hasNext()) {
+
+				tmpList = new ArrayList<String>();
+
+				Row currentRow = iterator.next();
+				Iterator<Cell> cellIterator = currentRow.iterator();
+
+				while (cellIterator.hasNext()) {
+					Cell currentCell = cellIterator.next();
+					tmpList.add(currentCell.toString().trim());
+				}
+
+				LOGGER.info("ROW: " + tmpList.toString());
+
+				if (tmpList.size() > 0 && tmpList.get(1) != null && !tmpList.get(1).isEmpty()) {
+					switch (tmpList.get(0)) {
+
+					case "Other Titles:":
+						lecProf.setOtherTitles(tmpList.get(1));
+						break;
+
+					case "Age:":
+						lecProf.setAge(Long.valueOf(tmpList.get(1)));
+						break;
+
+					case "Ordination:":
+						lecProf.setOrdination(tmpList.get(1));
+						break;
+
+					case "Academic History:":
+						lecProf.setAcademicHistory(tmpList.get(1));
+						break;
+
+					case "Professional History:":
+						lecProf.setProfessionalHistory(tmpList.get(1));
+						break;
+
+					case "Past and Current Ministry:":
+						lecProf.setPastAndCurrentMinistry(tmpList.get(1));
+						break;
+
+					case "Publications:":
+						lecProf.setPublications(tmpList.get(1));
+						break;
+
+					case "Family:":
+						lecProf.setFamilyDetails(tmpList.get(1));
+						break;
+
+					case "Reference:":
+						lecProf.setReference(tmpList.get(1));
+						break;
+
+					default:
+						break;
+					}
+				}
+
+				lecturerProfileRepository.save(lecProf);
+			}
+
+			workbook.close();
+		}
+
+		catch (FileNotFoundException e) {
+			LOGGER.error("loadLecturerProfileTemplate() FileNotFoundException: ", e);
+		}
+
+		catch (IOException e) {
+			LOGGER.error("loadLecturerProfileTemplate() IOException: ", e);
+		}
+
+		return ResponseEntity.ok()
+				.headers(HeaderUtil.createEntityUpdateAlert("Lecturer Profile", lecProf.getId().toString())).build();
 	}
 
 	@PostMapping("/record-of-certificates")
