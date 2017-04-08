@@ -52,7 +52,7 @@
 							</tr>
 
 							<!-- Research Papers -->
-							<tr ng-repeat="item in vm.researchPapers track by item">
+							<tr ng-repeat="item in vm.researchPapers track by $index">
 								<td>Research Papers</td>
 								<td>{{item.researchPaper.code}}</td>
 								<td>{{item.researchPaper.title}}</td>
@@ -68,7 +68,7 @@
 							</tr>
 
 							<!-- Book Reviews -->
-							<tr ng-repeat="item in vm.bookReviews track by item">
+							<tr ng-repeat="item in vm.bookReviews track by $index">
 								<td>Book Reviews</td>
 								<td>{{item.code}}</td>
 								<td>{{item.title}}</td>
@@ -84,7 +84,7 @@
 							</tr>
 
 							<!-- Dissertation -->
-							<tr ng-repeat="item in vm.dissertations track by item">
+							<tr ng-repeat="item in vm.dissertations track by $index">
 								<td>Dissertation</td>
 								<td>{{item.code}}</td>
 								<td>{{item.title}}</td>
@@ -100,7 +100,7 @@
 							</tr>
 
 							<!-- Writing Articles -->
-							<tr ng-repeat="item in vm.writingArticles track by item">
+							<tr ng-repeat="item in vm.writingArticles track by $index">
 								<td>Writing Articles</td>
 								<td>{{item.code}}</td>
 								<td>{{item.title}}</td>
@@ -116,7 +116,7 @@
 							</tr>
 
 							<!-- Sermon Outlines -->
-							<tr ng-repeat="item in vm.sermonOutlines track by item">
+							<tr ng-repeat="item in vm.sermonOutlines track by $index">
 								<td>Sermon Outlines</td>
 								<td>{{item.code}}</td>
 								<td>{{item.title}}</td>

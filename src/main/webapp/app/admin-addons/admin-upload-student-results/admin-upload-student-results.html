@@ -1,48 +1,48 @@
 <div class="panel panel-primary">
 	<div class="panel-heading">
-		<h4 class="panel-title">Upload Lecturer Profile Template</h4>
+		<h4 class="panel-title">Upload Student Results Template</h4>
 	</div>
 	<div class="panel-body">
 		<jhi-alert></jhi-alert>
 
-		<form name="uploadLecProfForm" role="form" novalidate
+		<form name="uploadStudentResultsForm" role="form" novalidate
 			ng-submit="vm.save()">
 
 			<div class="form-group" ngf-drop
-				ngf-change="vm.setLectProfileTemplate($file, vm.lecProfDto)">
+				ngf-change="vm.setStudentResultsTemplate($file, vm.studentResultsDto)">
 				<div class="form-group">
-					<label for="field_user">Lecturer User</label> <select
+					<label for="field_user">Student User</label> <select
 						class="form-control" id="field_user" name="user"
-						ng-model="vm.lecProfDto.user"
+						ng-model="vm.studentResultsDto.user"
 						ng-options="user as user.login for user in vm.users track by user.id"
 						required>
 						<option value=""></option>
 					</select>
 				</div>
 				<div>
-					<div ng-if="vm.lecProfDto.lecturerProfileTemplate"
+					<div ng-if="vm.studentResultsDto.studentResultTemplate"
 						class="help-block clearfix">
 						<a class="pull-left"
-							ng-click="vm.openFile(vm.lecProfDto.lecturerProfileTemplateContentType, vm.lecProfDto.lecturerProfileTemplate)">open</a><br>
-						<span class="pull-left">{{vm.lecProfDto.lecturerProfileTemplateContentType}},
-							{{vm.byteSize(vm.lecProfDto.lecturerProfileTemplate)}}</span>
+							ng-click="vm.openFile(vm.studentResultsDto.studentResultTemplateContentType, vm.studentResultsDto.studentResultTemplate)">open</a><br>
+						<span class="pull-left">{{vm.studentResultsDto.studentResultTemplateContentType}},
+							{{vm.byteSize(vm.studentResultsDto.studentResultTemplate)}}</span>
 						<button type="button"
-							ng-click="vm.lecProfDto.lecturerProfileTemplate=null;vm.lecProfDto.lecturerProfileTemplateContentType=null;"
+							ng-click="vm.studentResultsDto.studentResultTemplate=null;vm.studentResultsDto.studentResultTemplateContentType=null;"
 							class="btn btn-default btn-xs pull-right">
 							<span class="glyphicon glyphicon-remove"></span>
 						</button>
 					</div>
 					<button type="button" ngf-select class="btn btn-default btn-block"
-						ngf-change="vm.setLectProfileTemplate($file, vm.lecProfDto)">Add
+						ngf-change="vm.setStudentResultsTemplate($file, vm.studentResultsDto)">Add
 						File</button>
 				</div>
 				<input type="hidden" class="form-control"
 					name="academicCertificate1" id="field_academicCertificate1"
-					ng-model="vm.lecProfDto.lecturerProfileTemplate" /> <input
+					ng-model="vm.studentResultsDto.studentResultTemplate" /> <input
 					type="hidden" class="form-control"
 					name="academicCertificate1ContentType"
 					id="field_academicCertificate1ContentType"
-					ng-model="vm.lecProfDto.lecturerProfileTemplateContentType" />
+					ng-model="vm.studentResultsDto.studentResultTemplateContentType" />
 			</div>
 
 			<button type="submit" ng-disabled="editForm.$invalid || vm.isSaving"

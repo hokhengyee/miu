@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -29,10 +31,18 @@ import org.springframework.web.bind.annotation.RestController;
 import com.codahale.metrics.annotation.Timed;
 import com.miu.domain.LecturerProfile;
 import com.miu.domain.RecordOfCertificate;
+import com.miu.domain.ResearchPaper;
+import com.miu.domain.StudentModuleResult;
+import com.miu.domain.StudentResearchPaperResult;
 import com.miu.repository.LecturerProfileRepository;
+import com.miu.repository.ModuleRepository;
 import com.miu.repository.RecordOfCertificateRepository;
+import com.miu.repository.ResearchPaperRepository;
+import com.miu.repository.StudentModuleResultRepository;
+import com.miu.repository.StudentResearchPaperResultRepository;
 import com.miu.service.dto.LecturerProfileDto;
 import com.miu.service.dto.ROCDto;
+import com.miu.service.dto.StudentResultDto;
 import com.miu.web.rest.util.HeaderUtil;
 
 /**
@@ -42,18 +52,30 @@ import com.miu.web.rest.util.HeaderUtil;
 @RequestMapping("/api/load-data")
 public class AutoLoadDataResource {
 
+	@Inject
+	private LecturerProfileRepository lecturerProfileRepository;
+
 	private final Logger LOGGER = LoggerFactory.getLogger(AutoLoadDataResource.class);
 
 	@Inject
-	private LecturerProfileRepository lecturerProfileRepository;
+	private ModuleRepository moduleRepository;
 
 	@Inject
 	private RecordOfCertificateRepository recordOfCertificateRepository;
 
+	@Inject
+	private ResearchPaperRepository researchPaperRepository;
+
+	@Inject
+	private StudentModuleResultRepository studentModuleResultRepository;
+
+	@Inject
+	private StudentResearchPaperResultRepository studentResearchPaperResultRepository;
+
 	@GetMapping("/record-of-certificates")
 	@Timed
 	public ResponseEntity<ROCDto> getAcademicCertificateDto() {
-		LOGGER.debug("REST request to get Upload ROC Dto : {}");
+		LOGGER.debug("REST request to get Upload ROC Dto...");
 		ROCDto result = new ROCDto();
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
@@ -61,8 +83,16 @@ public class AutoLoadDataResource {
 	@GetMapping("/lecturer-profile")
 	@Timed
 	public ResponseEntity<LecturerProfileDto> getLecturerProfileDto() {
-		LOGGER.debug("REST request to get Upload Lecturer Profile Dto : {}");
+		LOGGER.debug("REST request to get Upload Lecturer Profile Dto...");
 		LecturerProfileDto result = new LecturerProfileDto();
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+
+	@GetMapping("/student-results")
+	@Timed
+	public ResponseEntity<StudentResultDto> getStudentResultsDto() {
+		LOGGER.debug("REST request to get Upload Student Result Dto...");
+		StudentResultDto result = new StudentResultDto();
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
@@ -221,6 +251,106 @@ public class AutoLoadDataResource {
 		}
 
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert("Record Of Certificates", null)).build();
+	}
+
+	@PostMapping("/student-results")
+	@Timed
+	public ResponseEntity<Void> loadStudentResultTemplate(@RequestBody StudentResultDto studentResultDto)
+			throws URISyntaxException {
+		LOGGER.debug("REST request to load student results.");
+
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+		try {
+
+			InputStream excelFile = new ByteArrayInputStream(studentResultDto.getStudentResultTemplate());
+			Workbook workbook = new XSSFWorkbook(excelFile);
+			Sheet datatypeSheet = workbook.getSheetAt(1);
+			Iterator<Row> iterator = datatypeSheet.iterator();
+
+			List<String> tmpList = new ArrayList<String>();
+
+			/* Skip header row */
+			if (iterator.hasNext()) {
+				iterator.next();
+			}
+
+			while (iterator.hasNext()) {
+
+				tmpList = new ArrayList<String>();
+
+				Row currentRow = iterator.next();
+				Iterator<Cell> cellIterator = currentRow.iterator();
+
+				while (cellIterator.hasNext()) {
+					Cell currentCell = cellIterator.next();
+					tmpList.add(currentCell.toString().trim());
+				}
+
+				LOGGER.info("ROW: " + tmpList.toString());
+
+				if (tmpList.get(0).contains("RE")) {
+					StudentResearchPaperResult result = studentResearchPaperResultRepository
+							.getResultByUserAndResearchPaper(studentResultDto.getUser().getId(), tmpList.get(0));
+
+					if (result == null) {
+						/* Generate new */
+						result = new StudentResearchPaperResult();
+						result.setUser(studentResultDto.getUser());
+						List<ResearchPaper> output = researchPaperRepository.getByCode(tmpList.get(0));
+						if (output.size() > 0) {
+							result.setResearchPaper(output.get(0));
+						}
+					}
+
+					if (tmpList.get(2) != null && !tmpList.get(2).isEmpty()) {
+						result.setResult(tmpList.get(2));
+					}
+
+					if (tmpList.get(4) != null && !tmpList.get(4).isEmpty()) {
+						LocalDate localDate = LocalDate.parse(tmpList.get(4).replaceAll("\"", ""), formatter);
+						result.setDateGraded(localDate);
+					}
+
+					studentResearchPaperResultRepository.save(result);
+				}
+
+				else {
+					StudentModuleResult result = studentModuleResultRepository
+							.getResultByUserAndModule(studentResultDto.getUser().getId(), tmpList.get(0));
+
+					if (result == null) {
+						/* Generate new */
+						result = new StudentModuleResult();
+						result.setUser(studentResultDto.getUser());
+						result.setModule(moduleRepository.getByCode(tmpList.get(0)));
+					}
+
+					if (tmpList.get(2) != null && !tmpList.get(2).isEmpty()) {
+						result.setResult(tmpList.get(2));
+					}
+
+					if (tmpList.get(4) != null && !tmpList.get(4).isEmpty()) {
+						LocalDate localDate = LocalDate.parse(tmpList.get(4).replaceAll("\"", ""), formatter);
+						result.setDateGraded(localDate);
+					}
+
+					studentModuleResultRepository.save(result);
+				}
+			}
+
+			workbook.close();
+		}
+
+		catch (FileNotFoundException e) {
+			LOGGER.error("loadStudentResultTemplate() FileNotFoundException: ", e);
+		}
+
+		catch (IOException e) {
+			LOGGER.error("loadStudentResultTemplate() IOException: ", e);
+		}
+
+		return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert("Student Results", null)).build();
 	}
 
 }

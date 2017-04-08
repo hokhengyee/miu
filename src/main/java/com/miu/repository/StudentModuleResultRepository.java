@@ -27,4 +27,7 @@ public interface StudentModuleResultRepository extends JpaRepository<StudentModu
 	@Query("SELECT r FROM StudentModuleResult r WHERE r.module.moduleType=2 AND r.user.id = ?1 ORDER BY r.resultOrder")
 	List<StudentModuleResult> getUserPracticalMinistryResult(Long id);
 
+	@Query("SELECT smr FROM StudentModuleResult smr where smr.user.id = ?1 AND smr.module.moduleCode = ?2")
+	StudentModuleResult getResultByUserAndModule(Long id, String moduleCode);
+
 }

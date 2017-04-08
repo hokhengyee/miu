@@ -13,6 +13,9 @@ import com.miu.domain.Module;
  */
 public interface ModuleRepository extends JpaRepository<Module, Long> {
 
+	@Query("SELECT m FROM Module m WHERE m.moduleCode= ?1")
+	Module getByCode(String code);
+
 	@Query("SELECT m FROM Module m WHERE m.course= ?1 AND m.moduleType=2 ORDER BY m.moduleOrder")
 	List<Module> getPracticalMinistry(Course courseID);
 
