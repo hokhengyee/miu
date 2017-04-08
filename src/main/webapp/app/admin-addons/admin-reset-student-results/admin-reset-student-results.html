@@ -1,0 +1,30 @@
+<div class="panel panel-primary">
+	<div class="panel-heading">
+		<h4 class="panel-title">Reset Student Results</h4>
+	</div>
+	<div class="panel-body">
+		<jhi-alert></jhi-alert>
+
+		<form name="resetStudentResultsForm" role="form" novalidate
+			ng-submit="vm.save()">
+
+			<div class="form-group" ngf-drop>
+				<div class="form-group">
+					<label for="field_user">Student User (Delete Existing
+						Module and Research Paper Results)</label> <select class="form-control"
+						id="field_user" name="user" ng-model="vm.studentResultsDto.user"
+						ng-options="user as user.login for user in vm.users track by user.id"
+						required>
+						<option value=""></option>
+					</select>
+				</div>
+			</div>
+
+			<button type="submit" ng-disabled="editForm.$invalid || vm.isSaving"
+				class="btn btn-primary">
+				<span class="glyphicon glyphicon-save"></span>&nbsp;<span>Reset</span>
+			</button>
+
+		</form>
+	</div>
+</div>

@@ -43,6 +43,7 @@ import com.miu.repository.StudentResearchPaperResultRepository;
 import com.miu.service.dto.LecturerProfileDto;
 import com.miu.service.dto.ROCDto;
 import com.miu.service.dto.StudentResultDto;
+import com.miu.service.dto.StudentResultResetDto;
 import com.miu.web.rest.util.HeaderUtil;
 
 /**
@@ -93,6 +94,14 @@ public class AutoLoadDataResource {
 	public ResponseEntity<StudentResultDto> getStudentResultsDto() {
 		LOGGER.debug("REST request to get Upload Student Result Dto...");
 		StudentResultDto result = new StudentResultDto();
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
+
+	@GetMapping("/student-results/reset")
+	@Timed
+	public ResponseEntity<StudentResultResetDto> getStudentResultsResetDto() {
+		LOGGER.debug("REST request to get Upload Student Result Reset Dto...");
+		StudentResultResetDto result = new StudentResultResetDto();
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
 
@@ -351,6 +360,32 @@ public class AutoLoadDataResource {
 		}
 
 		return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert("Student Results", null)).build();
+	}
+
+	@PostMapping("/student-results/reset")
+	@Timed
+	public ResponseEntity<Void> loadStudentResultTemplate(@RequestBody StudentResultResetDto studentResultResetDto)
+			throws URISyntaxException {
+		LOGGER.debug("REST request to reset student results.");
+
+		List<StudentModuleResult> moduleResults = studentModuleResultRepository
+				.getResultByUser(studentResultResetDto.getUser().getId());
+		if (moduleResults.size() > 0) {
+			for (StudentModuleResult item : moduleResults) {
+				studentModuleResultRepository.delete(item);
+			}
+		}
+
+		List<StudentResearchPaperResult> rpResults = studentResearchPaperResultRepository
+				.getResultByUser(studentResultResetDto.getUser().getId());
+		if (rpResults.size() > 0) {
+			for (StudentResearchPaperResult item : rpResults) {
+				studentResearchPaperResultRepository.delete(item);
+			}
+		}
+
+		return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert("Reset Student Results",
+				studentResultResetDto.getUser().getId().toString())).build();
 	}
 
 }
