@@ -18,6 +18,10 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFTable;
+import org.apache.poi.xwpf.usermodel.XWPFTableCell;
+import org.apache.poi.xwpf.usermodel.XWPFTableRow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -115,77 +119,73 @@ public class AutoLoadDataResource {
 
 		LOGGER.info("Prof: " + lecProf.getUser().getLogin());
 
+		List<String> tmpList = new ArrayList<String>();
 		try {
+			InputStream fis = new ByteArrayInputStream(lpDto.getLecturerProfileTemplate());
+			XWPFDocument doc = new XWPFDocument(fis);
 
-			InputStream excelFile = new ByteArrayInputStream(lpDto.getLecturerProfileTemplate());
-			Workbook workbook = new XSSFWorkbook(excelFile);
-			Sheet datatypeSheet = workbook.getSheetAt(0);
-			Iterator<Row> iterator = datatypeSheet.iterator();
+			List<XWPFTable> tables = doc.getTables();
 
-			List<String> tmpList = new ArrayList<String>();
-
-			while (iterator.hasNext()) {
-
-				tmpList = new ArrayList<String>();
-
-				Row currentRow = iterator.next();
-				Iterator<Cell> cellIterator = currentRow.iterator();
-
-				while (cellIterator.hasNext()) {
-					Cell currentCell = cellIterator.next();
-					tmpList.add(currentCell.toString().trim());
-				}
-
-				LOGGER.info("ROW: " + tmpList.toString());
-
-				if (tmpList.size() > 0 && tmpList.get(1) != null && !tmpList.get(1).isEmpty()) {
-					switch (tmpList.get(0)) {
-
-					case "Other Titles:":
-						lecProf.setOtherTitles(tmpList.get(1));
-						break;
-
-					case "Age:":
-						lecProf.setAge(Long.valueOf(tmpList.get(1)));
-						break;
-
-					case "Ordination:":
-						lecProf.setOrdination(tmpList.get(1));
-						break;
-
-					case "Academic History:":
-						lecProf.setAcademicHistory(tmpList.get(1));
-						break;
-
-					case "Professional History:":
-						lecProf.setProfessionalHistory(tmpList.get(1));
-						break;
-
-					case "Past and Current Ministry:":
-						lecProf.setPastAndCurrentMinistry(tmpList.get(1));
-						break;
-
-					case "Publications:":
-						lecProf.setPublications(tmpList.get(1));
-						break;
-
-					case "Family:":
-						lecProf.setFamilyDetails(tmpList.get(1));
-						break;
-
-					case "Reference:":
-						lecProf.setReference(tmpList.get(1));
-						break;
-
-					default:
-						break;
+			for (XWPFTable table : tables) {
+				for (XWPFTableRow row : table.getRows()) {
+					tmpList = new ArrayList<String>();
+					for (XWPFTableCell cell : row.getTableCells()) {
+						// System.out.print(cell.getText());
+						tmpList.add(cell.getText().trim());
 					}
-				}
 
-				lecturerProfileRepository.save(lecProf);
+					LOGGER.info("ROW: " + tmpList.toString());
+					
+					if (tmpList.size() > 0 && tmpList.get(1) != null &&
+							!tmpList.get(1).isEmpty()) {
+						switch (tmpList.get(0)) {
+
+						case "Other Titles:":
+							lecProf.setOtherTitles(tmpList.get(1));
+							break;
+
+						case "Age:":
+							lecProf.setAge(Long.valueOf(tmpList.get(1)));
+							break;
+
+						case "Ordination:":
+							lecProf.setOrdination(tmpList.get(1));
+							break;
+
+						case "Academic History:":
+							lecProf.setAcademicHistory(tmpList.get(1));
+							break;
+
+						case "Professional History:":
+							lecProf.setProfessionalHistory(tmpList.get(1));
+							break;
+
+						case "Past and Current Ministry:":
+							lecProf.setPastAndCurrentMinistry(tmpList.get(1));
+							break;
+
+						case "Publications:":
+							lecProf.setPublications(tmpList.get(1));
+							break;
+
+						case "Family:":
+							lecProf.setFamilyDetails(tmpList.get(1));
+							break;
+
+						case "Reference:":
+							lecProf.setReference(tmpList.get(1));
+							break;
+
+						default:
+							break;
+						}
+					}
+					
+					lecturerProfileRepository.save(lecProf);
+				}
 			}
 
-			workbook.close();
+			doc.close();
 		}
 
 		catch (FileNotFoundException e) {
@@ -195,6 +195,91 @@ public class AutoLoadDataResource {
 		catch (IOException e) {
 			LOGGER.error("loadLecturerProfileTemplate() IOException: ", e);
 		}
+
+		/* Original */
+		// try {
+		//
+		// InputStream excelFile = new
+		// ByteArrayInputStream(lpDto.getLecturerProfileTemplate());
+		// Workbook workbook = new XSSFWorkbook(excelFile);
+		// Sheet datatypeSheet = workbook.getSheetAt(0);
+		// Iterator<Row> iterator = datatypeSheet.iterator();
+		//
+		// List<String> tmpList = new ArrayList<String>();
+		//
+		// while (iterator.hasNext()) {
+		//
+		// tmpList = new ArrayList<String>();
+		//
+		// Row currentRow = iterator.next();
+		// Iterator<Cell> cellIterator = currentRow.iterator();
+		//
+		// while (cellIterator.hasNext()) {
+		// Cell currentCell = cellIterator.next();
+		// tmpList.add(currentCell.toString().trim());
+		// }
+		//
+		// LOGGER.info("ROW: " + tmpList.toString());
+		//
+		// if (tmpList.size() > 0 && tmpList.get(1) != null &&
+		// !tmpList.get(1).isEmpty()) {
+		// switch (tmpList.get(0)) {
+		//
+		// case "Other Titles:":
+		// lecProf.setOtherTitles(tmpList.get(1));
+		// break;
+		//
+		// case "Age:":
+		// lecProf.setAge(Long.valueOf(tmpList.get(1)));
+		// break;
+		//
+		// case "Ordination:":
+		// lecProf.setOrdination(tmpList.get(1));
+		// break;
+		//
+		// case "Academic History:":
+		// lecProf.setAcademicHistory(tmpList.get(1));
+		// break;
+		//
+		// case "Professional History:":
+		// lecProf.setProfessionalHistory(tmpList.get(1));
+		// break;
+		//
+		// case "Past and Current Ministry:":
+		// lecProf.setPastAndCurrentMinistry(tmpList.get(1));
+		// break;
+		//
+		// case "Publications:":
+		// lecProf.setPublications(tmpList.get(1));
+		// break;
+		//
+		// case "Family:":
+		// lecProf.setFamilyDetails(tmpList.get(1));
+		// break;
+		//
+		// case "Reference:":
+		// lecProf.setReference(tmpList.get(1));
+		// break;
+		//
+		// default:
+		// break;
+		// }
+		// }
+		//
+		// lecturerProfileRepository.save(lecProf);
+		// }
+		//
+		// workbook.close();
+		// }
+		//
+		// catch (FileNotFoundException e) {
+		// LOGGER.error("loadLecturerProfileTemplate() FileNotFoundException: ",
+		// e);
+		// }
+		//
+		// catch (IOException e) {
+		// LOGGER.error("loadLecturerProfileTemplate() IOException: ", e);
+		// }
 
 		return ResponseEntity.ok()
 				.headers(HeaderUtil.createEntityUpdateAlert("Lecturer Profile", lecProf.getId().toString())).build();
