@@ -10,7 +10,7 @@
     function stateConfig($stateProvider) {
         $stateProvider
         .state('public-adjunct-faculty', {
-            parent: 'study',
+            parent: 'about-us',
             url: '/public-adjunct-faculty?page&sort&search',
             data: {
                 authorities: [],
@@ -18,7 +18,7 @@
             },
             views: {
                 'content@': {
-                    templateUrl: 'app/study/public-adjunct-faculty/public-adjunct-faculties.html',
+                    templateUrl: 'app/about-us/public-adjunct-faculty/public-adjunct-faculties.html',
                     controller: 'PublicAdjunctFacultyController',
                     controllerAs: 'vm'
                 }
@@ -55,7 +55,7 @@
             },
             views: {
                 'content@': {
-                    templateUrl: 'app/study/public-adjunct-faculty/public-lecturer-profile.html',
+                    templateUrl: 'app/about-us/public-adjunct-faculty/public-lecturer-profile.html',
                     controller: 'PublicLecturerProfileController',
                     controllerAs: 'vm'
                 }

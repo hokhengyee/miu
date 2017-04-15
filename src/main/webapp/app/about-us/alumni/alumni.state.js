@@ -7,7 +7,7 @@
 
 	function stateConfig($stateProvider) {
 		$stateProvider.state('alumni-msg', {
-			parent : 'study',
+			parent : 'about-us',
 			url : '/alumni',
 			data : {
 				authorities : [],
