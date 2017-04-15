@@ -38,7 +38,12 @@
 				<li>Excludes textbooks and workbook not from MIU.</li>
 				<li>E-Library fee : USD $70.00 (one time)</li>
 			</ul>
+			<br />
+			<div class="panel-body">
+				<span ng-bind-html="vm.staticHtml"></span><br />
+			</div>
 		</div>
+
 		<div class="text-center">
 			<jhi-item-count page="vm.page" total="vm.queryCount"
 				items-per-page="vm.itemsPerPage"></jhi-item-count>

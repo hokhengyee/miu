@@ -43,7 +43,13 @@
                         ascending: PaginationUtil.parseAscending($stateParams.sort),
                         search: $stateParams.search
                     };
-                }]
+                }],
+                entity : [ '$stateParams', 'RefundPolicyMsg',
+					function($stateParams, RefundPolicyMsg) {
+						return RefundPolicyMsg.get({
+							id : $stateParams.id
+						}).$promise;
+				} ]
             }
         })
         .state('public-course-detail', {

@@ -5,11 +5,16 @@
 			PublicCourseController);
 
 	PublicCourseController.$inject = [ '$scope', '$state', 'PublicCourse',
-			'ParseLinks', 'AlertService', 'paginationConstants', 'pagingParams' ];
+			'ParseLinks', 'AlertService', 'paginationConstants',
+			'pagingParams', 'entity', 'RefundPolicyMsg', '$sce' ];
 
 	function PublicCourseController($scope, $state, PublicCourse, ParseLinks,
-			AlertService, paginationConstants, pagingParams) {
+			AlertService, paginationConstants, pagingParams, entity,
+			RefundPolicyMsg, $sce) {
 		var vm = this;
+
+		vm.staticPage = entity;
+		vm.staticHtml = $sce.trustAsHtml(vm.staticPage.content);
 
 		vm.loadPage = loadPage;
 		vm.predicate = pagingParams.predicate;
@@ -60,5 +65,6 @@
 				search : vm.currentSearch
 			});
 		}
+
 	}
 })();
