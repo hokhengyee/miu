@@ -89,7 +89,7 @@ Logo styles
 }
 
 .logo .logo-img {
-	height: 120px;
+	height: 100px;
 	display: inline-block;
 }
 
@@ -446,4 +446,9 @@ ui bootstrap tweaks
 	height: 50px !important;
 	margin-top: -52px !important;
 	/* padding-right: 100px !important; */
+}
+
+.navbar-brand span.ajaHeader {
+	font-size: 12px !important;
+	line-height: 12px !important;
 }
