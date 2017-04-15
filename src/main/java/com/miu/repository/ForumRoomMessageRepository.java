@@ -9,11 +9,15 @@ import org.springframework.data.jpa.repository.Query;
 
 import com.miu.domain.ForumRoom;
 import com.miu.domain.ForumRoomMessage;
+import com.miu.domain.User;
 
 /**
  * Spring Data JPA repository for the ForumRoomMessage entity.
  */
 public interface ForumRoomMessageRepository extends JpaRepository<ForumRoomMessage, Long> {
+
+	@Query("select forumRoomMessage from ForumRoomMessage forumRoomMessage where forumRoomMessage.user = ?1")
+	List<ForumRoomMessage> findByUser(User user);
 
 	@Query("select forumRoomMessage from ForumRoomMessage forumRoomMessage where forumRoomMessage.user.login = ?#{principal.username}")
 	List<ForumRoomMessage> findByUserIsCurrentUser();
