@@ -100,7 +100,7 @@ public class ResearchPaper implements Serializable {
 	}
 
 	public String getTitle() {
-		return title;
+		return title + " - " + this.getCourse().getTitle();
 	}
 
 	@Override

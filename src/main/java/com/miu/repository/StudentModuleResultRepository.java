@@ -2,6 +2,7 @@ package com.miu.repository;
 
 import java.util.List;
 
+import com.miu.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -14,6 +15,9 @@ public interface StudentModuleResultRepository extends JpaRepository<StudentModu
 
 	@Query("select studentModuleResult from StudentModuleResult studentModuleResult where studentModuleResult.user.login = ?#{principal.username}")
 	List<StudentModuleResult> findByUserIsCurrentUser();
+
+    @Query("select studentModuleResult from StudentModuleResult studentModuleResult where studentModuleResult.user = ?1")
+	List<StudentModuleResult> findByUser(User user);
 
 	@Query("SELECT r FROM StudentModuleResult r WHERE r.module.moduleType=2 AND r.user.login = ?#{principal.username} ORDER BY r.resultOrder")
 	List<StudentModuleResult> getPracticalMinistryResult();
