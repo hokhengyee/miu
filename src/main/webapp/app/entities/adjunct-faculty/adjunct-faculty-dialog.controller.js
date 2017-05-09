@@ -5,15 +5,15 @@
         .module('miuApp')
         .controller('AdjunctFacultyDialogController', AdjunctFacultyDialogController);
 
-    AdjunctFacultyDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'AdjunctFaculty', 'LecturerProfile'];
+    AdjunctFacultyDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'AdjunctFaculty', 'AllLecturerProfile'];
 
-    function AdjunctFacultyDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, AdjunctFaculty, LecturerProfile) {
+    function AdjunctFacultyDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, AdjunctFaculty, AllLecturerProfile) {
         var vm = this;
 
         vm.adjunctFaculty = entity;
         vm.clear = clear;
         vm.save = save;
-        vm.lecturerprofiles = LecturerProfile.query();
+        vm.lecturerprofiles = AllLecturerProfile.get();
 
         $timeout(function (){
             angular.element('.form-group:eq(1)>input').focus();

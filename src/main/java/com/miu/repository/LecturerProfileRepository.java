@@ -16,6 +16,9 @@ public interface LecturerProfileRepository extends JpaRepository<LecturerProfile
 	@Query("select lecturerProfile from LecturerProfile lecturerProfile where lecturerProfile.user.login = ?#{principal.username}")
 	List<LecturerProfile> findByUserIsCurrentUser();
 
+    @Query("select lecturerProfile from LecturerProfile lecturerProfile order by lecturerProfile.user.login")
+    List<LecturerProfile> findAllOrderByUsername();
+
 	@Query("select lecturerProfile from LecturerProfile lecturerProfile where lecturerProfile.user.login = ?#{principal.username}")
 	LecturerProfile findLecturerIsCurrentUser();
 

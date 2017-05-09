@@ -138,6 +138,17 @@ public class LecturerProfileResource {
 		return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
 	}
 
+    @GetMapping("/all-lecturer-profiles")
+    @Timed
+    public ResponseEntity<List<LecturerProfile>> getAllLecturerProfilesSorted()
+        throws URISyntaxException {
+        LOGGER.debug("REST request to get a page of LecturerProfiles Sorted");
+        List<LecturerProfile> lecturerProfileList = lecturerProfileRepository.findAllOrderByUsername();
+        // HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/lecturer-profiles");
+        HttpHeaders headers = new HttpHeaders();
+        return new ResponseEntity<List<LecturerProfile>>(lecturerProfileList, headers, HttpStatus.OK);
+    }
+
 	/**
 	 * GET /lecturer-profiles/:id : get the "id" lecturerProfile.
 	 *
