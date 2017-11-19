@@ -8,6 +8,7 @@
     "src/main/webapp/bower_components"
   ],
   "devDependencies": {
+    "angular-md5": "^0.1.10",
     "bower": "1.7.9",
     "browser-sync": "2.17.0",
     "del": "2.2.2",
@@ -59,12 +60,12 @@
     "yargs": "5.0.0"
   },
   "engines": {
-    "node": "^4.3"
+    "node": "^8.9.1"
   },
   "scripts": {
     "test": "gulp test"
   },
   "dependencies": {
-    "angular-md5": "^0.1.10"
+    "npm": "^5.5.1"
   }
 }
