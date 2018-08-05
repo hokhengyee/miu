@@ -16,4 +16,6 @@ public interface CourseMaterialRepository extends JpaRepository<CourseMaterial, 
 	@Query("SELECT cm FROM CourseMaterial cm WHERE cm.course= ?1 ORDER BY cm.displayOrder")
 	List<CourseMaterial> getCourseMaterialByCourseTitle(Course course);
 
+	@Query("SELECT cm FROM CourseMaterial cm ORDER BY cm.displayOrder")
+	List<CourseMaterial> getAllCourseMaterial();
 }

@@ -5,16 +5,16 @@
         .module('miuApp')
         .controller('CourseMaterialAccessDialogController', CourseMaterialAccessDialogController);
 
-    CourseMaterialAccessDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'CourseMaterialAccess', 'Course', 'CourseMaterial'];
+    CourseMaterialAccessDialogController.$inject = ['$timeout', '$scope', '$stateParams', '$uibModalInstance', 'entity', 'CourseMaterialAccess', 'Course', 'AllCourseMaterial'];
 
-    function CourseMaterialAccessDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, CourseMaterialAccess, Course, CourseMaterial) {
+    function CourseMaterialAccessDialogController ($timeout, $scope, $stateParams, $uibModalInstance, entity, CourseMaterialAccess, Course, AllCourseMaterial) {
         var vm = this;
 
         vm.courseMaterialAccess = entity;
         vm.clear = clear;
         vm.save = save;
         vm.courses = Course.query();
-        vm.coursematerials = CourseMaterial.query();
+        vm.coursematerials = AllCourseMaterial.get();
 
         $timeout(function (){
             angular.element('.form-group:eq(1)>input').focus();

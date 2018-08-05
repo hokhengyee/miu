@@ -95,6 +95,16 @@ public class CourseMaterialResource {
         return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
+    @GetMapping("/all-course-materials")
+    @Timed
+    public ResponseEntity<List<CourseMaterial>> getAllCourseMaterialsSorted()
+        throws URISyntaxException {
+        LOGGER.debug("REST request to get a page of CourseMaterials sorted");
+        List<CourseMaterial> courseMaterialList = courseMaterialRepository.getAllCourseMaterial();
+        HttpHeaders headers = new HttpHeaders();
+        return new ResponseEntity<List<CourseMaterial>>(courseMaterialList, headers, HttpStatus.OK);
+    }
+
     /**
      * GET  /course-materials/:id : get the "id" courseMaterial.
      *
