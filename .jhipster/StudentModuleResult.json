@@ -1,0 +1,43 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "user",
+            "otherEntityName": "user",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "login",
+            "ownerSide": true
+        },
+        {
+            "relationshipName": "module",
+            "otherEntityName": "module",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "moduleCode"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "result",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "dateGraded",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "resultOrder",
+            "fieldType": "Long"
+        }
+    ],
+    "changelogDate": "20170217155516",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "student_module_result",
+    "pagination": "pager"
+}

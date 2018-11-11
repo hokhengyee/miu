@@ -1,0 +1,75 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "user",
+            "otherEntityName": "user",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "login",
+            "ownerSide": true
+        },
+        {
+            "relationshipName": "salutation",
+            "otherEntityName": "salutation",
+            "relationshipType": "many-to-one",
+            "otherEntityField": "title"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "otherTitles",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "age",
+            "fieldType": "Long"
+        },
+        {
+            "fieldName": "ordination",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "academicHistory",
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "text"
+        },
+        {
+            "fieldName": "professionalHistory",
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "text"
+        },
+        {
+            "fieldName": "pastAndCurrentMinistry",
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "text"
+        },
+        {
+            "fieldName": "publications",
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "text"
+        },
+        {
+            "fieldName": "familyDetails",
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "text"
+        },
+        {
+            "fieldName": "reference",
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "text"
+        },
+        {
+            "fieldName": "profilePhoto",
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "image"
+        }
+    ],
+    "changelogDate": "20170205144013",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "lecturer_profile",
+    "pagination": "pager"
+}

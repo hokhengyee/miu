@@ -1,0 +1,43 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "researchPaper",
+            "otherEntityName": "researchPaper",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "title"
+        },
+        {
+            "relationshipName": "user",
+            "otherEntityName": "user",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "login",
+            "ownerSide": true
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "result",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "dateGraded",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "resultOrder",
+            "fieldType": "Long"
+        }
+    ],
+    "changelogDate": "20170218064239",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "student_research_paper_result",
+    "pagination": "pager"
+}

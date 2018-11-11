@@ -1,0 +1,20 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "title",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required",
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": "1000"
+        }
+    ],
+    "changelogDate": "20161230020222",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "static_page_type",
+    "pagination": "pager"
+}

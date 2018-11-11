@@ -1,0 +1,51 @@
+
+<div>
+    <h2><span>Student Payment</span> {{vm.studentPayment.id}}</h2>
+    <hr>
+    <jhi-alert-error></jhi-alert-error>
+    <dl class="dl-horizontal jh-entity-details">
+        <dt><span>Created Date</span></dt>
+        <dd>
+            <span>{{vm.studentPayment.createdDate | date:'medium'}}</span>
+        </dd>
+        <dt><span>Amount</span></dt>
+        <dd>
+            <span>{{vm.studentPayment.amount}}</span>
+        </dd>
+        <dt><span>Description</span></dt>
+        <dd>
+            <span>{{vm.studentPayment.description}}</span>
+        </dd>
+        <dt><span>Payment Date</span></dt>
+        <dd>
+            <span>{{vm.studentPayment.paymentDate | date:'mediumDate'}}</span>
+        </dd>
+        <dt><span>Paid</span></dt>
+        <dd>
+            <span>{{vm.studentPayment.paid}}</span>
+        </dd>
+        <dt><span>User</span></dt>
+        <dd>
+            {{vm.studentPayment.user.login}}
+        </dd>
+        <dt><span>Course</span></dt>
+        <dd>
+            <a ui-sref="course-detail({id:vm.studentPayment.course.id})">{{vm.studentPayment.course.title}}</a>
+        </dd>
+        <dt><span>Payment Type</span></dt>
+        <dd>
+            <a ui-sref="payment-type-detail({id:vm.studentPayment.paymentType.id})">{{vm.studentPayment.paymentType.title}}</a>
+        </dd>
+    </dl>
+
+    <button type="submit"
+            ui-sref="{{ vm.previousState }}"
+            class="btn btn-info">
+        <span class="glyphicon glyphicon-arrow-left"></span>&nbsp;<span> Back</span>
+    </button>
+
+    <button type="button" ui-sref="student-payment-detail.edit({id:vm.studentPayment.id})" class="btn btn-primary">
+        <span class="glyphicon glyphicon-pencil"></span>
+        <span class="hidden-xs hidden-sm"> Edit</span>
+    </button>
+</div>

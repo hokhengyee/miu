@@ -1,0 +1,30 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "md5Key",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "academicCertificate1",
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "any"
+        },
+        {
+            "fieldName": "academicCertificate2",
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "any"
+        },
+        {
+            "fieldName": "academicCertificate3",
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "any"
+        }
+    ],
+    "changelogDate": "20170328150224",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "academic_certificate",
+    "pagination": "pager"
+}
