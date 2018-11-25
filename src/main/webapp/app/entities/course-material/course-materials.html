@@ -1,0 +1,75 @@
+<div>
+    <h2>Course Materials</h2>
+    <jhi-alert></jhi-alert>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-4 no-padding-left">
+                <button class="btn btn-primary" ui-sref="course-material.new" >
+                    <span class="glyphicon glyphicon-plus"></span>
+                    <span >
+                        Create new Course Material
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive">
+        <table class="jh-table table table-striped">
+            <thead>
+                <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.transition()">
+                    <th jh-sort-by="id"><span>ID</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="title"><span>Title</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="description"><span>Description</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="websiteLink"><span>Website Link</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="content"><span>Content</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="displayOrder"><span>Display Order</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="course.title"><span>Course</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="courseMaterial in vm.courseMaterials track by courseMaterial.id">
+                    <td><a ui-sref="course-material-detail({id:courseMaterial.id})">{{courseMaterial.id}}</a></td>
+                    <td>{{courseMaterial.title}}</td>
+                    <td>{{courseMaterial.description}}</td>
+                    <td>{{courseMaterial.websiteLink}}</td>
+                    <td>
+                        <a ng-if="courseMaterial.content" ng-click="vm.openFile(courseMaterial.contentContentType, courseMaterial.content)">open</a>
+                        <span ng-if="courseMaterial.content">{{courseMaterial.contentContentType}}, {{vm.byteSize(courseMaterial.content)}}</span>
+                    </td>
+                    <td>{{courseMaterial.displayOrder}}</td>
+                    <td>
+                        <a ui-sref="course-detail({id:courseMaterial.course.id})">{{courseMaterial.course.title}}</a>
+                    </td>
+                    <td class="text-right">
+                        <div class="btn-group flex-btn-group-container">
+                            <button type="submit"
+                                    ui-sref="course-material-detail({id:courseMaterial.id})"
+                                    class="btn btn-info btn-sm">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                                <span class="hidden-xs hidden-sm"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="course-material.edit({id:courseMaterial.id})"
+                                    class="btn btn-primary btn-sm">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                                <span class="hidden-xs hidden-sm"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="course-material.delete({id:courseMaterial.id})"
+                                    class="btn btn-danger btn-sm">
+                                <span class="glyphicon glyphicon-remove-circle"></span>
+                                <span class="hidden-xs hidden-sm"></span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="text-center">
+        <jhi-item-count page="vm.page" total="vm.queryCount" items-per-page="vm.itemsPerPage"></jhi-item-count>
+    </div>
+    <uib-pager total-items="vm.totalItems" ng-model="vm.page" ng-change="vm.transition()"></uib-pager>
+</div>

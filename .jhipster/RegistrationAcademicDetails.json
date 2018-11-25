@@ -1,0 +1,135 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "nameOfInstitution2",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": "1000"
+        },
+        {
+            "fieldName": "examPassed2",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": "1000"
+        },
+        {
+            "fieldName": "year2",
+            "fieldType": "Long",
+            "fieldValidateRules": [
+                "min",
+                "max"
+            ],
+            "fieldValidateRulesMin": "1900",
+            "fieldValidateRulesMax": "9999"
+        },
+        {
+            "fieldName": "grade2",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "nameOfInstitution3",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": "1000"
+        },
+        {
+            "fieldName": "examPassed3",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": "1000"
+        },
+        {
+            "fieldName": "year3",
+            "fieldType": "Long",
+            "fieldValidateRules": [
+                "min",
+                "max"
+            ],
+            "fieldValidateRulesMin": "1900",
+            "fieldValidateRulesMax": "9999"
+        },
+        {
+            "fieldName": "grade3",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "nameOfInstitution4",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": "1000"
+        },
+        {
+            "fieldName": "examPassed4",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": "1000"
+        },
+        {
+            "fieldName": "year4",
+            "fieldType": "Long",
+            "fieldValidateRules": [
+                "min",
+                "max"
+            ],
+            "fieldValidateRulesMin": "1900",
+            "fieldValidateRulesMax": "9999"
+        },
+        {
+            "fieldName": "grade4",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "md5key",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "nameOfInstitution1",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": "1000"
+        },
+        {
+            "fieldName": "examPassed1",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": "1000"
+        },
+        {
+            "fieldName": "year1",
+            "fieldType": "Long",
+            "fieldValidateRules": [
+                "min",
+                "max"
+            ],
+            "fieldValidateRulesMin": "1900",
+            "fieldValidateRulesMax": "9999"
+        },
+        {
+            "fieldName": "grade1",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20170306141333",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "registration_academic_details",
+    "pagination": "pager"
+}

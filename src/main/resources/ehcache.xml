@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns='http://www.ehcache.org/v3'
+         xsi:schemaLocation="http://www.ehcache.org/v3 http://www.ehcache.org/schema/ehcache-core-3.0.xsd">
+
+    <cache-template name="simple">
+        <expiry>
+            <ttl unit="seconds">3600</ttl>
+        </expiry>
+        <heap>100</heap>
+    </cache-template>
+
+    <cache alias="com.miu.domain.User" uses-template="simple"/>
+
+    <cache alias="com.miu.domain.Authority" uses-template="simple"/>
+
+    <cache alias="com.miu.domain.User.authorities" uses-template="simple"/>
+
+    <cache alias="com.miu.domain.PersistentToken" uses-template="simple"/>
+
+    <cache alias="com.miu.domain.User.persistentTokens" uses-template="simple"/>
+
+    <cache alias="com.miu.domain.Course" uses-template="simple"/>
+
+    <cache alias="com.miu.domain.Module" uses-template="simple"/>
+
+    <cache alias="com.miu.domain.ModuleType" uses-template="simple"/>
+
+    <cache alias="com.miu.domain.ForumRoom" uses-template="simple"/>
+
+    <cache alias="com.miu.domain.ForumRoomMessage" uses-template="simple"/>
+
+    <cache alias="com.miu.domain.EntryQualification" uses-template="simple"/>
+
+    <cache alias="com.miu.domain.StaticPageType" uses-template="simple"/>
+
+    <cache alias="com.miu.domain.StaticPage" uses-template="simple"/>
+
+    <cache alias="com.miu.domain.ResearchPaper" uses-template="simple"/>
+
+    <cache alias="com.miu.domain.OnlineApplication" uses-template="simple"/>
+
+    <cache alias="com.miu.domain.PaymentType" uses-template="simple"/>
+
+    <cache alias="com.miu.domain.RecordOfCertificate" uses-template="simple"/>
+
+    <cache alias="com.miu.domain.StudentPayment" uses-template="simple"/>
+
+    <cache alias="com.miu.domain.Salutation" uses-template="simple"/>
+
+    <cache alias="com.miu.domain.Gender" uses-template="simple"/>
+
+    <cache alias="com.miu.domain.NewsAndEvent" uses-template="simple"/>
+
+    <cache alias="com.miu.domain.StudentProfile" uses-template="simple"/>
+
+    <cache alias="com.miu.domain.Gallery" uses-template="simple"/>
+
+    <cache alias="com.miu.domain.CourseAccess" uses-template="simple"/>
+
+    <cache alias="com.miu.domain.ExternalOnlineResource" uses-template="simple"/>
+
+    <cache alias="com.miu.domain.CommonResources" uses-template="simple"/>
+
+    <cache alias="com.miu.domain.CourseMaterial" uses-template="simple"/>
+
+    <cache alias="com.miu.domain.LecturerProfile" uses-template="simple"/>
+
+    <cache alias="com.miu.domain.CustomStudentReportType" uses-template="simple"/>
+
+    <cache alias="com.miu.domain.StudentModuleResult" uses-template="simple"/>
+
+    <cache alias="com.miu.domain.StudentOtherResult" uses-template="simple"/>
+
+    <cache alias="com.miu.domain.StudentResearchPaperResult" uses-template="simple"/>
+
+    <cache alias="com.miu.domain.AdjunctFaculty" uses-template="simple"/>
+
+    <cache alias="com.miu.domain.RegistrationAcademicDetails" uses-template="simple"/>
+
+    <cache alias="com.miu.domain.MinisterialWorkExperience" uses-template="simple"/>
+
+    <cache alias="com.miu.domain.CourseMaterialAccess" uses-template="simple"/>
+
+    <cache alias="com.miu.domain.CourseModule" uses-template="simple"/>
+
+    <cache alias="com.miu.domain.AcademicCertificate" uses-template="simple"/>
+
+    <cache alias="com.miu.domain.PageViewLog" uses-template="simple"/>
+
+    <!-- jhipster-needle-ehcache-add-entry -->
+</config>

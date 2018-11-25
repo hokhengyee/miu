@@ -1,0 +1,25 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "lecturerProfile",
+            "otherEntityName": "lecturerProfile",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "user"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "showOrder",
+            "fieldType": "Long"
+        }
+    ],
+    "changelogDate": "20170225121659",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "adjunct_faculty",
+    "pagination": "pager"
+}

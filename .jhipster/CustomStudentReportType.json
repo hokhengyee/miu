@@ -1,0 +1,18 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "label",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20170217152659",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "custom_student_report_type",
+    "pagination": "pager"
+}

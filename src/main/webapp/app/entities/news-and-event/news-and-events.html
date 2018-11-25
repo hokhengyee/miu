@@ -1,0 +1,70 @@
+<div>
+    <h2>News And Events</h2>
+    <jhi-alert></jhi-alert>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-4 no-padding-left">
+                <button class="btn btn-primary" ui-sref="news-and-event.new" >
+                    <span class="glyphicon glyphicon-plus"></span>
+                    <span >
+                        Create new News And Event
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <div class="table-responsive">
+        <table class="jh-table table table-striped">
+            <thead>
+                <tr jh-sort="vm.predicate" ascending="vm.reverse" callback="vm.transition()">
+                    <th jh-sort-by="id"><span>ID</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="title"><span>Title</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="websiteLink"><span>Website Link</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="startDT"><span>Start DT</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="endDT"><span>End DT</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="venue"><span>Venue</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th jh-sort-by="eventDetail"><span>Event Detail</span> <span class="glyphicon glyphicon-sort"></span></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="newsAndEvent in vm.newsAndEvents track by newsAndEvent.id">
+                    <td><a ui-sref="news-and-event-detail({id:newsAndEvent.id})">{{newsAndEvent.id}}</a></td>
+                    <td>{{newsAndEvent.title}}</td>
+                    <td>{{newsAndEvent.websiteLink}}</td>
+                    <td>{{newsAndEvent.startDT | date:'medium'}}</td>
+                    <td>{{newsAndEvent.endDT | date:'medium'}}</td>
+                    <td>{{newsAndEvent.venue}}</td>
+                    <td>{{newsAndEvent.eventDetail}}</td>
+                    <td class="text-right">
+                        <div class="btn-group flex-btn-group-container">
+                            <button type="submit"
+                                    ui-sref="news-and-event-detail({id:newsAndEvent.id})"
+                                    class="btn btn-info btn-sm">
+                                <span class="glyphicon glyphicon-eye-open"></span>
+                                <span class="hidden-xs hidden-sm"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="news-and-event.edit({id:newsAndEvent.id})"
+                                    class="btn btn-primary btn-sm">
+                                <span class="glyphicon glyphicon-pencil"></span>
+                                <span class="hidden-xs hidden-sm"></span>
+                            </button>
+                            <button type="submit"
+                                    ui-sref="news-and-event.delete({id:newsAndEvent.id})"
+                                    class="btn btn-danger btn-sm">
+                                <span class="glyphicon glyphicon-remove-circle"></span>
+                                <span class="hidden-xs hidden-sm"></span>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="text-center">
+        <jhi-item-count page="vm.page" total="vm.queryCount" items-per-page="vm.itemsPerPage"></jhi-item-count>
+    </div>
+    <uib-pager total-items="vm.totalItems" ng-model="vm.page" ng-change="vm.transition()"></uib-pager>
+</div>

@@ -1,0 +1,30 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "staticPageType",
+            "otherEntityName": "staticPageType",
+            "relationshipType": "many-to-one",
+            "relationshipValidateRules": [
+                "required"
+            ],
+            "otherEntityField": "title"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "content",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required",
+                "maxlength"
+            ],
+            "fieldValidateRulesMaxlength": "10000"
+        }
+    ],
+    "changelogDate": "20161230023003",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "static_page",
+    "pagination": "pager"
+}

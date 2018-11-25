@@ -1,0 +1,98 @@
+
+<form name="editForm" role="form" novalidate ng-submit="vm.save()">
+
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                ng-click="vm.clear()">&times;</button>
+        <h4 class="modal-title" id="myAcademicCertificateLabel">Create or edit a Academic Certificate</h4>
+    </div>
+    <div class="modal-body">
+        <jhi-alert-error></jhi-alert-error>
+        <div class="form-group" ng-show="vm.academicCertificate.id">
+            <label for="id">ID</label>
+            <input type="text" class="form-control" id="id" name="id"
+                    ng-model="vm.academicCertificate.id" readonly />
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="field_md5Key">Md 5 Key</label>
+            <input type="text" class="form-control" name="md5Key" id="field_md5Key"
+                    ng-model="vm.academicCertificate.md5Key"
+                     />
+        </div>
+        <div class="form-group" ngf-drop ngf-change="vm.setAcademicCertificate1($file, vm.academicCertificate)">
+            <label class="control-label" for="field_academicCertificate1">Academic Certificate 1</label>
+            <div>
+                <div ng-if="vm.academicCertificate.academicCertificate1" class="help-block clearfix">
+                    <a class="pull-left" ng-click="vm.openFile(vm.academicCertificate.academicCertificate1ContentType, vm.academicCertificate.academicCertificate1)">open</a><br>
+                    <span class="pull-left">{{vm.academicCertificate.academicCertificate1ContentType}}, {{vm.byteSize(vm.academicCertificate.academicCertificate1)}}</span>
+                    <button type="button" ng-click="vm.academicCertificate.academicCertificate1=null;vm.academicCertificate.academicCertificate1ContentType=null;"
+                            class="btn btn-default btn-xs pull-right">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+                </div>
+                <button type="button" ngf-select class="btn btn-default btn-block"
+                        ngf-change="vm.setAcademicCertificate1($file, vm.academicCertificate)">
+                    Add blob
+                </button>
+            </div>
+            <input type="hidden" class="form-control" name="academicCertificate1" id="field_academicCertificate1"
+                    ng-model="vm.academicCertificate.academicCertificate1"
+                     />
+            <input type="hidden" class="form-control" name="academicCertificate1ContentType" id="field_academicCertificate1ContentType"
+                    ng-model="vm.academicCertificate.academicCertificate1ContentType" />
+        </div>
+        <div class="form-group" ngf-drop ngf-change="vm.setAcademicCertificate2($file, vm.academicCertificate)">
+            <label class="control-label" for="field_academicCertificate2">Academic Certificate 2</label>
+            <div>
+                <div ng-if="vm.academicCertificate.academicCertificate2" class="help-block clearfix">
+                    <a class="pull-left" ng-click="vm.openFile(vm.academicCertificate.academicCertificate2ContentType, vm.academicCertificate.academicCertificate2)">open</a><br>
+                    <span class="pull-left">{{vm.academicCertificate.academicCertificate2ContentType}}, {{vm.byteSize(vm.academicCertificate.academicCertificate2)}}</span>
+                    <button type="button" ng-click="vm.academicCertificate.academicCertificate2=null;vm.academicCertificate.academicCertificate2ContentType=null;"
+                            class="btn btn-default btn-xs pull-right">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+                </div>
+                <button type="button" ngf-select class="btn btn-default btn-block"
+                        ngf-change="vm.setAcademicCertificate2($file, vm.academicCertificate)">
+                    Add blob
+                </button>
+            </div>
+            <input type="hidden" class="form-control" name="academicCertificate2" id="field_academicCertificate2"
+                    ng-model="vm.academicCertificate.academicCertificate2"
+                     />
+            <input type="hidden" class="form-control" name="academicCertificate2ContentType" id="field_academicCertificate2ContentType"
+                    ng-model="vm.academicCertificate.academicCertificate2ContentType" />
+        </div>
+        <div class="form-group" ngf-drop ngf-change="vm.setAcademicCertificate3($file, vm.academicCertificate)">
+            <label class="control-label" for="field_academicCertificate3">Academic Certificate 3</label>
+            <div>
+                <div ng-if="vm.academicCertificate.academicCertificate3" class="help-block clearfix">
+                    <a class="pull-left" ng-click="vm.openFile(vm.academicCertificate.academicCertificate3ContentType, vm.academicCertificate.academicCertificate3)">open</a><br>
+                    <span class="pull-left">{{vm.academicCertificate.academicCertificate3ContentType}}, {{vm.byteSize(vm.academicCertificate.academicCertificate3)}}</span>
+                    <button type="button" ng-click="vm.academicCertificate.academicCertificate3=null;vm.academicCertificate.academicCertificate3ContentType=null;"
+                            class="btn btn-default btn-xs pull-right">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </button>
+                </div>
+                <button type="button" ngf-select class="btn btn-default btn-block"
+                        ngf-change="vm.setAcademicCertificate3($file, vm.academicCertificate)">
+                    Add blob
+                </button>
+            </div>
+            <input type="hidden" class="form-control" name="academicCertificate3" id="field_academicCertificate3"
+                    ng-model="vm.academicCertificate.academicCertificate3"
+                     />
+            <input type="hidden" class="form-control" name="academicCertificate3ContentType" id="field_academicCertificate3ContentType"
+                    ng-model="vm.academicCertificate.academicCertificate3ContentType" />
+        </div>
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.clear()">
+            <span class="glyphicon glyphicon-ban-circle"></span>&nbsp;<span>Cancel</span>
+        </button>
+        <button type="submit" ng-disabled="editForm.$invalid || vm.isSaving" class="btn btn-primary">
+            <span class="glyphicon glyphicon-save"></span>&nbsp;<span>Save</span>
+        </button>
+    </div>
+</form>
