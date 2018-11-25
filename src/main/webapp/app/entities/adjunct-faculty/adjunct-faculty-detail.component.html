@@ -1,0 +1,33 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="adjunctFaculty">
+            <h2><span>Adjunct Faculty</span> {{adjunctFaculty.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Show Order</span></dt>
+                <dd>
+                    <span>{{adjunctFaculty.showOrder}}</span>
+                </dd>
+                <dt><span>Lecturer Profile</span></dt>
+                <dd>
+                    <div *ngIf="adjunctFaculty.lecturerProfile">
+                        <a [routerLink]="['/lecturer-profile', adjunctFaculty.lecturerProfile?.id, 'view']">{{adjunctFaculty.lecturerProfile?.user}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/adjunct-faculty', adjunctFaculty.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

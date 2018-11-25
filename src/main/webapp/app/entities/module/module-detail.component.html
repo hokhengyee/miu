@@ -1,0 +1,51 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="module">
+            <h2><span>Module</span> {{module.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Description</span></dt>
+                <dd>
+                    <span>{{module.description}}</span>
+                </dd>
+                <dt><span>Module Order</span></dt>
+                <dd>
+                    <span>{{module.moduleOrder}}</span>
+                </dd>
+                <dt><span>Module Code</span></dt>
+                <dd>
+                    <span>{{module.moduleCode}}</span>
+                </dd>
+                <dt><span>Title</span></dt>
+                <dd>
+                    <span>{{module.title}}</span>
+                </dd>
+                <dt><span>Module Type</span></dt>
+                <dd>
+                    <div *ngIf="module.moduleType">
+                        <a [routerLink]="['/module-type', module.moduleType?.id, 'view']">{{module.moduleType?.title}}</a>
+                    </div>
+                </dd>
+                <dt><span>Course</span></dt>
+                <dd>
+                    <div *ngIf="module.course">
+                        <a [routerLink]="['/course', module.course?.id, 'view']">{{module.course?.title}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/module', module.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

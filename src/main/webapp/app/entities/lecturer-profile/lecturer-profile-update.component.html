@@ -1,0 +1,106 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-lecturer-profile-heading">Create or edit a Lecturer Profile</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!lecturerProfile.id">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="lecturerProfile.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_otherTitles">Other Titles</label>
+                    <input type="text" class="form-control" name="otherTitles" id="field_otherTitles"
+                        [(ngModel)]="lecturerProfile.otherTitles" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_age">Age</label>
+                    <input type="number" class="form-control" name="age" id="field_age"
+                        [(ngModel)]="lecturerProfile.age" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_ordination">Ordination</label>
+                    <input type="text" class="form-control" name="ordination" id="field_ordination"
+                        [(ngModel)]="lecturerProfile.ordination" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_academicHistory">Academic History</label>
+                    <textarea class="form-control" name="academicHistory" id="field_academicHistory"
+                        [(ngModel)]="lecturerProfile.academicHistory" ></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_professionalHistory">Professional History</label>
+                    <textarea class="form-control" name="professionalHistory" id="field_professionalHistory"
+                        [(ngModel)]="lecturerProfile.professionalHistory" ></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_pastAndCurrentMinistry">Past And Current Ministry</label>
+                    <textarea class="form-control" name="pastAndCurrentMinistry" id="field_pastAndCurrentMinistry"
+                        [(ngModel)]="lecturerProfile.pastAndCurrentMinistry" ></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_publications">Publications</label>
+                    <textarea class="form-control" name="publications" id="field_publications"
+                        [(ngModel)]="lecturerProfile.publications" ></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_familyDetails">Family Details</label>
+                    <textarea class="form-control" name="familyDetails" id="field_familyDetails"
+                        [(ngModel)]="lecturerProfile.familyDetails" ></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_reference">Reference</label>
+                    <textarea class="form-control" name="reference" id="field_reference"
+                        [(ngModel)]="lecturerProfile.reference" ></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_profilePhoto">Profile Photo</label>
+                    <div>
+                        <img [src]="'data:' + lecturerProfile.profilePhotoContentType + ';base64,' + lecturerProfile.profilePhoto" style="max-height: 100px;" *ngIf="lecturerProfile.profilePhoto" alt="lecturerProfile image"/>
+                        <div *ngIf="lecturerProfile.profilePhoto" class="form-text text-danger clearfix">
+                            <span class="pull-left">{{lecturerProfile.profilePhotoContentType}}, {{byteSize(lecturerProfile.profilePhoto)}}</span>
+                            <button type="button" (click)="clearInputImage('profilePhoto', 'profilePhotoContentType', 'fileImage')" class="btn btn-secondary btn-xs pull-right">
+                                <fa-icon [icon]="'times'"></fa-icon>
+                            </button>
+                        </div>
+                        <input type="file" id="file_profilePhoto" (change)="setFileData($event, lecturerProfile, 'profilePhoto', true)" accept="image/*"/>
+                    </div>
+                    <input type="hidden" class="form-control" name="profilePhoto" id="field_profilePhoto"
+                        [(ngModel)]="lecturerProfile.profilePhoto" />
+                    <input type="hidden" class="form-control" name="profilePhotoContentType" id="field_profilePhotoContentType"
+                        [(ngModel)]="lecturerProfile.profilePhotoContentType" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_user">User</label>
+                    <select class="form-control" id="field_user" name="user" [(ngModel)]="lecturerProfile.user"  required>
+                        <option *ngIf="!editForm.value.user" [ngValue]="null" selected></option>
+                        <option [ngValue]="userOption.id === lecturerProfile.user?.id ? lecturerProfile.user : userOption" *ngFor="let userOption of users; trackBy: trackUserById">{{userOption.login}}</option>
+                    </select>
+                </div>
+                <div [hidden]="!(editForm.controls.user?.dirty && editForm.controls.user?.invalid)">
+                    <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.user?.errors?.required">
+                        This field is required.
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_salutation">Salutation</label>
+                    <select class="form-control" id="field_salutation" name="salutation" [(ngModel)]="lecturerProfile.salutation" >
+                        <option [ngValue]="null"></option>
+                        <option [ngValue]="salutationOption.id === lecturerProfile.salutation?.id ? lecturerProfile.salutation : salutationOption" *ngFor="let salutationOption of salutations; trackBy: trackSalutationById">{{salutationOption.title}}</option>
+                    </select>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

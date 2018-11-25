@@ -8,28 +8,30 @@ import com.miu.domain.Gender;
 import com.miu.domain.User;
 import com.miu.domain.User;
 import com.miu.repository.StudentProfileRepository;
+import com.miu.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
 
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
 
+
+import static com.miu.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -66,23 +68,26 @@ public class StudentProfileResourceIntTest {
     private static final String UPDATED_MAILING_ADDRESS = "BBBBBBBBBB";
 
     private static final byte[] DEFAULT_PROFILE_PHOTO = TestUtil.createByteArray(1, "0");
-    private static final byte[] UPDATED_PROFILE_PHOTO = TestUtil.createByteArray(2, "1");
+    private static final byte[] UPDATED_PROFILE_PHOTO = TestUtil.createByteArray(1, "1");
     private static final String DEFAULT_PROFILE_PHOTO_CONTENT_TYPE = "image/jpg";
     private static final String UPDATED_PROFILE_PHOTO_CONTENT_TYPE = "image/png";
 
     private static final LocalDate DEFAULT_EXTENDED_COMPLETION_DATE = LocalDate.ofEpochDay(0L);
     private static final LocalDate UPDATED_EXTENDED_COMPLETION_DATE = LocalDate.now(ZoneId.systemDefault());
 
-    @Inject
+    @Autowired
     private StudentProfileRepository studentProfileRepository;
 
-    @Inject
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
-    @Inject
+    @Autowired
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
-    @Inject
+    @Autowired
+    private ExceptionTranslator exceptionTranslator;
+
+    @Autowired
     private EntityManager em;
 
     private MockMvc restStudentProfileMockMvc;
@@ -92,10 +97,11 @@ public class StudentProfileResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        StudentProfileResource studentProfileResource = new StudentProfileResource();
-        ReflectionTestUtils.setField(studentProfileResource, "studentProfileRepository", studentProfileRepository);
+        final StudentProfileResource studentProfileResource = new StudentProfileResource(studentProfileRepository);
         this.restStudentProfileMockMvc = MockMvcBuilders.standaloneSetup(studentProfileResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -107,16 +113,16 @@ public class StudentProfileResourceIntTest {
      */
     public static StudentProfile createEntity(EntityManager em) {
         StudentProfile studentProfile = new StudentProfile()
-                .studentId(DEFAULT_STUDENT_ID)
-                .dateOfBirth(DEFAULT_DATE_OF_BIRTH)
-                .phone(DEFAULT_PHONE)
-                .applicationDate(DEFAULT_APPLICATION_DATE)
-                .commencementDate(DEFAULT_COMMENCEMENT_DATE)
-                .completionDate(DEFAULT_COMPLETION_DATE)
-                .mailingAddress(DEFAULT_MAILING_ADDRESS)
-                .profilePhoto(DEFAULT_PROFILE_PHOTO)
-                .profilePhotoContentType(DEFAULT_PROFILE_PHOTO_CONTENT_TYPE)
-                .extendedCompletionDate(DEFAULT_EXTENDED_COMPLETION_DATE);
+            .studentId(DEFAULT_STUDENT_ID)
+            .dateOfBirth(DEFAULT_DATE_OF_BIRTH)
+            .phone(DEFAULT_PHONE)
+            .applicationDate(DEFAULT_APPLICATION_DATE)
+            .commencementDate(DEFAULT_COMMENCEMENT_DATE)
+            .completionDate(DEFAULT_COMPLETION_DATE)
+            .mailingAddress(DEFAULT_MAILING_ADDRESS)
+            .profilePhoto(DEFAULT_PROFILE_PHOTO)
+            .profilePhotoContentType(DEFAULT_PROFILE_PHOTO_CONTENT_TYPE)
+            .extendedCompletionDate(DEFAULT_EXTENDED_COMPLETION_DATE);
         // Add required entity
         Salutation salutation = SalutationResourceIntTest.createEntity(em);
         em.persist(salutation);
@@ -128,14 +134,11 @@ public class StudentProfileResourceIntTest {
         em.flush();
         studentProfile.setGender(gender);
         // Add required entity
-        User supervisor = UserResourceIntTest.createEntity(em);
-        em.persist(supervisor);
-        em.flush();
-        studentProfile.setSupervisor(supervisor);
-        // Add required entity
         User user = UserResourceIntTest.createEntity(em);
         em.persist(user);
         em.flush();
+        studentProfile.setSupervisor(user);
+        // Add required entity
         studentProfile.setUser(user);
         return studentProfile;
     }
@@ -151,7 +154,6 @@ public class StudentProfileResourceIntTest {
         int databaseSizeBeforeCreate = studentProfileRepository.findAll().size();
 
         // Create the StudentProfile
-
         restStudentProfileMockMvc.perform(post("/api/student-profiles")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(studentProfile)))
@@ -179,16 +181,15 @@ public class StudentProfileResourceIntTest {
         int databaseSizeBeforeCreate = studentProfileRepository.findAll().size();
 
         // Create the StudentProfile with an existing ID
-        StudentProfile existingStudentProfile = new StudentProfile();
-        existingStudentProfile.setId(1L);
+        studentProfile.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restStudentProfileMockMvc.perform(post("/api/student-profiles")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(existingStudentProfile)))
+            .content(TestUtil.convertObjectToJsonBytes(studentProfile)))
             .andExpect(status().isBadRequest());
 
-        // Validate the Alice in the database
+        // Validate the StudentProfile in the database
         List<StudentProfile> studentProfileList = studentProfileRepository.findAll();
         assertThat(studentProfileList).hasSize(databaseSizeBeforeCreate);
     }
@@ -267,24 +268,6 @@ public class StudentProfileResourceIntTest {
 
     @Test
     @Transactional
-    public void checkMailingAddressIsRequired() throws Exception {
-        int databaseSizeBeforeTest = studentProfileRepository.findAll().size();
-        // set the field null
-        studentProfile.setMailingAddress(null);
-
-        // Create the StudentProfile, which fails.
-
-        restStudentProfileMockMvc.perform(post("/api/student-profiles")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(studentProfile)))
-            .andExpect(status().isBadRequest());
-
-        List<StudentProfile> studentProfileList = studentProfileRepository.findAll();
-        assertThat(studentProfileList).hasSize(databaseSizeBeforeTest);
-    }
-
-    @Test
-    @Transactional
     public void getAllStudentProfiles() throws Exception {
         // Initialize the database
         studentProfileRepository.saveAndFlush(studentProfile);
@@ -305,7 +288,7 @@ public class StudentProfileResourceIntTest {
             .andExpect(jsonPath("$.[*].profilePhoto").value(hasItem(Base64Utils.encodeToString(DEFAULT_PROFILE_PHOTO))))
             .andExpect(jsonPath("$.[*].extendedCompletionDate").value(hasItem(DEFAULT_EXTENDED_COMPLETION_DATE.toString())));
     }
-
+    
     @Test
     @Transactional
     public void getStudentProfile() throws Exception {
@@ -342,21 +325,24 @@ public class StudentProfileResourceIntTest {
     public void updateStudentProfile() throws Exception {
         // Initialize the database
         studentProfileRepository.saveAndFlush(studentProfile);
+
         int databaseSizeBeforeUpdate = studentProfileRepository.findAll().size();
 
         // Update the studentProfile
-        StudentProfile updatedStudentProfile = studentProfileRepository.findOne(studentProfile.getId());
+        StudentProfile updatedStudentProfile = studentProfileRepository.findById(studentProfile.getId()).get();
+        // Disconnect from session so that the updates on updatedStudentProfile are not directly saved in db
+        em.detach(updatedStudentProfile);
         updatedStudentProfile
-                .studentId(UPDATED_STUDENT_ID)
-                .dateOfBirth(UPDATED_DATE_OF_BIRTH)
-                .phone(UPDATED_PHONE)
-                .applicationDate(UPDATED_APPLICATION_DATE)
-                .commencementDate(UPDATED_COMMENCEMENT_DATE)
-                .completionDate(UPDATED_COMPLETION_DATE)
-                .mailingAddress(UPDATED_MAILING_ADDRESS)
-                .profilePhoto(UPDATED_PROFILE_PHOTO)
-                .profilePhotoContentType(UPDATED_PROFILE_PHOTO_CONTENT_TYPE)
-                .extendedCompletionDate(UPDATED_EXTENDED_COMPLETION_DATE);
+            .studentId(UPDATED_STUDENT_ID)
+            .dateOfBirth(UPDATED_DATE_OF_BIRTH)
+            .phone(UPDATED_PHONE)
+            .applicationDate(UPDATED_APPLICATION_DATE)
+            .commencementDate(UPDATED_COMMENCEMENT_DATE)
+            .completionDate(UPDATED_COMPLETION_DATE)
+            .mailingAddress(UPDATED_MAILING_ADDRESS)
+            .profilePhoto(UPDATED_PROFILE_PHOTO)
+            .profilePhotoContentType(UPDATED_PROFILE_PHOTO_CONTENT_TYPE)
+            .extendedCompletionDate(UPDATED_EXTENDED_COMPLETION_DATE);
 
         restStudentProfileMockMvc.perform(put("/api/student-profiles")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -386,15 +372,15 @@ public class StudentProfileResourceIntTest {
 
         // Create the StudentProfile
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restStudentProfileMockMvc.perform(put("/api/student-profiles")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(studentProfile)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the StudentProfile in the database
         List<StudentProfile> studentProfileList = studentProfileRepository.findAll();
-        assertThat(studentProfileList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(studentProfileList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -402,6 +388,7 @@ public class StudentProfileResourceIntTest {
     public void deleteStudentProfile() throws Exception {
         // Initialize the database
         studentProfileRepository.saveAndFlush(studentProfile);
+
         int databaseSizeBeforeDelete = studentProfileRepository.findAll().size();
 
         // Get the studentProfile
@@ -412,5 +399,20 @@ public class StudentProfileResourceIntTest {
         // Validate the database is empty
         List<StudentProfile> studentProfileList = studentProfileRepository.findAll();
         assertThat(studentProfileList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    @Transactional
+    public void equalsVerifier() throws Exception {
+        TestUtil.equalsVerifier(StudentProfile.class);
+        StudentProfile studentProfile1 = new StudentProfile();
+        studentProfile1.setId(1L);
+        StudentProfile studentProfile2 = new StudentProfile();
+        studentProfile2.setId(studentProfile1.getId());
+        assertThat(studentProfile1).isEqualTo(studentProfile2);
+        studentProfile2.setId(2L);
+        assertThat(studentProfile1).isNotEqualTo(studentProfile2);
+        studentProfile1.setId(null);
+        assertThat(studentProfile1).isNotEqualTo(studentProfile2);
     }
 }

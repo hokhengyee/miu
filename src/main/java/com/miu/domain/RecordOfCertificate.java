@@ -5,6 +5,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -20,7 +21,7 @@ public class RecordOfCertificate implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
@@ -29,7 +30,7 @@ public class RecordOfCertificate implements Serializable {
     private String name;
 
     @NotNull
-    @Column(name = "degree", nullable = false)
+    @Column(name = "jhi_degree", nullable = false)
     private String degree;
 
     @NotNull
@@ -50,6 +51,7 @@ public class RecordOfCertificate implements Serializable {
     @Column(name = "cert_date")
     private LocalDate certDate;
 
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -148,6 +150,7 @@ public class RecordOfCertificate implements Serializable {
     public void setCertDate(LocalDate certDate) {
         this.certDate = certDate;
     }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -158,28 +161,28 @@ public class RecordOfCertificate implements Serializable {
             return false;
         }
         RecordOfCertificate recordOfCertificate = (RecordOfCertificate) o;
-        if (recordOfCertificate.id == null || id == null) {
+        if (recordOfCertificate.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(id, recordOfCertificate.id);
+        return Objects.equals(getId(), recordOfCertificate.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(getId());
     }
 
     @Override
     public String toString() {
         return "RecordOfCertificate{" +
-            "id=" + id +
-            ", name='" + name + "'" +
-            ", degree='" + degree + "'" +
-            ", studentNo='" + studentNo + "'" +
-            ", certNumber='" + certNumber + "'" +
-            ", certScanFile='" + certScanFile + "'" +
-            ", certScanFileContentType='" + certScanFileContentType + "'" +
-            ", certDate='" + certDate + "'" +
-            '}';
+            "id=" + getId() +
+            ", name='" + getName() + "'" +
+            ", degree='" + getDegree() + "'" +
+            ", studentNo='" + getStudentNo() + "'" +
+            ", certNumber='" + getCertNumber() + "'" +
+            ", certScanFile='" + getCertScanFile() + "'" +
+            ", certScanFileContentType='" + getCertScanFileContentType() + "'" +
+            ", certDate='" + getCertDate() + "'" +
+            "}";
     }
 }

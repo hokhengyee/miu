@@ -1,0 +1,39 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="courseMaterialAccess">
+            <h2><span>Course Material Access</span> {{courseMaterialAccess.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Display Order</span></dt>
+                <dd>
+                    <span>{{courseMaterialAccess.displayOrder}}</span>
+                </dd>
+                <dt><span>Course</span></dt>
+                <dd>
+                    <div *ngIf="courseMaterialAccess.course">
+                        <a [routerLink]="['/course', courseMaterialAccess.course?.id, 'view']">{{courseMaterialAccess.course?.title}}</a>
+                    </div>
+                </dd>
+                <dt><span>Course Material</span></dt>
+                <dd>
+                    <div *ngIf="courseMaterialAccess.courseMaterial">
+                        <a [routerLink]="['/course-material', courseMaterialAccess.courseMaterial?.id, 'view']">{{courseMaterialAccess.courseMaterial?.title}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/course-material-access', courseMaterialAccess.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,15 +1,15 @@
 package com.miu.repository;
 
 import com.miu.domain.PaymentType;
-
 import org.springframework.data.jpa.repository.*;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
 
 /**
- * Spring Data JPA repository for the PaymentType entity.
+ * Spring Data  repository for the PaymentType entity.
  */
 @SuppressWarnings("unused")
-public interface PaymentTypeRepository extends JpaRepository<PaymentType,Long> {
+@Repository
+public interface PaymentTypeRepository extends JpaRepository<PaymentType, Long> {
 
 }

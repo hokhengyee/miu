@@ -5,6 +5,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -19,7 +20,7 @@ public class ExternalOnlineResource implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
@@ -33,6 +34,7 @@ public class ExternalOnlineResource implements Serializable {
     @Column(name = "description")
     private String description;
 
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -79,6 +81,7 @@ public class ExternalOnlineResource implements Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -89,24 +92,24 @@ public class ExternalOnlineResource implements Serializable {
             return false;
         }
         ExternalOnlineResource externalOnlineResource = (ExternalOnlineResource) o;
-        if (externalOnlineResource.id == null || id == null) {
+        if (externalOnlineResource.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(id, externalOnlineResource.id);
+        return Objects.equals(getId(), externalOnlineResource.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(getId());
     }
 
     @Override
     public String toString() {
         return "ExternalOnlineResource{" +
-            "id=" + id +
-            ", title='" + title + "'" +
-            ", websiteLink='" + websiteLink + "'" +
-            ", description='" + description + "'" +
-            '}';
+            "id=" + getId() +
+            ", title='" + getTitle() + "'" +
+            ", websiteLink='" + getWebsiteLink() + "'" +
+            ", description='" + getDescription() + "'" +
+            "}";
     }
 }

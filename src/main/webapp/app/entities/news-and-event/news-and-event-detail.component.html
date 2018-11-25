@@ -1,0 +1,47 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="newsAndEvent">
+            <h2><span>News And Event</span> {{newsAndEvent.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Title</span></dt>
+                <dd>
+                    <span>{{newsAndEvent.title}}</span>
+                </dd>
+                <dt><span>Website Link</span></dt>
+                <dd>
+                    <span>{{newsAndEvent.websiteLink}}</span>
+                </dd>
+                <dt><span>Start DT</span></dt>
+                <dd>
+                    <span>{{newsAndEvent.startDT}}</span>
+                </dd>
+                <dt><span>End DT</span></dt>
+                <dd>
+                    <span>{{newsAndEvent.endDT}}</span>
+                </dd>
+                <dt><span>Venue</span></dt>
+                <dd>
+                    <span>{{newsAndEvent.venue}}</span>
+                </dd>
+                <dt><span>Event Detail</span></dt>
+                <dd>
+                    <span>{{newsAndEvent.eventDetail}}</span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/news-and-event', newsAndEvent.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

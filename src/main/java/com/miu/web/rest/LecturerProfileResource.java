@@ -2,12 +2,11 @@ package com.miu.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.miu.domain.LecturerProfile;
-
 import com.miu.repository.LecturerProfileRepository;
+import com.miu.web.rest.errors.BadRequestAlertException;
 import com.miu.web.rest.util.HeaderUtil;
 import com.miu.web.rest.util.PaginationUtil;
-
-import io.swagger.annotations.ApiParam;
+import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -17,10 +16,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.inject.Inject;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -32,9 +31,14 @@ import java.util.Optional;
 public class LecturerProfileResource {
 
     private final Logger log = LoggerFactory.getLogger(LecturerProfileResource.class);
-        
-    @Inject
-    private LecturerProfileRepository lecturerProfileRepository;
+
+    private static final String ENTITY_NAME = "lecturerProfile";
+
+    private final LecturerProfileRepository lecturerProfileRepository;
+
+    public LecturerProfileResource(LecturerProfileRepository lecturerProfileRepository) {
+        this.lecturerProfileRepository = lecturerProfileRepository;
+    }
 
     /**
      * POST  /lecturer-profiles : Create a new lecturerProfile.
@@ -48,11 +52,11 @@ public class LecturerProfileResource {
     public ResponseEntity<LecturerProfile> createLecturerProfile(@Valid @RequestBody LecturerProfile lecturerProfile) throws URISyntaxException {
         log.debug("REST request to save LecturerProfile : {}", lecturerProfile);
         if (lecturerProfile.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("lecturerProfile", "idexists", "A new lecturerProfile cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new lecturerProfile cannot already have an ID", ENTITY_NAME, "idexists");
         }
         LecturerProfile result = lecturerProfileRepository.save(lecturerProfile);
         return ResponseEntity.created(new URI("/api/lecturer-profiles/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert("lecturerProfile", result.getId().toString()))
+            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
@@ -62,7 +66,7 @@ public class LecturerProfileResource {
      * @param lecturerProfile the lecturerProfile to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated lecturerProfile,
      * or with status 400 (Bad Request) if the lecturerProfile is not valid,
-     * or with status 500 (Internal Server Error) if the lecturerProfile couldnt be updated
+     * or with status 500 (Internal Server Error) if the lecturerProfile couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/lecturer-profiles")
@@ -70,11 +74,11 @@ public class LecturerProfileResource {
     public ResponseEntity<LecturerProfile> updateLecturerProfile(@Valid @RequestBody LecturerProfile lecturerProfile) throws URISyntaxException {
         log.debug("REST request to update LecturerProfile : {}", lecturerProfile);
         if (lecturerProfile.getId() == null) {
-            return createLecturerProfile(lecturerProfile);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         LecturerProfile result = lecturerProfileRepository.save(lecturerProfile);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert("lecturerProfile", lecturerProfile.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, lecturerProfile.getId().toString()))
             .body(result);
     }
 
@@ -83,16 +87,14 @@ public class LecturerProfileResource {
      *
      * @param pageable the pagination information
      * @return the ResponseEntity with status 200 (OK) and the list of lecturerProfiles in body
-     * @throws URISyntaxException if there is an error to generate the pagination HTTP headers
      */
     @GetMapping("/lecturer-profiles")
     @Timed
-    public ResponseEntity<List<LecturerProfile>> getAllLecturerProfiles(@ApiParam Pageable pageable)
-        throws URISyntaxException {
+    public ResponseEntity<List<LecturerProfile>> getAllLecturerProfiles(Pageable pageable) {
         log.debug("REST request to get a page of LecturerProfiles");
         Page<LecturerProfile> page = lecturerProfileRepository.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/lecturer-profiles");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**
@@ -105,12 +107,8 @@ public class LecturerProfileResource {
     @Timed
     public ResponseEntity<LecturerProfile> getLecturerProfile(@PathVariable Long id) {
         log.debug("REST request to get LecturerProfile : {}", id);
-        LecturerProfile lecturerProfile = lecturerProfileRepository.findOne(id);
-        return Optional.ofNullable(lecturerProfile)
-            .map(result -> new ResponseEntity<>(
-                result,
-                HttpStatus.OK))
-            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        Optional<LecturerProfile> lecturerProfile = lecturerProfileRepository.findById(id);
+        return ResponseUtil.wrapOrNotFound(lecturerProfile);
     }
 
     /**
@@ -123,8 +121,8 @@ public class LecturerProfileResource {
     @Timed
     public ResponseEntity<Void> deleteLecturerProfile(@PathVariable Long id) {
         log.debug("REST request to delete LecturerProfile : {}", id);
-        lecturerProfileRepository.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("lecturerProfile", id.toString())).build();
-    }
 
+        lecturerProfileRepository.deleteById(id);
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+    }
 }

@@ -5,6 +5,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -19,7 +20,7 @@ public class Course implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "description")
@@ -48,6 +49,7 @@ public class Course implements Serializable {
     @Column(name = "course_fee", nullable = false)
     private String courseFee;
 
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -146,6 +148,7 @@ public class Course implements Serializable {
     public void setCourseFee(String courseFee) {
         this.courseFee = courseFee;
     }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -156,28 +159,28 @@ public class Course implements Serializable {
             return false;
         }
         Course course = (Course) o;
-        if (course.id == null || id == null) {
+        if (course.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(id, course.id);
+        return Objects.equals(getId(), course.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(getId());
     }
 
     @Override
     public String toString() {
         return "Course{" +
-            "id=" + id +
-            ", description='" + description + "'" +
-            ", courseOrder='" + courseOrder + "'" +
-            ", title='" + title + "'" +
-            ", creditHours='" + creditHours + "'" +
-            ", applicationFee='" + applicationFee + "'" +
-            ", registrationFee='" + registrationFee + "'" +
-            ", courseFee='" + courseFee + "'" +
-            '}';
+            "id=" + getId() +
+            ", description='" + getDescription() + "'" +
+            ", courseOrder=" + getCourseOrder() +
+            ", title='" + getTitle() + "'" +
+            ", creditHours=" + getCreditHours() +
+            ", applicationFee='" + getApplicationFee() + "'" +
+            ", registrationFee='" + getRegistrationFee() + "'" +
+            ", courseFee='" + getCourseFee() + "'" +
+            "}";
     }
 }

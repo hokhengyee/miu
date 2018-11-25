@@ -1,0 +1,52 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-gallery-heading">Create or edit a Gallery</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!gallery.id">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="gallery.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_imageTitle">Image Title</label>
+                    <input type="text" class="form-control" name="imageTitle" id="field_imageTitle"
+                        [(ngModel)]="gallery.imageTitle" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_galleryPhoto">Gallery Photo</label>
+                    <div>
+                        <img [src]="'data:' + gallery.galleryPhotoContentType + ';base64,' + gallery.galleryPhoto" style="max-height: 100px;" *ngIf="gallery.galleryPhoto" alt="gallery image"/>
+                        <div *ngIf="gallery.galleryPhoto" class="form-text text-danger clearfix">
+                            <span class="pull-left">{{gallery.galleryPhotoContentType}}, {{byteSize(gallery.galleryPhoto)}}</span>
+                            <button type="button" (click)="clearInputImage('galleryPhoto', 'galleryPhotoContentType', 'fileImage')" class="btn btn-secondary btn-xs pull-right">
+                                <fa-icon [icon]="'times'"></fa-icon>
+                            </button>
+                        </div>
+                        <input type="file" id="file_galleryPhoto" (change)="setFileData($event, gallery, 'galleryPhoto', true)" accept="image/*"/>
+                    </div>
+                    <input type="hidden" class="form-control" name="galleryPhoto" id="field_galleryPhoto"
+                        [(ngModel)]="gallery.galleryPhoto" required/>
+                    <input type="hidden" class="form-control" name="galleryPhotoContentType" id="field_galleryPhotoContentType"
+                        [(ngModel)]="gallery.galleryPhotoContentType" />
+                    <div [hidden]="!(editForm.controls.galleryPhoto?.dirty && editForm.controls.galleryPhoto?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.galleryPhoto?.errors?.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

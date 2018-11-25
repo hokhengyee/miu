@@ -2,12 +2,11 @@ package com.miu.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.miu.domain.StudentPayment;
-
 import com.miu.repository.StudentPaymentRepository;
+import com.miu.web.rest.errors.BadRequestAlertException;
 import com.miu.web.rest.util.HeaderUtil;
 import com.miu.web.rest.util.PaginationUtil;
-
-import io.swagger.annotations.ApiParam;
+import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -17,10 +16,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.inject.Inject;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -32,9 +31,14 @@ import java.util.Optional;
 public class StudentPaymentResource {
 
     private final Logger log = LoggerFactory.getLogger(StudentPaymentResource.class);
-        
-    @Inject
-    private StudentPaymentRepository studentPaymentRepository;
+
+    private static final String ENTITY_NAME = "studentPayment";
+
+    private final StudentPaymentRepository studentPaymentRepository;
+
+    public StudentPaymentResource(StudentPaymentRepository studentPaymentRepository) {
+        this.studentPaymentRepository = studentPaymentRepository;
+    }
 
     /**
      * POST  /student-payments : Create a new studentPayment.
@@ -48,11 +52,11 @@ public class StudentPaymentResource {
     public ResponseEntity<StudentPayment> createStudentPayment(@Valid @RequestBody StudentPayment studentPayment) throws URISyntaxException {
         log.debug("REST request to save StudentPayment : {}", studentPayment);
         if (studentPayment.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("studentPayment", "idexists", "A new studentPayment cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new studentPayment cannot already have an ID", ENTITY_NAME, "idexists");
         }
         StudentPayment result = studentPaymentRepository.save(studentPayment);
         return ResponseEntity.created(new URI("/api/student-payments/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert("studentPayment", result.getId().toString()))
+            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
@@ -62,7 +66,7 @@ public class StudentPaymentResource {
      * @param studentPayment the studentPayment to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated studentPayment,
      * or with status 400 (Bad Request) if the studentPayment is not valid,
-     * or with status 500 (Internal Server Error) if the studentPayment couldnt be updated
+     * or with status 500 (Internal Server Error) if the studentPayment couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/student-payments")
@@ -70,11 +74,11 @@ public class StudentPaymentResource {
     public ResponseEntity<StudentPayment> updateStudentPayment(@Valid @RequestBody StudentPayment studentPayment) throws URISyntaxException {
         log.debug("REST request to update StudentPayment : {}", studentPayment);
         if (studentPayment.getId() == null) {
-            return createStudentPayment(studentPayment);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         StudentPayment result = studentPaymentRepository.save(studentPayment);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert("studentPayment", studentPayment.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, studentPayment.getId().toString()))
             .body(result);
     }
 
@@ -83,16 +87,14 @@ public class StudentPaymentResource {
      *
      * @param pageable the pagination information
      * @return the ResponseEntity with status 200 (OK) and the list of studentPayments in body
-     * @throws URISyntaxException if there is an error to generate the pagination HTTP headers
      */
     @GetMapping("/student-payments")
     @Timed
-    public ResponseEntity<List<StudentPayment>> getAllStudentPayments(@ApiParam Pageable pageable)
-        throws URISyntaxException {
+    public ResponseEntity<List<StudentPayment>> getAllStudentPayments(Pageable pageable) {
         log.debug("REST request to get a page of StudentPayments");
         Page<StudentPayment> page = studentPaymentRepository.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/student-payments");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**
@@ -105,12 +107,8 @@ public class StudentPaymentResource {
     @Timed
     public ResponseEntity<StudentPayment> getStudentPayment(@PathVariable Long id) {
         log.debug("REST request to get StudentPayment : {}", id);
-        StudentPayment studentPayment = studentPaymentRepository.findOne(id);
-        return Optional.ofNullable(studentPayment)
-            .map(result -> new ResponseEntity<>(
-                result,
-                HttpStatus.OK))
-            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        Optional<StudentPayment> studentPayment = studentPaymentRepository.findById(id);
+        return ResponseUtil.wrapOrNotFound(studentPayment);
     }
 
     /**
@@ -123,8 +121,8 @@ public class StudentPaymentResource {
     @Timed
     public ResponseEntity<Void> deleteStudentPayment(@PathVariable Long id) {
         log.debug("REST request to delete StudentPayment : {}", id);
-        studentPaymentRepository.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("studentPayment", id.toString())).build();
-    }
 
+        studentPaymentRepository.deleteById(id);
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+    }
 }

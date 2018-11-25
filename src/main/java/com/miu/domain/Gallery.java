@@ -5,6 +5,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -19,13 +20,13 @@ public class Gallery implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "image_title")
     private String imageTitle;
 
-    @NotNull
+    
     @Lob
     @Column(name = "gallery_photo", nullable = false)
     private byte[] galleryPhoto;
@@ -33,6 +34,7 @@ public class Gallery implements Serializable {
     @Column(name = "gallery_photo_content_type", nullable = false)
     private String galleryPhotoContentType;
 
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -79,6 +81,7 @@ public class Gallery implements Serializable {
     public void setGalleryPhotoContentType(String galleryPhotoContentType) {
         this.galleryPhotoContentType = galleryPhotoContentType;
     }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -89,24 +92,24 @@ public class Gallery implements Serializable {
             return false;
         }
         Gallery gallery = (Gallery) o;
-        if (gallery.id == null || id == null) {
+        if (gallery.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(id, gallery.id);
+        return Objects.equals(getId(), gallery.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(getId());
     }
 
     @Override
     public String toString() {
         return "Gallery{" +
-            "id=" + id +
-            ", imageTitle='" + imageTitle + "'" +
-            ", galleryPhoto='" + galleryPhoto + "'" +
-            ", galleryPhotoContentType='" + galleryPhotoContentType + "'" +
-            '}';
+            "id=" + getId() +
+            ", imageTitle='" + getImageTitle() + "'" +
+            ", galleryPhoto='" + getGalleryPhoto() + "'" +
+            ", galleryPhotoContentType='" + getGalleryPhotoContentType() + "'" +
+            "}";
     }
 }

@@ -1,10 +1,12 @@
 package com.miu.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
@@ -21,7 +23,7 @@ public class OnlineApplication implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
@@ -106,10 +108,12 @@ public class OnlineApplication implements Serializable {
     @Column(name = "md_5_key")
     private String md5key;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("")
     private Course course;
 
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -390,6 +394,7 @@ public class OnlineApplication implements Serializable {
     public void setCourse(Course course) {
         this.course = course;
     }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -400,41 +405,41 @@ public class OnlineApplication implements Serializable {
             return false;
         }
         OnlineApplication onlineApplication = (OnlineApplication) o;
-        if (onlineApplication.id == null || id == null) {
+        if (onlineApplication.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(id, onlineApplication.id);
+        return Objects.equals(getId(), onlineApplication.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(getId());
     }
 
     @Override
     public String toString() {
         return "OnlineApplication{" +
-            "id=" + id +
-            ", dateOfBirth='" + dateOfBirth + "'" +
-            ", telephone='" + telephone + "'" +
-            ", email='" + email + "'" +
-            ", city='" + city + "'" +
-            ", state='" + state + "'" +
-            ", country='" + country + "'" +
-            ", postcode='" + postcode + "'" +
-            ", registrationDatetime='" + registrationDatetime + "'" +
-            ", surname='" + surname + "'" +
-            ", givenName='" + givenName + "'" +
-            ", address='" + address + "'" +
-            ", profilePhoto='" + profilePhoto + "'" +
-            ", profilePhotoContentType='" + profilePhotoContentType + "'" +
-            ", academicCertificate='" + academicCertificate + "'" +
-            ", academicCertificateContentType='" + academicCertificateContentType + "'" +
-            ", letterOfRecommendation='" + letterOfRecommendation + "'" +
-            ", letterOfRecommendationContentType='" + letterOfRecommendationContentType + "'" +
-            ", profileDocument='" + profileDocument + "'" +
-            ", profileDocumentContentType='" + profileDocumentContentType + "'" +
-            ", md5key='" + md5key + "'" +
-            '}';
+            "id=" + getId() +
+            ", dateOfBirth='" + getDateOfBirth() + "'" +
+            ", telephone='" + getTelephone() + "'" +
+            ", email='" + getEmail() + "'" +
+            ", city='" + getCity() + "'" +
+            ", state='" + getState() + "'" +
+            ", country='" + getCountry() + "'" +
+            ", postcode='" + getPostcode() + "'" +
+            ", registrationDatetime='" + getRegistrationDatetime() + "'" +
+            ", surname='" + getSurname() + "'" +
+            ", givenName='" + getGivenName() + "'" +
+            ", address='" + getAddress() + "'" +
+            ", profilePhoto='" + getProfilePhoto() + "'" +
+            ", profilePhotoContentType='" + getProfilePhotoContentType() + "'" +
+            ", academicCertificate='" + getAcademicCertificate() + "'" +
+            ", academicCertificateContentType='" + getAcademicCertificateContentType() + "'" +
+            ", letterOfRecommendation='" + getLetterOfRecommendation() + "'" +
+            ", letterOfRecommendationContentType='" + getLetterOfRecommendationContentType() + "'" +
+            ", profileDocument='" + getProfileDocument() + "'" +
+            ", profileDocumentContentType='" + getProfileDocumentContentType() + "'" +
+            ", md5key='" + getMd5key() + "'" +
+            "}";
     }
 }

@@ -5,6 +5,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -19,7 +20,7 @@ public class ModuleType implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
@@ -33,6 +34,7 @@ public class ModuleType implements Serializable {
     @Column(name = "module_type_order", nullable = false)
     private Long moduleTypeOrder;
 
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -79,6 +81,7 @@ public class ModuleType implements Serializable {
     public void setModuleTypeOrder(Long moduleTypeOrder) {
         this.moduleTypeOrder = moduleTypeOrder;
     }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -89,24 +92,24 @@ public class ModuleType implements Serializable {
             return false;
         }
         ModuleType moduleType = (ModuleType) o;
-        if (moduleType.id == null || id == null) {
+        if (moduleType.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(id, moduleType.id);
+        return Objects.equals(getId(), moduleType.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(getId());
     }
 
     @Override
     public String toString() {
         return "ModuleType{" +
-            "id=" + id +
-            ", title='" + title + "'" +
-            ", description='" + description + "'" +
-            ", moduleTypeOrder='" + moduleTypeOrder + "'" +
-            '}';
+            "id=" + getId() +
+            ", title='" + getTitle() + "'" +
+            ", description='" + getDescription() + "'" +
+            ", moduleTypeOrder=" + getModuleTypeOrder() +
+            "}";
     }
 }

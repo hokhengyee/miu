@@ -2,12 +2,11 @@ package com.miu.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.miu.domain.PageViewLog;
-
 import com.miu.repository.PageViewLogRepository;
+import com.miu.web.rest.errors.BadRequestAlertException;
 import com.miu.web.rest.util.HeaderUtil;
 import com.miu.web.rest.util.PaginationUtil;
-
-import io.swagger.annotations.ApiParam;
+import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -17,9 +16,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.inject.Inject;
 import java.net.URI;
 import java.net.URISyntaxException;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -31,9 +30,14 @@ import java.util.Optional;
 public class PageViewLogResource {
 
     private final Logger log = LoggerFactory.getLogger(PageViewLogResource.class);
-        
-    @Inject
-    private PageViewLogRepository pageViewLogRepository;
+
+    private static final String ENTITY_NAME = "pageViewLog";
+
+    private final PageViewLogRepository pageViewLogRepository;
+
+    public PageViewLogResource(PageViewLogRepository pageViewLogRepository) {
+        this.pageViewLogRepository = pageViewLogRepository;
+    }
 
     /**
      * POST  /page-view-logs : Create a new pageViewLog.
@@ -47,11 +51,11 @@ public class PageViewLogResource {
     public ResponseEntity<PageViewLog> createPageViewLog(@RequestBody PageViewLog pageViewLog) throws URISyntaxException {
         log.debug("REST request to save PageViewLog : {}", pageViewLog);
         if (pageViewLog.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("pageViewLog", "idexists", "A new pageViewLog cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new pageViewLog cannot already have an ID", ENTITY_NAME, "idexists");
         }
         PageViewLog result = pageViewLogRepository.save(pageViewLog);
         return ResponseEntity.created(new URI("/api/page-view-logs/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert("pageViewLog", result.getId().toString()))
+            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
@@ -61,7 +65,7 @@ public class PageViewLogResource {
      * @param pageViewLog the pageViewLog to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated pageViewLog,
      * or with status 400 (Bad Request) if the pageViewLog is not valid,
-     * or with status 500 (Internal Server Error) if the pageViewLog couldnt be updated
+     * or with status 500 (Internal Server Error) if the pageViewLog couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/page-view-logs")
@@ -69,11 +73,11 @@ public class PageViewLogResource {
     public ResponseEntity<PageViewLog> updatePageViewLog(@RequestBody PageViewLog pageViewLog) throws URISyntaxException {
         log.debug("REST request to update PageViewLog : {}", pageViewLog);
         if (pageViewLog.getId() == null) {
-            return createPageViewLog(pageViewLog);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         PageViewLog result = pageViewLogRepository.save(pageViewLog);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert("pageViewLog", pageViewLog.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, pageViewLog.getId().toString()))
             .body(result);
     }
 
@@ -82,16 +86,14 @@ public class PageViewLogResource {
      *
      * @param pageable the pagination information
      * @return the ResponseEntity with status 200 (OK) and the list of pageViewLogs in body
-     * @throws URISyntaxException if there is an error to generate the pagination HTTP headers
      */
     @GetMapping("/page-view-logs")
     @Timed
-    public ResponseEntity<List<PageViewLog>> getAllPageViewLogs(@ApiParam Pageable pageable)
-        throws URISyntaxException {
+    public ResponseEntity<List<PageViewLog>> getAllPageViewLogs(Pageable pageable) {
         log.debug("REST request to get a page of PageViewLogs");
         Page<PageViewLog> page = pageViewLogRepository.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/page-view-logs");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**
@@ -104,12 +106,8 @@ public class PageViewLogResource {
     @Timed
     public ResponseEntity<PageViewLog> getPageViewLog(@PathVariable Long id) {
         log.debug("REST request to get PageViewLog : {}", id);
-        PageViewLog pageViewLog = pageViewLogRepository.findOne(id);
-        return Optional.ofNullable(pageViewLog)
-            .map(result -> new ResponseEntity<>(
-                result,
-                HttpStatus.OK))
-            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        Optional<PageViewLog> pageViewLog = pageViewLogRepository.findById(id);
+        return ResponseUtil.wrapOrNotFound(pageViewLog);
     }
 
     /**
@@ -122,8 +120,8 @@ public class PageViewLogResource {
     @Timed
     public ResponseEntity<Void> deletePageViewLog(@PathVariable Long id) {
         log.debug("REST request to delete PageViewLog : {}", id);
-        pageViewLogRepository.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("pageViewLog", id.toString())).build();
-    }
 
+        pageViewLogRepository.deleteById(id);
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+    }
 }

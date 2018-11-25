@@ -1,10 +1,12 @@
 package com.miu.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -19,16 +21,18 @@ public class AdjunctFaculty implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "show_order")
     private Long showOrder;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("")
     private LecturerProfile lecturerProfile;
 
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -62,6 +66,7 @@ public class AdjunctFaculty implements Serializable {
     public void setLecturerProfile(LecturerProfile lecturerProfile) {
         this.lecturerProfile = lecturerProfile;
     }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -72,22 +77,22 @@ public class AdjunctFaculty implements Serializable {
             return false;
         }
         AdjunctFaculty adjunctFaculty = (AdjunctFaculty) o;
-        if (adjunctFaculty.id == null || id == null) {
+        if (adjunctFaculty.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(id, adjunctFaculty.id);
+        return Objects.equals(getId(), adjunctFaculty.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(getId());
     }
 
     @Override
     public String toString() {
         return "AdjunctFaculty{" +
-            "id=" + id +
-            ", showOrder='" + showOrder + "'" +
-            '}';
+            "id=" + getId() +
+            ", showOrder=" + getShowOrder() +
+            "}";
     }
 }

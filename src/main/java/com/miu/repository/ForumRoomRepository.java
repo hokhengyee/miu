@@ -1,15 +1,15 @@
 package com.miu.repository;
 
 import com.miu.domain.ForumRoom;
-
 import org.springframework.data.jpa.repository.*;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
 
 /**
- * Spring Data JPA repository for the ForumRoom entity.
+ * Spring Data  repository for the ForumRoom entity.
  */
 @SuppressWarnings("unused")
-public interface ForumRoomRepository extends JpaRepository<ForumRoom,Long> {
+@Repository
+public interface ForumRoomRepository extends JpaRepository<ForumRoom, Long> {
 
 }

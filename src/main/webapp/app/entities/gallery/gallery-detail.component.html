@@ -1,0 +1,36 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="gallery">
+            <h2><span>Gallery</span> {{gallery.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Image Title</span></dt>
+                <dd>
+                    <span>{{gallery.imageTitle}}</span>
+                </dd>
+                <dt><span>Gallery Photo</span></dt>
+                <dd>
+                    <div *ngIf="gallery.galleryPhoto">
+                        <a (click)="openFile(gallery.galleryPhotoContentType, gallery.galleryPhoto)">
+                            <img [src]="'data:' + gallery.galleryPhotoContentType + ';base64,' + gallery.galleryPhoto" style="max-width: 100%;" alt="gallery image"/>
+                        </a>
+                        {{gallery.galleryPhotoContentType}}, {{byteSize(gallery.galleryPhoto)}}
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/gallery', gallery.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

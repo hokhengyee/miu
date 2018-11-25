@@ -6,25 +6,27 @@ import com.miu.domain.CourseMaterialAccess;
 import com.miu.domain.Course;
 import com.miu.domain.CourseMaterial;
 import com.miu.repository.CourseMaterialAccessRepository;
+import com.miu.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static com.miu.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -42,16 +44,19 @@ public class CourseMaterialAccessResourceIntTest {
     private static final Long DEFAULT_DISPLAY_ORDER = 1L;
     private static final Long UPDATED_DISPLAY_ORDER = 2L;
 
-    @Inject
+    @Autowired
     private CourseMaterialAccessRepository courseMaterialAccessRepository;
 
-    @Inject
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
-    @Inject
+    @Autowired
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
-    @Inject
+    @Autowired
+    private ExceptionTranslator exceptionTranslator;
+
+    @Autowired
     private EntityManager em;
 
     private MockMvc restCourseMaterialAccessMockMvc;
@@ -61,10 +66,11 @@ public class CourseMaterialAccessResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        CourseMaterialAccessResource courseMaterialAccessResource = new CourseMaterialAccessResource();
-        ReflectionTestUtils.setField(courseMaterialAccessResource, "courseMaterialAccessRepository", courseMaterialAccessRepository);
+        final CourseMaterialAccessResource courseMaterialAccessResource = new CourseMaterialAccessResource(courseMaterialAccessRepository);
         this.restCourseMaterialAccessMockMvc = MockMvcBuilders.standaloneSetup(courseMaterialAccessResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -76,7 +82,7 @@ public class CourseMaterialAccessResourceIntTest {
      */
     public static CourseMaterialAccess createEntity(EntityManager em) {
         CourseMaterialAccess courseMaterialAccess = new CourseMaterialAccess()
-                .displayOrder(DEFAULT_DISPLAY_ORDER);
+            .displayOrder(DEFAULT_DISPLAY_ORDER);
         // Add required entity
         Course course = CourseResourceIntTest.createEntity(em);
         em.persist(course);
@@ -101,7 +107,6 @@ public class CourseMaterialAccessResourceIntTest {
         int databaseSizeBeforeCreate = courseMaterialAccessRepository.findAll().size();
 
         // Create the CourseMaterialAccess
-
         restCourseMaterialAccessMockMvc.perform(post("/api/course-material-accesses")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(courseMaterialAccess)))
@@ -120,16 +125,15 @@ public class CourseMaterialAccessResourceIntTest {
         int databaseSizeBeforeCreate = courseMaterialAccessRepository.findAll().size();
 
         // Create the CourseMaterialAccess with an existing ID
-        CourseMaterialAccess existingCourseMaterialAccess = new CourseMaterialAccess();
-        existingCourseMaterialAccess.setId(1L);
+        courseMaterialAccess.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restCourseMaterialAccessMockMvc.perform(post("/api/course-material-accesses")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(existingCourseMaterialAccess)))
+            .content(TestUtil.convertObjectToJsonBytes(courseMaterialAccess)))
             .andExpect(status().isBadRequest());
 
-        // Validate the Alice in the database
+        // Validate the CourseMaterialAccess in the database
         List<CourseMaterialAccess> courseMaterialAccessList = courseMaterialAccessRepository.findAll();
         assertThat(courseMaterialAccessList).hasSize(databaseSizeBeforeCreate);
     }
@@ -147,7 +151,7 @@ public class CourseMaterialAccessResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(courseMaterialAccess.getId().intValue())))
             .andExpect(jsonPath("$.[*].displayOrder").value(hasItem(DEFAULT_DISPLAY_ORDER.intValue())));
     }
-
+    
     @Test
     @Transactional
     public void getCourseMaterialAccess() throws Exception {
@@ -175,12 +179,15 @@ public class CourseMaterialAccessResourceIntTest {
     public void updateCourseMaterialAccess() throws Exception {
         // Initialize the database
         courseMaterialAccessRepository.saveAndFlush(courseMaterialAccess);
+
         int databaseSizeBeforeUpdate = courseMaterialAccessRepository.findAll().size();
 
         // Update the courseMaterialAccess
-        CourseMaterialAccess updatedCourseMaterialAccess = courseMaterialAccessRepository.findOne(courseMaterialAccess.getId());
+        CourseMaterialAccess updatedCourseMaterialAccess = courseMaterialAccessRepository.findById(courseMaterialAccess.getId()).get();
+        // Disconnect from session so that the updates on updatedCourseMaterialAccess are not directly saved in db
+        em.detach(updatedCourseMaterialAccess);
         updatedCourseMaterialAccess
-                .displayOrder(UPDATED_DISPLAY_ORDER);
+            .displayOrder(UPDATED_DISPLAY_ORDER);
 
         restCourseMaterialAccessMockMvc.perform(put("/api/course-material-accesses")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -201,15 +208,15 @@ public class CourseMaterialAccessResourceIntTest {
 
         // Create the CourseMaterialAccess
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restCourseMaterialAccessMockMvc.perform(put("/api/course-material-accesses")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(courseMaterialAccess)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the CourseMaterialAccess in the database
         List<CourseMaterialAccess> courseMaterialAccessList = courseMaterialAccessRepository.findAll();
-        assertThat(courseMaterialAccessList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(courseMaterialAccessList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -217,6 +224,7 @@ public class CourseMaterialAccessResourceIntTest {
     public void deleteCourseMaterialAccess() throws Exception {
         // Initialize the database
         courseMaterialAccessRepository.saveAndFlush(courseMaterialAccess);
+
         int databaseSizeBeforeDelete = courseMaterialAccessRepository.findAll().size();
 
         // Get the courseMaterialAccess
@@ -227,5 +235,20 @@ public class CourseMaterialAccessResourceIntTest {
         // Validate the database is empty
         List<CourseMaterialAccess> courseMaterialAccessList = courseMaterialAccessRepository.findAll();
         assertThat(courseMaterialAccessList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    @Transactional
+    public void equalsVerifier() throws Exception {
+        TestUtil.equalsVerifier(CourseMaterialAccess.class);
+        CourseMaterialAccess courseMaterialAccess1 = new CourseMaterialAccess();
+        courseMaterialAccess1.setId(1L);
+        CourseMaterialAccess courseMaterialAccess2 = new CourseMaterialAccess();
+        courseMaterialAccess2.setId(courseMaterialAccess1.getId());
+        assertThat(courseMaterialAccess1).isEqualTo(courseMaterialAccess2);
+        courseMaterialAccess2.setId(2L);
+        assertThat(courseMaterialAccess1).isNotEqualTo(courseMaterialAccess2);
+        courseMaterialAccess1.setId(null);
+        assertThat(courseMaterialAccess1).isNotEqualTo(courseMaterialAccess2);
     }
 }

@@ -1,15 +1,15 @@
 package com.miu.repository;
 
 import com.miu.domain.EntryQualification;
-
 import org.springframework.data.jpa.repository.*;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
 
 /**
- * Spring Data JPA repository for the EntryQualification entity.
+ * Spring Data  repository for the EntryQualification entity.
  */
 @SuppressWarnings("unused")
-public interface EntryQualificationRepository extends JpaRepository<EntryQualification,Long> {
+@Repository
+public interface EntryQualificationRepository extends JpaRepository<EntryQualification, Long> {
 
 }

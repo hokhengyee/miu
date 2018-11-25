@@ -4,23 +4,23 @@ import com.miu.MiuApp;
 
 import com.miu.domain.NewsAndEvent;
 import com.miu.repository.NewsAndEventRepository;
+import com.miu.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
 
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.time.Instant;
 import java.time.ZonedDateTime;
@@ -28,7 +28,9 @@ import java.time.ZoneOffset;
 import java.time.ZoneId;
 import java.util.List;
 
+
 import static com.miu.web.rest.TestUtil.sameInstant;
+import static com.miu.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -61,16 +63,19 @@ public class NewsAndEventResourceIntTest {
     private static final String DEFAULT_EVENT_DETAIL = "AAAAAAAAAA";
     private static final String UPDATED_EVENT_DETAIL = "BBBBBBBBBB";
 
-    @Inject
+    @Autowired
     private NewsAndEventRepository newsAndEventRepository;
 
-    @Inject
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
-    @Inject
+    @Autowired
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
-    @Inject
+    @Autowired
+    private ExceptionTranslator exceptionTranslator;
+
+    @Autowired
     private EntityManager em;
 
     private MockMvc restNewsAndEventMockMvc;
@@ -80,10 +85,11 @@ public class NewsAndEventResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        NewsAndEventResource newsAndEventResource = new NewsAndEventResource();
-        ReflectionTestUtils.setField(newsAndEventResource, "newsAndEventRepository", newsAndEventRepository);
+        final NewsAndEventResource newsAndEventResource = new NewsAndEventResource(newsAndEventRepository);
         this.restNewsAndEventMockMvc = MockMvcBuilders.standaloneSetup(newsAndEventResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -95,12 +101,12 @@ public class NewsAndEventResourceIntTest {
      */
     public static NewsAndEvent createEntity(EntityManager em) {
         NewsAndEvent newsAndEvent = new NewsAndEvent()
-                .title(DEFAULT_TITLE)
-                .websiteLink(DEFAULT_WEBSITE_LINK)
-                .startDT(DEFAULT_START_DT)
-                .endDT(DEFAULT_END_DT)
-                .venue(DEFAULT_VENUE)
-                .eventDetail(DEFAULT_EVENT_DETAIL);
+            .title(DEFAULT_TITLE)
+            .websiteLink(DEFAULT_WEBSITE_LINK)
+            .startDT(DEFAULT_START_DT)
+            .endDT(DEFAULT_END_DT)
+            .venue(DEFAULT_VENUE)
+            .eventDetail(DEFAULT_EVENT_DETAIL);
         return newsAndEvent;
     }
 
@@ -115,7 +121,6 @@ public class NewsAndEventResourceIntTest {
         int databaseSizeBeforeCreate = newsAndEventRepository.findAll().size();
 
         // Create the NewsAndEvent
-
         restNewsAndEventMockMvc.perform(post("/api/news-and-events")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(newsAndEvent)))
@@ -139,16 +144,15 @@ public class NewsAndEventResourceIntTest {
         int databaseSizeBeforeCreate = newsAndEventRepository.findAll().size();
 
         // Create the NewsAndEvent with an existing ID
-        NewsAndEvent existingNewsAndEvent = new NewsAndEvent();
-        existingNewsAndEvent.setId(1L);
+        newsAndEvent.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restNewsAndEventMockMvc.perform(post("/api/news-and-events")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(existingNewsAndEvent)))
+            .content(TestUtil.convertObjectToJsonBytes(newsAndEvent)))
             .andExpect(status().isBadRequest());
 
-        // Validate the Alice in the database
+        // Validate the NewsAndEvent in the database
         List<NewsAndEvent> newsAndEventList = newsAndEventRepository.findAll();
         assertThat(newsAndEventList).hasSize(databaseSizeBeforeCreate);
     }
@@ -189,7 +193,7 @@ public class NewsAndEventResourceIntTest {
             .andExpect(jsonPath("$.[*].venue").value(hasItem(DEFAULT_VENUE.toString())))
             .andExpect(jsonPath("$.[*].eventDetail").value(hasItem(DEFAULT_EVENT_DETAIL.toString())));
     }
-
+    
     @Test
     @Transactional
     public void getNewsAndEvent() throws Exception {
@@ -222,17 +226,20 @@ public class NewsAndEventResourceIntTest {
     public void updateNewsAndEvent() throws Exception {
         // Initialize the database
         newsAndEventRepository.saveAndFlush(newsAndEvent);
+
         int databaseSizeBeforeUpdate = newsAndEventRepository.findAll().size();
 
         // Update the newsAndEvent
-        NewsAndEvent updatedNewsAndEvent = newsAndEventRepository.findOne(newsAndEvent.getId());
+        NewsAndEvent updatedNewsAndEvent = newsAndEventRepository.findById(newsAndEvent.getId()).get();
+        // Disconnect from session so that the updates on updatedNewsAndEvent are not directly saved in db
+        em.detach(updatedNewsAndEvent);
         updatedNewsAndEvent
-                .title(UPDATED_TITLE)
-                .websiteLink(UPDATED_WEBSITE_LINK)
-                .startDT(UPDATED_START_DT)
-                .endDT(UPDATED_END_DT)
-                .venue(UPDATED_VENUE)
-                .eventDetail(UPDATED_EVENT_DETAIL);
+            .title(UPDATED_TITLE)
+            .websiteLink(UPDATED_WEBSITE_LINK)
+            .startDT(UPDATED_START_DT)
+            .endDT(UPDATED_END_DT)
+            .venue(UPDATED_VENUE)
+            .eventDetail(UPDATED_EVENT_DETAIL);
 
         restNewsAndEventMockMvc.perform(put("/api/news-and-events")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -258,15 +265,15 @@ public class NewsAndEventResourceIntTest {
 
         // Create the NewsAndEvent
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restNewsAndEventMockMvc.perform(put("/api/news-and-events")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(newsAndEvent)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the NewsAndEvent in the database
         List<NewsAndEvent> newsAndEventList = newsAndEventRepository.findAll();
-        assertThat(newsAndEventList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(newsAndEventList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -274,6 +281,7 @@ public class NewsAndEventResourceIntTest {
     public void deleteNewsAndEvent() throws Exception {
         // Initialize the database
         newsAndEventRepository.saveAndFlush(newsAndEvent);
+
         int databaseSizeBeforeDelete = newsAndEventRepository.findAll().size();
 
         // Get the newsAndEvent
@@ -284,5 +292,20 @@ public class NewsAndEventResourceIntTest {
         // Validate the database is empty
         List<NewsAndEvent> newsAndEventList = newsAndEventRepository.findAll();
         assertThat(newsAndEventList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    @Transactional
+    public void equalsVerifier() throws Exception {
+        TestUtil.equalsVerifier(NewsAndEvent.class);
+        NewsAndEvent newsAndEvent1 = new NewsAndEvent();
+        newsAndEvent1.setId(1L);
+        NewsAndEvent newsAndEvent2 = new NewsAndEvent();
+        newsAndEvent2.setId(newsAndEvent1.getId());
+        assertThat(newsAndEvent1).isEqualTo(newsAndEvent2);
+        newsAndEvent2.setId(2L);
+        assertThat(newsAndEvent1).isNotEqualTo(newsAndEvent2);
+        newsAndEvent1.setId(null);
+        assertThat(newsAndEvent1).isNotEqualTo(newsAndEvent2);
     }
 }

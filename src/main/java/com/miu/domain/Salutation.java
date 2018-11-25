@@ -5,6 +5,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -19,7 +20,7 @@ public class Salutation implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
@@ -30,6 +31,7 @@ public class Salutation implements Serializable {
     @Column(name = "display_order")
     private Long displayOrder;
 
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -63,6 +65,7 @@ public class Salutation implements Serializable {
     public void setDisplayOrder(Long displayOrder) {
         this.displayOrder = displayOrder;
     }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -73,23 +76,23 @@ public class Salutation implements Serializable {
             return false;
         }
         Salutation salutation = (Salutation) o;
-        if (salutation.id == null || id == null) {
+        if (salutation.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(id, salutation.id);
+        return Objects.equals(getId(), salutation.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(getId());
     }
 
     @Override
     public String toString() {
         return "Salutation{" +
-            "id=" + id +
-            ", title='" + title + "'" +
-            ", displayOrder='" + displayOrder + "'" +
-            '}';
+            "id=" + getId() +
+            ", title='" + getTitle() + "'" +
+            ", displayOrder=" + getDisplayOrder() +
+            "}";
     }
 }

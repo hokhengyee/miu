@@ -4,25 +4,27 @@ import com.miu.MiuApp;
 
 import com.miu.domain.PaymentType;
 import com.miu.repository.PaymentTypeRepository;
+import com.miu.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static com.miu.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -40,16 +42,19 @@ public class PaymentTypeResourceIntTest {
     private static final String DEFAULT_TITLE = "AAAAAAAAAA";
     private static final String UPDATED_TITLE = "BBBBBBBBBB";
 
-    @Inject
+    @Autowired
     private PaymentTypeRepository paymentTypeRepository;
 
-    @Inject
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
-    @Inject
+    @Autowired
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
-    @Inject
+    @Autowired
+    private ExceptionTranslator exceptionTranslator;
+
+    @Autowired
     private EntityManager em;
 
     private MockMvc restPaymentTypeMockMvc;
@@ -59,10 +64,11 @@ public class PaymentTypeResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        PaymentTypeResource paymentTypeResource = new PaymentTypeResource();
-        ReflectionTestUtils.setField(paymentTypeResource, "paymentTypeRepository", paymentTypeRepository);
+        final PaymentTypeResource paymentTypeResource = new PaymentTypeResource(paymentTypeRepository);
         this.restPaymentTypeMockMvc = MockMvcBuilders.standaloneSetup(paymentTypeResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -74,7 +80,7 @@ public class PaymentTypeResourceIntTest {
      */
     public static PaymentType createEntity(EntityManager em) {
         PaymentType paymentType = new PaymentType()
-                .title(DEFAULT_TITLE);
+            .title(DEFAULT_TITLE);
         return paymentType;
     }
 
@@ -89,7 +95,6 @@ public class PaymentTypeResourceIntTest {
         int databaseSizeBeforeCreate = paymentTypeRepository.findAll().size();
 
         // Create the PaymentType
-
         restPaymentTypeMockMvc.perform(post("/api/payment-types")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(paymentType)))
@@ -108,16 +113,15 @@ public class PaymentTypeResourceIntTest {
         int databaseSizeBeforeCreate = paymentTypeRepository.findAll().size();
 
         // Create the PaymentType with an existing ID
-        PaymentType existingPaymentType = new PaymentType();
-        existingPaymentType.setId(1L);
+        paymentType.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restPaymentTypeMockMvc.perform(post("/api/payment-types")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(existingPaymentType)))
+            .content(TestUtil.convertObjectToJsonBytes(paymentType)))
             .andExpect(status().isBadRequest());
 
-        // Validate the Alice in the database
+        // Validate the PaymentType in the database
         List<PaymentType> paymentTypeList = paymentTypeRepository.findAll();
         assertThat(paymentTypeList).hasSize(databaseSizeBeforeCreate);
     }
@@ -153,7 +157,7 @@ public class PaymentTypeResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(paymentType.getId().intValue())))
             .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE.toString())));
     }
-
+    
     @Test
     @Transactional
     public void getPaymentType() throws Exception {
@@ -181,12 +185,15 @@ public class PaymentTypeResourceIntTest {
     public void updatePaymentType() throws Exception {
         // Initialize the database
         paymentTypeRepository.saveAndFlush(paymentType);
+
         int databaseSizeBeforeUpdate = paymentTypeRepository.findAll().size();
 
         // Update the paymentType
-        PaymentType updatedPaymentType = paymentTypeRepository.findOne(paymentType.getId());
+        PaymentType updatedPaymentType = paymentTypeRepository.findById(paymentType.getId()).get();
+        // Disconnect from session so that the updates on updatedPaymentType are not directly saved in db
+        em.detach(updatedPaymentType);
         updatedPaymentType
-                .title(UPDATED_TITLE);
+            .title(UPDATED_TITLE);
 
         restPaymentTypeMockMvc.perform(put("/api/payment-types")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -207,15 +214,15 @@ public class PaymentTypeResourceIntTest {
 
         // Create the PaymentType
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restPaymentTypeMockMvc.perform(put("/api/payment-types")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(paymentType)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the PaymentType in the database
         List<PaymentType> paymentTypeList = paymentTypeRepository.findAll();
-        assertThat(paymentTypeList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(paymentTypeList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -223,6 +230,7 @@ public class PaymentTypeResourceIntTest {
     public void deletePaymentType() throws Exception {
         // Initialize the database
         paymentTypeRepository.saveAndFlush(paymentType);
+
         int databaseSizeBeforeDelete = paymentTypeRepository.findAll().size();
 
         // Get the paymentType
@@ -233,5 +241,20 @@ public class PaymentTypeResourceIntTest {
         // Validate the database is empty
         List<PaymentType> paymentTypeList = paymentTypeRepository.findAll();
         assertThat(paymentTypeList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    @Transactional
+    public void equalsVerifier() throws Exception {
+        TestUtil.equalsVerifier(PaymentType.class);
+        PaymentType paymentType1 = new PaymentType();
+        paymentType1.setId(1L);
+        PaymentType paymentType2 = new PaymentType();
+        paymentType2.setId(paymentType1.getId());
+        assertThat(paymentType1).isEqualTo(paymentType2);
+        paymentType2.setId(2L);
+        assertThat(paymentType1).isNotEqualTo(paymentType2);
+        paymentType1.setId(null);
+        assertThat(paymentType1).isNotEqualTo(paymentType2);
     }
 }

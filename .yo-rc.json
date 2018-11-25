@@ -1,6 +1,6 @@
 {
   "generator-jhipster": {
-    "jhipsterVersion": "3.12.1",
+    "jhipsterVersion": "5.7.0",
     "baseName": "miu",
     "packageName": "com.miu",
     "packageFolder": "com/miu",
@@ -24,6 +24,11 @@
     ],
     "jhiPrefix": "jhi",
     "enableTranslation": false,
-    "serviceDiscoveryType": false
+    "serviceDiscoveryType": false,
+    "cacheProvider": "ehcache",
+    "enableHibernateCache": true,
+    "clientFramework": "angularX",
+    "clientPackageManager": "npm",
+    "otherModules": []
   }
 }

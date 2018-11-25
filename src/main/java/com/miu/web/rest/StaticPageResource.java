@@ -2,12 +2,11 @@ package com.miu.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.miu.domain.StaticPage;
-
 import com.miu.repository.StaticPageRepository;
+import com.miu.web.rest.errors.BadRequestAlertException;
 import com.miu.web.rest.util.HeaderUtil;
 import com.miu.web.rest.util.PaginationUtil;
-
-import io.swagger.annotations.ApiParam;
+import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -17,10 +16,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.inject.Inject;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -32,9 +31,14 @@ import java.util.Optional;
 public class StaticPageResource {
 
     private final Logger log = LoggerFactory.getLogger(StaticPageResource.class);
-        
-    @Inject
-    private StaticPageRepository staticPageRepository;
+
+    private static final String ENTITY_NAME = "staticPage";
+
+    private final StaticPageRepository staticPageRepository;
+
+    public StaticPageResource(StaticPageRepository staticPageRepository) {
+        this.staticPageRepository = staticPageRepository;
+    }
 
     /**
      * POST  /static-pages : Create a new staticPage.
@@ -48,11 +52,11 @@ public class StaticPageResource {
     public ResponseEntity<StaticPage> createStaticPage(@Valid @RequestBody StaticPage staticPage) throws URISyntaxException {
         log.debug("REST request to save StaticPage : {}", staticPage);
         if (staticPage.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("staticPage", "idexists", "A new staticPage cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new staticPage cannot already have an ID", ENTITY_NAME, "idexists");
         }
         StaticPage result = staticPageRepository.save(staticPage);
         return ResponseEntity.created(new URI("/api/static-pages/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert("staticPage", result.getId().toString()))
+            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
@@ -62,7 +66,7 @@ public class StaticPageResource {
      * @param staticPage the staticPage to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated staticPage,
      * or with status 400 (Bad Request) if the staticPage is not valid,
-     * or with status 500 (Internal Server Error) if the staticPage couldnt be updated
+     * or with status 500 (Internal Server Error) if the staticPage couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/static-pages")
@@ -70,11 +74,11 @@ public class StaticPageResource {
     public ResponseEntity<StaticPage> updateStaticPage(@Valid @RequestBody StaticPage staticPage) throws URISyntaxException {
         log.debug("REST request to update StaticPage : {}", staticPage);
         if (staticPage.getId() == null) {
-            return createStaticPage(staticPage);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         StaticPage result = staticPageRepository.save(staticPage);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert("staticPage", staticPage.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, staticPage.getId().toString()))
             .body(result);
     }
 
@@ -83,16 +87,14 @@ public class StaticPageResource {
      *
      * @param pageable the pagination information
      * @return the ResponseEntity with status 200 (OK) and the list of staticPages in body
-     * @throws URISyntaxException if there is an error to generate the pagination HTTP headers
      */
     @GetMapping("/static-pages")
     @Timed
-    public ResponseEntity<List<StaticPage>> getAllStaticPages(@ApiParam Pageable pageable)
-        throws URISyntaxException {
+    public ResponseEntity<List<StaticPage>> getAllStaticPages(Pageable pageable) {
         log.debug("REST request to get a page of StaticPages");
         Page<StaticPage> page = staticPageRepository.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/static-pages");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**
@@ -105,12 +107,8 @@ public class StaticPageResource {
     @Timed
     public ResponseEntity<StaticPage> getStaticPage(@PathVariable Long id) {
         log.debug("REST request to get StaticPage : {}", id);
-        StaticPage staticPage = staticPageRepository.findOne(id);
-        return Optional.ofNullable(staticPage)
-            .map(result -> new ResponseEntity<>(
-                result,
-                HttpStatus.OK))
-            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        Optional<StaticPage> staticPage = staticPageRepository.findById(id);
+        return ResponseUtil.wrapOrNotFound(staticPage);
     }
 
     /**
@@ -123,8 +121,8 @@ public class StaticPageResource {
     @Timed
     public ResponseEntity<Void> deleteStaticPage(@PathVariable Long id) {
         log.debug("REST request to delete StaticPage : {}", id);
-        staticPageRepository.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("staticPage", id.toString())).build();
-    }
 
+        staticPageRepository.deleteById(id);
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+    }
 }

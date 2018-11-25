@@ -4,26 +4,28 @@ import com.miu.MiuApp;
 
 import com.miu.domain.Gallery;
 import com.miu.repository.GalleryRepository;
+import com.miu.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
 
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static com.miu.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -42,20 +44,23 @@ public class GalleryResourceIntTest {
     private static final String UPDATED_IMAGE_TITLE = "BBBBBBBBBB";
 
     private static final byte[] DEFAULT_GALLERY_PHOTO = TestUtil.createByteArray(1, "0");
-    private static final byte[] UPDATED_GALLERY_PHOTO = TestUtil.createByteArray(2, "1");
+    private static final byte[] UPDATED_GALLERY_PHOTO = TestUtil.createByteArray(1, "1");
     private static final String DEFAULT_GALLERY_PHOTO_CONTENT_TYPE = "image/jpg";
     private static final String UPDATED_GALLERY_PHOTO_CONTENT_TYPE = "image/png";
 
-    @Inject
+    @Autowired
     private GalleryRepository galleryRepository;
 
-    @Inject
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
-    @Inject
+    @Autowired
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
-    @Inject
+    @Autowired
+    private ExceptionTranslator exceptionTranslator;
+
+    @Autowired
     private EntityManager em;
 
     private MockMvc restGalleryMockMvc;
@@ -65,10 +70,11 @@ public class GalleryResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        GalleryResource galleryResource = new GalleryResource();
-        ReflectionTestUtils.setField(galleryResource, "galleryRepository", galleryRepository);
+        final GalleryResource galleryResource = new GalleryResource(galleryRepository);
         this.restGalleryMockMvc = MockMvcBuilders.standaloneSetup(galleryResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -80,9 +86,9 @@ public class GalleryResourceIntTest {
      */
     public static Gallery createEntity(EntityManager em) {
         Gallery gallery = new Gallery()
-                .imageTitle(DEFAULT_IMAGE_TITLE)
-                .galleryPhoto(DEFAULT_GALLERY_PHOTO)
-                .galleryPhotoContentType(DEFAULT_GALLERY_PHOTO_CONTENT_TYPE);
+            .imageTitle(DEFAULT_IMAGE_TITLE)
+            .galleryPhoto(DEFAULT_GALLERY_PHOTO)
+            .galleryPhotoContentType(DEFAULT_GALLERY_PHOTO_CONTENT_TYPE);
         return gallery;
     }
 
@@ -97,7 +103,6 @@ public class GalleryResourceIntTest {
         int databaseSizeBeforeCreate = galleryRepository.findAll().size();
 
         // Create the Gallery
-
         restGalleryMockMvc.perform(post("/api/galleries")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(gallery)))
@@ -118,36 +123,17 @@ public class GalleryResourceIntTest {
         int databaseSizeBeforeCreate = galleryRepository.findAll().size();
 
         // Create the Gallery with an existing ID
-        Gallery existingGallery = new Gallery();
-        existingGallery.setId(1L);
+        gallery.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
-        restGalleryMockMvc.perform(post("/api/galleries")
-            .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(existingGallery)))
-            .andExpect(status().isBadRequest());
-
-        // Validate the Alice in the database
-        List<Gallery> galleryList = galleryRepository.findAll();
-        assertThat(galleryList).hasSize(databaseSizeBeforeCreate);
-    }
-
-    @Test
-    @Transactional
-    public void checkGalleryPhotoIsRequired() throws Exception {
-        int databaseSizeBeforeTest = galleryRepository.findAll().size();
-        // set the field null
-        gallery.setGalleryPhoto(null);
-
-        // Create the Gallery, which fails.
-
         restGalleryMockMvc.perform(post("/api/galleries")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(gallery)))
             .andExpect(status().isBadRequest());
 
+        // Validate the Gallery in the database
         List<Gallery> galleryList = galleryRepository.findAll();
-        assertThat(galleryList).hasSize(databaseSizeBeforeTest);
+        assertThat(galleryList).hasSize(databaseSizeBeforeCreate);
     }
 
     @Test
@@ -165,7 +151,7 @@ public class GalleryResourceIntTest {
             .andExpect(jsonPath("$.[*].galleryPhotoContentType").value(hasItem(DEFAULT_GALLERY_PHOTO_CONTENT_TYPE)))
             .andExpect(jsonPath("$.[*].galleryPhoto").value(hasItem(Base64Utils.encodeToString(DEFAULT_GALLERY_PHOTO))));
     }
-
+    
     @Test
     @Transactional
     public void getGallery() throws Exception {
@@ -195,14 +181,17 @@ public class GalleryResourceIntTest {
     public void updateGallery() throws Exception {
         // Initialize the database
         galleryRepository.saveAndFlush(gallery);
+
         int databaseSizeBeforeUpdate = galleryRepository.findAll().size();
 
         // Update the gallery
-        Gallery updatedGallery = galleryRepository.findOne(gallery.getId());
+        Gallery updatedGallery = galleryRepository.findById(gallery.getId()).get();
+        // Disconnect from session so that the updates on updatedGallery are not directly saved in db
+        em.detach(updatedGallery);
         updatedGallery
-                .imageTitle(UPDATED_IMAGE_TITLE)
-                .galleryPhoto(UPDATED_GALLERY_PHOTO)
-                .galleryPhotoContentType(UPDATED_GALLERY_PHOTO_CONTENT_TYPE);
+            .imageTitle(UPDATED_IMAGE_TITLE)
+            .galleryPhoto(UPDATED_GALLERY_PHOTO)
+            .galleryPhotoContentType(UPDATED_GALLERY_PHOTO_CONTENT_TYPE);
 
         restGalleryMockMvc.perform(put("/api/galleries")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -225,15 +214,15 @@ public class GalleryResourceIntTest {
 
         // Create the Gallery
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restGalleryMockMvc.perform(put("/api/galleries")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(gallery)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the Gallery in the database
         List<Gallery> galleryList = galleryRepository.findAll();
-        assertThat(galleryList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(galleryList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -241,6 +230,7 @@ public class GalleryResourceIntTest {
     public void deleteGallery() throws Exception {
         // Initialize the database
         galleryRepository.saveAndFlush(gallery);
+
         int databaseSizeBeforeDelete = galleryRepository.findAll().size();
 
         // Get the gallery
@@ -251,5 +241,20 @@ public class GalleryResourceIntTest {
         // Validate the database is empty
         List<Gallery> galleryList = galleryRepository.findAll();
         assertThat(galleryList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    @Transactional
+    public void equalsVerifier() throws Exception {
+        TestUtil.equalsVerifier(Gallery.class);
+        Gallery gallery1 = new Gallery();
+        gallery1.setId(1L);
+        Gallery gallery2 = new Gallery();
+        gallery2.setId(gallery1.getId());
+        assertThat(gallery1).isEqualTo(gallery2);
+        gallery2.setId(2L);
+        assertThat(gallery1).isNotEqualTo(gallery2);
+        gallery1.setId(null);
+        assertThat(gallery1).isNotEqualTo(gallery2);
     }
 }

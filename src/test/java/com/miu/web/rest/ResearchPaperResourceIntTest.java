@@ -5,25 +5,27 @@ import com.miu.MiuApp;
 import com.miu.domain.ResearchPaper;
 import com.miu.domain.Course;
 import com.miu.repository.ResearchPaperRepository;
+import com.miu.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static com.miu.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -50,16 +52,19 @@ public class ResearchPaperResourceIntTest {
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
-    @Inject
+    @Autowired
     private ResearchPaperRepository researchPaperRepository;
 
-    @Inject
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
-    @Inject
+    @Autowired
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
-    @Inject
+    @Autowired
+    private ExceptionTranslator exceptionTranslator;
+
+    @Autowired
     private EntityManager em;
 
     private MockMvc restResearchPaperMockMvc;
@@ -69,10 +74,11 @@ public class ResearchPaperResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        ResearchPaperResource researchPaperResource = new ResearchPaperResource();
-        ReflectionTestUtils.setField(researchPaperResource, "researchPaperRepository", researchPaperRepository);
+        final ResearchPaperResource researchPaperResource = new ResearchPaperResource(researchPaperRepository);
         this.restResearchPaperMockMvc = MockMvcBuilders.standaloneSetup(researchPaperResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -84,10 +90,10 @@ public class ResearchPaperResourceIntTest {
      */
     public static ResearchPaper createEntity(EntityManager em) {
         ResearchPaper researchPaper = new ResearchPaper()
-                .code(DEFAULT_CODE)
-                .title(DEFAULT_TITLE)
-                .showOrder(DEFAULT_SHOW_ORDER)
-                .description(DEFAULT_DESCRIPTION);
+            .code(DEFAULT_CODE)
+            .title(DEFAULT_TITLE)
+            .showOrder(DEFAULT_SHOW_ORDER)
+            .description(DEFAULT_DESCRIPTION);
         // Add required entity
         Course course = CourseResourceIntTest.createEntity(em);
         em.persist(course);
@@ -107,7 +113,6 @@ public class ResearchPaperResourceIntTest {
         int databaseSizeBeforeCreate = researchPaperRepository.findAll().size();
 
         // Create the ResearchPaper
-
         restResearchPaperMockMvc.perform(post("/api/research-papers")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(researchPaper)))
@@ -129,16 +134,15 @@ public class ResearchPaperResourceIntTest {
         int databaseSizeBeforeCreate = researchPaperRepository.findAll().size();
 
         // Create the ResearchPaper with an existing ID
-        ResearchPaper existingResearchPaper = new ResearchPaper();
-        existingResearchPaper.setId(1L);
+        researchPaper.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restResearchPaperMockMvc.perform(post("/api/research-papers")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(existingResearchPaper)))
+            .content(TestUtil.convertObjectToJsonBytes(researchPaper)))
             .andExpect(status().isBadRequest());
 
-        // Validate the Alice in the database
+        // Validate the ResearchPaper in the database
         List<ResearchPaper> researchPaperList = researchPaperRepository.findAll();
         assertThat(researchPaperList).hasSize(databaseSizeBeforeCreate);
     }
@@ -195,7 +199,7 @@ public class ResearchPaperResourceIntTest {
             .andExpect(jsonPath("$.[*].showOrder").value(hasItem(DEFAULT_SHOW_ORDER.intValue())))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())));
     }
-
+    
     @Test
     @Transactional
     public void getResearchPaper() throws Exception {
@@ -226,15 +230,18 @@ public class ResearchPaperResourceIntTest {
     public void updateResearchPaper() throws Exception {
         // Initialize the database
         researchPaperRepository.saveAndFlush(researchPaper);
+
         int databaseSizeBeforeUpdate = researchPaperRepository.findAll().size();
 
         // Update the researchPaper
-        ResearchPaper updatedResearchPaper = researchPaperRepository.findOne(researchPaper.getId());
+        ResearchPaper updatedResearchPaper = researchPaperRepository.findById(researchPaper.getId()).get();
+        // Disconnect from session so that the updates on updatedResearchPaper are not directly saved in db
+        em.detach(updatedResearchPaper);
         updatedResearchPaper
-                .code(UPDATED_CODE)
-                .title(UPDATED_TITLE)
-                .showOrder(UPDATED_SHOW_ORDER)
-                .description(UPDATED_DESCRIPTION);
+            .code(UPDATED_CODE)
+            .title(UPDATED_TITLE)
+            .showOrder(UPDATED_SHOW_ORDER)
+            .description(UPDATED_DESCRIPTION);
 
         restResearchPaperMockMvc.perform(put("/api/research-papers")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -258,15 +265,15 @@ public class ResearchPaperResourceIntTest {
 
         // Create the ResearchPaper
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restResearchPaperMockMvc.perform(put("/api/research-papers")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(researchPaper)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the ResearchPaper in the database
         List<ResearchPaper> researchPaperList = researchPaperRepository.findAll();
-        assertThat(researchPaperList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(researchPaperList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -274,6 +281,7 @@ public class ResearchPaperResourceIntTest {
     public void deleteResearchPaper() throws Exception {
         // Initialize the database
         researchPaperRepository.saveAndFlush(researchPaper);
+
         int databaseSizeBeforeDelete = researchPaperRepository.findAll().size();
 
         // Get the researchPaper
@@ -284,5 +292,20 @@ public class ResearchPaperResourceIntTest {
         // Validate the database is empty
         List<ResearchPaper> researchPaperList = researchPaperRepository.findAll();
         assertThat(researchPaperList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    @Transactional
+    public void equalsVerifier() throws Exception {
+        TestUtil.equalsVerifier(ResearchPaper.class);
+        ResearchPaper researchPaper1 = new ResearchPaper();
+        researchPaper1.setId(1L);
+        ResearchPaper researchPaper2 = new ResearchPaper();
+        researchPaper2.setId(researchPaper1.getId());
+        assertThat(researchPaper1).isEqualTo(researchPaper2);
+        researchPaper2.setId(2L);
+        assertThat(researchPaper1).isNotEqualTo(researchPaper2);
+        researchPaper1.setId(null);
+        assertThat(researchPaper1).isNotEqualTo(researchPaper2);
     }
 }

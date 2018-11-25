@@ -1,15 +1,15 @@
 package com.miu.repository;
 
 import com.miu.domain.StaticPage;
-
 import org.springframework.data.jpa.repository.*;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
 
 /**
- * Spring Data JPA repository for the StaticPage entity.
+ * Spring Data  repository for the StaticPage entity.
  */
 @SuppressWarnings("unused")
-public interface StaticPageRepository extends JpaRepository<StaticPage,Long> {
+@Repository
+public interface StaticPageRepository extends JpaRepository<StaticPage, Long> {
 
 }

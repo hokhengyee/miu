@@ -5,23 +5,23 @@ import com.miu.MiuApp;
 import com.miu.domain.OnlineApplication;
 import com.miu.domain.Course;
 import com.miu.repository.OnlineApplicationRepository;
+import com.miu.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
 
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.Instant;
@@ -30,7 +30,9 @@ import java.time.ZoneOffset;
 import java.time.ZoneId;
 import java.util.List;
 
+
 import static com.miu.web.rest.TestUtil.sameInstant;
+import static com.miu.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -79,38 +81,41 @@ public class OnlineApplicationResourceIntTest {
     private static final String UPDATED_ADDRESS = "BBBBBBBBBB";
 
     private static final byte[] DEFAULT_PROFILE_PHOTO = TestUtil.createByteArray(1, "0");
-    private static final byte[] UPDATED_PROFILE_PHOTO = TestUtil.createByteArray(2, "1");
+    private static final byte[] UPDATED_PROFILE_PHOTO = TestUtil.createByteArray(1, "1");
     private static final String DEFAULT_PROFILE_PHOTO_CONTENT_TYPE = "image/jpg";
     private static final String UPDATED_PROFILE_PHOTO_CONTENT_TYPE = "image/png";
 
     private static final byte[] DEFAULT_ACADEMIC_CERTIFICATE = TestUtil.createByteArray(1, "0");
-    private static final byte[] UPDATED_ACADEMIC_CERTIFICATE = TestUtil.createByteArray(2, "1");
+    private static final byte[] UPDATED_ACADEMIC_CERTIFICATE = TestUtil.createByteArray(1, "1");
     private static final String DEFAULT_ACADEMIC_CERTIFICATE_CONTENT_TYPE = "image/jpg";
     private static final String UPDATED_ACADEMIC_CERTIFICATE_CONTENT_TYPE = "image/png";
 
     private static final byte[] DEFAULT_LETTER_OF_RECOMMENDATION = TestUtil.createByteArray(1, "0");
-    private static final byte[] UPDATED_LETTER_OF_RECOMMENDATION = TestUtil.createByteArray(2, "1");
+    private static final byte[] UPDATED_LETTER_OF_RECOMMENDATION = TestUtil.createByteArray(1, "1");
     private static final String DEFAULT_LETTER_OF_RECOMMENDATION_CONTENT_TYPE = "image/jpg";
     private static final String UPDATED_LETTER_OF_RECOMMENDATION_CONTENT_TYPE = "image/png";
 
     private static final byte[] DEFAULT_PROFILE_DOCUMENT = TestUtil.createByteArray(1, "0");
-    private static final byte[] UPDATED_PROFILE_DOCUMENT = TestUtil.createByteArray(2, "1");
+    private static final byte[] UPDATED_PROFILE_DOCUMENT = TestUtil.createByteArray(1, "1");
     private static final String DEFAULT_PROFILE_DOCUMENT_CONTENT_TYPE = "image/jpg";
     private static final String UPDATED_PROFILE_DOCUMENT_CONTENT_TYPE = "image/png";
 
     private static final String DEFAULT_MD_5_KEY = "AAAAAAAAAA";
     private static final String UPDATED_MD_5_KEY = "BBBBBBBBBB";
 
-    @Inject
+    @Autowired
     private OnlineApplicationRepository onlineApplicationRepository;
 
-    @Inject
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
-    @Inject
+    @Autowired
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
-    @Inject
+    @Autowired
+    private ExceptionTranslator exceptionTranslator;
+
+    @Autowired
     private EntityManager em;
 
     private MockMvc restOnlineApplicationMockMvc;
@@ -120,10 +125,11 @@ public class OnlineApplicationResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        OnlineApplicationResource onlineApplicationResource = new OnlineApplicationResource();
-        ReflectionTestUtils.setField(onlineApplicationResource, "onlineApplicationRepository", onlineApplicationRepository);
+        final OnlineApplicationResource onlineApplicationResource = new OnlineApplicationResource(onlineApplicationRepository);
         this.restOnlineApplicationMockMvc = MockMvcBuilders.standaloneSetup(onlineApplicationResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -135,26 +141,26 @@ public class OnlineApplicationResourceIntTest {
      */
     public static OnlineApplication createEntity(EntityManager em) {
         OnlineApplication onlineApplication = new OnlineApplication()
-                .dateOfBirth(DEFAULT_DATE_OF_BIRTH)
-                .telephone(DEFAULT_TELEPHONE)
-                .email(DEFAULT_EMAIL)
-                .city(DEFAULT_CITY)
-                .state(DEFAULT_STATE)
-                .country(DEFAULT_COUNTRY)
-                .postcode(DEFAULT_POSTCODE)
-                .registrationDatetime(DEFAULT_REGISTRATION_DATETIME)
-                .surname(DEFAULT_SURNAME)
-                .givenName(DEFAULT_GIVEN_NAME)
-                .address(DEFAULT_ADDRESS)
-                .profilePhoto(DEFAULT_PROFILE_PHOTO)
-                .profilePhotoContentType(DEFAULT_PROFILE_PHOTO_CONTENT_TYPE)
-                .academicCertificate(DEFAULT_ACADEMIC_CERTIFICATE)
-                .academicCertificateContentType(DEFAULT_ACADEMIC_CERTIFICATE_CONTENT_TYPE)
-                .letterOfRecommendation(DEFAULT_LETTER_OF_RECOMMENDATION)
-                .letterOfRecommendationContentType(DEFAULT_LETTER_OF_RECOMMENDATION_CONTENT_TYPE)
-                .profileDocument(DEFAULT_PROFILE_DOCUMENT)
-                .profileDocumentContentType(DEFAULT_PROFILE_DOCUMENT_CONTENT_TYPE)
-                .md5key(DEFAULT_MD_5_KEY);
+            .dateOfBirth(DEFAULT_DATE_OF_BIRTH)
+            .telephone(DEFAULT_TELEPHONE)
+            .email(DEFAULT_EMAIL)
+            .city(DEFAULT_CITY)
+            .state(DEFAULT_STATE)
+            .country(DEFAULT_COUNTRY)
+            .postcode(DEFAULT_POSTCODE)
+            .registrationDatetime(DEFAULT_REGISTRATION_DATETIME)
+            .surname(DEFAULT_SURNAME)
+            .givenName(DEFAULT_GIVEN_NAME)
+            .address(DEFAULT_ADDRESS)
+            .profilePhoto(DEFAULT_PROFILE_PHOTO)
+            .profilePhotoContentType(DEFAULT_PROFILE_PHOTO_CONTENT_TYPE)
+            .academicCertificate(DEFAULT_ACADEMIC_CERTIFICATE)
+            .academicCertificateContentType(DEFAULT_ACADEMIC_CERTIFICATE_CONTENT_TYPE)
+            .letterOfRecommendation(DEFAULT_LETTER_OF_RECOMMENDATION)
+            .letterOfRecommendationContentType(DEFAULT_LETTER_OF_RECOMMENDATION_CONTENT_TYPE)
+            .profileDocument(DEFAULT_PROFILE_DOCUMENT)
+            .profileDocumentContentType(DEFAULT_PROFILE_DOCUMENT_CONTENT_TYPE)
+            .md5key(DEFAULT_MD_5_KEY);
         // Add required entity
         Course course = CourseResourceIntTest.createEntity(em);
         em.persist(course);
@@ -174,7 +180,6 @@ public class OnlineApplicationResourceIntTest {
         int databaseSizeBeforeCreate = onlineApplicationRepository.findAll().size();
 
         // Create the OnlineApplication
-
         restOnlineApplicationMockMvc.perform(post("/api/online-applications")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(onlineApplication)))
@@ -212,16 +217,15 @@ public class OnlineApplicationResourceIntTest {
         int databaseSizeBeforeCreate = onlineApplicationRepository.findAll().size();
 
         // Create the OnlineApplication with an existing ID
-        OnlineApplication existingOnlineApplication = new OnlineApplication();
-        existingOnlineApplication.setId(1L);
+        onlineApplication.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restOnlineApplicationMockMvc.perform(post("/api/online-applications")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(existingOnlineApplication)))
+            .content(TestUtil.convertObjectToJsonBytes(onlineApplication)))
             .andExpect(status().isBadRequest());
 
-        // Validate the Alice in the database
+        // Validate the OnlineApplication in the database
         List<OnlineApplication> onlineApplicationList = onlineApplicationRepository.findAll();
         assertThat(onlineApplicationList).hasSize(databaseSizeBeforeCreate);
     }
@@ -438,7 +442,7 @@ public class OnlineApplicationResourceIntTest {
             .andExpect(jsonPath("$.[*].profileDocument").value(hasItem(Base64Utils.encodeToString(DEFAULT_PROFILE_DOCUMENT))))
             .andExpect(jsonPath("$.[*].md5key").value(hasItem(DEFAULT_MD_5_KEY.toString())));
     }
-
+    
     @Test
     @Transactional
     public void getOnlineApplication() throws Exception {
@@ -485,31 +489,34 @@ public class OnlineApplicationResourceIntTest {
     public void updateOnlineApplication() throws Exception {
         // Initialize the database
         onlineApplicationRepository.saveAndFlush(onlineApplication);
+
         int databaseSizeBeforeUpdate = onlineApplicationRepository.findAll().size();
 
         // Update the onlineApplication
-        OnlineApplication updatedOnlineApplication = onlineApplicationRepository.findOne(onlineApplication.getId());
+        OnlineApplication updatedOnlineApplication = onlineApplicationRepository.findById(onlineApplication.getId()).get();
+        // Disconnect from session so that the updates on updatedOnlineApplication are not directly saved in db
+        em.detach(updatedOnlineApplication);
         updatedOnlineApplication
-                .dateOfBirth(UPDATED_DATE_OF_BIRTH)
-                .telephone(UPDATED_TELEPHONE)
-                .email(UPDATED_EMAIL)
-                .city(UPDATED_CITY)
-                .state(UPDATED_STATE)
-                .country(UPDATED_COUNTRY)
-                .postcode(UPDATED_POSTCODE)
-                .registrationDatetime(UPDATED_REGISTRATION_DATETIME)
-                .surname(UPDATED_SURNAME)
-                .givenName(UPDATED_GIVEN_NAME)
-                .address(UPDATED_ADDRESS)
-                .profilePhoto(UPDATED_PROFILE_PHOTO)
-                .profilePhotoContentType(UPDATED_PROFILE_PHOTO_CONTENT_TYPE)
-                .academicCertificate(UPDATED_ACADEMIC_CERTIFICATE)
-                .academicCertificateContentType(UPDATED_ACADEMIC_CERTIFICATE_CONTENT_TYPE)
-                .letterOfRecommendation(UPDATED_LETTER_OF_RECOMMENDATION)
-                .letterOfRecommendationContentType(UPDATED_LETTER_OF_RECOMMENDATION_CONTENT_TYPE)
-                .profileDocument(UPDATED_PROFILE_DOCUMENT)
-                .profileDocumentContentType(UPDATED_PROFILE_DOCUMENT_CONTENT_TYPE)
-                .md5key(UPDATED_MD_5_KEY);
+            .dateOfBirth(UPDATED_DATE_OF_BIRTH)
+            .telephone(UPDATED_TELEPHONE)
+            .email(UPDATED_EMAIL)
+            .city(UPDATED_CITY)
+            .state(UPDATED_STATE)
+            .country(UPDATED_COUNTRY)
+            .postcode(UPDATED_POSTCODE)
+            .registrationDatetime(UPDATED_REGISTRATION_DATETIME)
+            .surname(UPDATED_SURNAME)
+            .givenName(UPDATED_GIVEN_NAME)
+            .address(UPDATED_ADDRESS)
+            .profilePhoto(UPDATED_PROFILE_PHOTO)
+            .profilePhotoContentType(UPDATED_PROFILE_PHOTO_CONTENT_TYPE)
+            .academicCertificate(UPDATED_ACADEMIC_CERTIFICATE)
+            .academicCertificateContentType(UPDATED_ACADEMIC_CERTIFICATE_CONTENT_TYPE)
+            .letterOfRecommendation(UPDATED_LETTER_OF_RECOMMENDATION)
+            .letterOfRecommendationContentType(UPDATED_LETTER_OF_RECOMMENDATION_CONTENT_TYPE)
+            .profileDocument(UPDATED_PROFILE_DOCUMENT)
+            .profileDocumentContentType(UPDATED_PROFILE_DOCUMENT_CONTENT_TYPE)
+            .md5key(UPDATED_MD_5_KEY);
 
         restOnlineApplicationMockMvc.perform(put("/api/online-applications")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -549,15 +556,15 @@ public class OnlineApplicationResourceIntTest {
 
         // Create the OnlineApplication
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restOnlineApplicationMockMvc.perform(put("/api/online-applications")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(onlineApplication)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the OnlineApplication in the database
         List<OnlineApplication> onlineApplicationList = onlineApplicationRepository.findAll();
-        assertThat(onlineApplicationList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(onlineApplicationList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -565,6 +572,7 @@ public class OnlineApplicationResourceIntTest {
     public void deleteOnlineApplication() throws Exception {
         // Initialize the database
         onlineApplicationRepository.saveAndFlush(onlineApplication);
+
         int databaseSizeBeforeDelete = onlineApplicationRepository.findAll().size();
 
         // Get the onlineApplication
@@ -575,5 +583,20 @@ public class OnlineApplicationResourceIntTest {
         // Validate the database is empty
         List<OnlineApplication> onlineApplicationList = onlineApplicationRepository.findAll();
         assertThat(onlineApplicationList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    @Transactional
+    public void equalsVerifier() throws Exception {
+        TestUtil.equalsVerifier(OnlineApplication.class);
+        OnlineApplication onlineApplication1 = new OnlineApplication();
+        onlineApplication1.setId(1L);
+        OnlineApplication onlineApplication2 = new OnlineApplication();
+        onlineApplication2.setId(onlineApplication1.getId());
+        assertThat(onlineApplication1).isEqualTo(onlineApplication2);
+        onlineApplication2.setId(2L);
+        assertThat(onlineApplication1).isNotEqualTo(onlineApplication2);
+        onlineApplication1.setId(null);
+        assertThat(onlineApplication1).isNotEqualTo(onlineApplication2);
     }
 }

@@ -1,0 +1,95 @@
+<div>
+    <h2 id="page-heading">
+        <span>Registration Academic Details</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-registration-academic-details" [routerLink]="['/registration-academic-details/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span >
+            Create new Registration Academic Details
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <br/>
+    <div class="table-responsive" *ngIf="registrationAcademicDetails">
+        <table class="table table-striped">
+            <thead>
+            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
+            <th jhiSortBy="id"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="nameOfInstitution2"><span>Name Of Institution 2</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="examPassed2"><span>Exam Passed 2</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="year2"><span>Year 2</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="grade2"><span>Grade 2</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="nameOfInstitution3"><span>Name Of Institution 3</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="examPassed3"><span>Exam Passed 3</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="year3"><span>Year 3</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="grade3"><span>Grade 3</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="nameOfInstitution4"><span>Name Of Institution 4</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="examPassed4"><span>Exam Passed 4</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="year4"><span>Year 4</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="grade4"><span>Grade 4</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="md5key"><span>Md 5 Key</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="nameOfInstitution1"><span>Name Of Institution 1</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="examPassed1"><span>Exam Passed 1</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="year1"><span>Year 1</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="grade1"><span>Grade 1</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let registrationAcademicDetails of registrationAcademicDetails ;trackBy: trackId">
+                <td><a [routerLink]="['/registration-academic-details', registrationAcademicDetails.id, 'view' ]">{{registrationAcademicDetails.id}}</a></td>
+                <td>{{registrationAcademicDetails.nameOfInstitution2}}</td>
+                <td>{{registrationAcademicDetails.examPassed2}}</td>
+                <td>{{registrationAcademicDetails.year2}}</td>
+                <td>{{registrationAcademicDetails.grade2}}</td>
+                <td>{{registrationAcademicDetails.nameOfInstitution3}}</td>
+                <td>{{registrationAcademicDetails.examPassed3}}</td>
+                <td>{{registrationAcademicDetails.year3}}</td>
+                <td>{{registrationAcademicDetails.grade3}}</td>
+                <td>{{registrationAcademicDetails.nameOfInstitution4}}</td>
+                <td>{{registrationAcademicDetails.examPassed4}}</td>
+                <td>{{registrationAcademicDetails.year4}}</td>
+                <td>{{registrationAcademicDetails.grade4}}</td>
+                <td>{{registrationAcademicDetails.md5key}}</td>
+                <td>{{registrationAcademicDetails.nameOfInstitution1}}</td>
+                <td>{{registrationAcademicDetails.examPassed1}}</td>
+                <td>{{registrationAcademicDetails.year1}}</td>
+                <td>{{registrationAcademicDetails.grade1}}</td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['/registration-academic-details', registrationAcademicDetails.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/registration-academic-details', registrationAcademicDetails.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'registration-academic-details/'+ registrationAcademicDetails.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- Pager is not implemented yet, so this is normal pagination instead -->
+    <div *ngIf="registrationAcademicDetails && registrationAcademicDetails.length">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="queryCount" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+        </div>
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(page)"></ngb-pagination>
+        </div>
+    </div>
+</div>

@@ -1,15 +1,15 @@
 package com.miu.repository;
 
 import com.miu.domain.NewsAndEvent;
-
 import org.springframework.data.jpa.repository.*;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
 
 /**
- * Spring Data JPA repository for the NewsAndEvent entity.
+ * Spring Data  repository for the NewsAndEvent entity.
  */
 @SuppressWarnings("unused")
-public interface NewsAndEventRepository extends JpaRepository<NewsAndEvent,Long> {
+@Repository
+public interface NewsAndEventRepository extends JpaRepository<NewsAndEvent, Long> {
 
 }

@@ -5,6 +5,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -19,13 +20,14 @@ public class ForumRoom implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
     @Column(name = "forum_room_name", nullable = false)
     private String forumRoomName;
 
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -46,6 +48,7 @@ public class ForumRoom implements Serializable {
     public void setForumRoomName(String forumRoomName) {
         this.forumRoomName = forumRoomName;
     }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -56,22 +59,22 @@ public class ForumRoom implements Serializable {
             return false;
         }
         ForumRoom forumRoom = (ForumRoom) o;
-        if (forumRoom.id == null || id == null) {
+        if (forumRoom.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(id, forumRoom.id);
+        return Objects.equals(getId(), forumRoom.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(getId());
     }
 
     @Override
     public String toString() {
         return "ForumRoom{" +
-            "id=" + id +
-            ", forumRoomName='" + forumRoomName + "'" +
-            '}';
+            "id=" + getId() +
+            ", forumRoomName='" + getForumRoomName() + "'" +
+            "}";
     }
 }

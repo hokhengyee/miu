@@ -1,0 +1,113 @@
+<div>
+    <h2 id="page-heading">
+        <span>Online Applications</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-online-application" [routerLink]="['/online-application/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span >
+            Create new Online Application
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <br/>
+    <div class="table-responsive" *ngIf="onlineApplications">
+        <table class="table table-striped">
+            <thead>
+            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
+            <th jhiSortBy="id"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="dateOfBirth"><span>Date Of Birth</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="telephone"><span>Telephone</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="email"><span>Email</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="city"><span>City</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="state"><span>State</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="country"><span>Country</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="postcode"><span>Postcode</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="registrationDatetime"><span>Registration Datetime</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="surname"><span>Surname</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="givenName"><span>Given Name</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="address"><span>Address</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="profilePhoto"><span>Profile Photo</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="academicCertificate"><span>Academic Certificate</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="letterOfRecommendation"><span>Letter Of Recommendation</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="profileDocument"><span>Profile Document</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="md5key"><span>Md 5 Key</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="course.title"><span>Course</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let onlineApplication of onlineApplications ;trackBy: trackId">
+                <td><a [routerLink]="['/online-application', onlineApplication.id, 'view' ]">{{onlineApplication.id}}</a></td>
+                <td>{{onlineApplication.dateOfBirth | date:'mediumDate'}}</td>
+                <td>{{onlineApplication.telephone}}</td>
+                <td>{{onlineApplication.email}}</td>
+                <td>{{onlineApplication.city}}</td>
+                <td>{{onlineApplication.state}}</td>
+                <td>{{onlineApplication.country}}</td>
+                <td>{{onlineApplication.postcode}}</td>
+                <td>{{onlineApplication.registrationDatetime | date:'medium'}}</td>
+                <td>{{onlineApplication.surname}}</td>
+                <td>{{onlineApplication.givenName}}</td>
+                <td>{{onlineApplication.address}}</td>
+                <td>
+                    <a *ngIf="onlineApplication.profilePhoto" (click)="openFile(onlineApplication.profilePhotoContentType, onlineApplication.profilePhoto)">
+                        <img [src]="'data:' + onlineApplication.profilePhotoContentType + ';base64,' + onlineApplication.profilePhoto" style="max-height: 30px;" alt="onlineApplication image"/>
+                    </a>
+                    <span *ngIf="onlineApplication.profilePhoto">{{onlineApplication.profilePhotoContentType}}, {{byteSize(onlineApplication.profilePhoto)}}</span>
+                </td>
+                <td>
+                    <a *ngIf="onlineApplication.academicCertificate" (click)="openFile(onlineApplication.academicCertificateContentType, onlineApplication.academicCertificate)">open</a>
+                    <span *ngIf="onlineApplication.academicCertificate">{{onlineApplication.academicCertificateContentType}}, {{byteSize(onlineApplication.academicCertificate)}}</span>
+                </td>
+                <td>
+                    <a *ngIf="onlineApplication.letterOfRecommendation" (click)="openFile(onlineApplication.letterOfRecommendationContentType, onlineApplication.letterOfRecommendation)">open</a>
+                    <span *ngIf="onlineApplication.letterOfRecommendation">{{onlineApplication.letterOfRecommendationContentType}}, {{byteSize(onlineApplication.letterOfRecommendation)}}</span>
+                </td>
+                <td>
+                    <a *ngIf="onlineApplication.profileDocument" (click)="openFile(onlineApplication.profileDocumentContentType, onlineApplication.profileDocument)">open</a>
+                    <span *ngIf="onlineApplication.profileDocument">{{onlineApplication.profileDocumentContentType}}, {{byteSize(onlineApplication.profileDocument)}}</span>
+                </td>
+                <td>{{onlineApplication.md5key}}</td>
+                <td>
+                    <div *ngIf="onlineApplication.course">
+                        <a [routerLink]="['../course', onlineApplication.course?.id, 'view' ]" >{{onlineApplication.course?.title}}</a>
+                    </div>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['/online-application', onlineApplication.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/online-application', onlineApplication.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'online-application/'+ onlineApplication.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- Pager is not implemented yet, so this is normal pagination instead -->
+    <div *ngIf="onlineApplications && onlineApplications.length">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="queryCount" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+        </div>
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(page)"></ngb-pagination>
+        </div>
+    </div>
+</div>

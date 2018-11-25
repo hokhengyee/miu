@@ -4,25 +4,27 @@ import com.miu.MiuApp;
 
 import com.miu.domain.StaticPageType;
 import com.miu.repository.StaticPageTypeRepository;
+import com.miu.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static com.miu.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -40,16 +42,19 @@ public class StaticPageTypeResourceIntTest {
     private static final String DEFAULT_TITLE = "AAAAAAAAAA";
     private static final String UPDATED_TITLE = "BBBBBBBBBB";
 
-    @Inject
+    @Autowired
     private StaticPageTypeRepository staticPageTypeRepository;
 
-    @Inject
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
-    @Inject
+    @Autowired
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
-    @Inject
+    @Autowired
+    private ExceptionTranslator exceptionTranslator;
+
+    @Autowired
     private EntityManager em;
 
     private MockMvc restStaticPageTypeMockMvc;
@@ -59,10 +64,11 @@ public class StaticPageTypeResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        StaticPageTypeResource staticPageTypeResource = new StaticPageTypeResource();
-        ReflectionTestUtils.setField(staticPageTypeResource, "staticPageTypeRepository", staticPageTypeRepository);
+        final StaticPageTypeResource staticPageTypeResource = new StaticPageTypeResource(staticPageTypeRepository);
         this.restStaticPageTypeMockMvc = MockMvcBuilders.standaloneSetup(staticPageTypeResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -74,7 +80,7 @@ public class StaticPageTypeResourceIntTest {
      */
     public static StaticPageType createEntity(EntityManager em) {
         StaticPageType staticPageType = new StaticPageType()
-                .title(DEFAULT_TITLE);
+            .title(DEFAULT_TITLE);
         return staticPageType;
     }
 
@@ -89,7 +95,6 @@ public class StaticPageTypeResourceIntTest {
         int databaseSizeBeforeCreate = staticPageTypeRepository.findAll().size();
 
         // Create the StaticPageType
-
         restStaticPageTypeMockMvc.perform(post("/api/static-page-types")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(staticPageType)))
@@ -108,16 +113,15 @@ public class StaticPageTypeResourceIntTest {
         int databaseSizeBeforeCreate = staticPageTypeRepository.findAll().size();
 
         // Create the StaticPageType with an existing ID
-        StaticPageType existingStaticPageType = new StaticPageType();
-        existingStaticPageType.setId(1L);
+        staticPageType.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restStaticPageTypeMockMvc.perform(post("/api/static-page-types")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(existingStaticPageType)))
+            .content(TestUtil.convertObjectToJsonBytes(staticPageType)))
             .andExpect(status().isBadRequest());
 
-        // Validate the Alice in the database
+        // Validate the StaticPageType in the database
         List<StaticPageType> staticPageTypeList = staticPageTypeRepository.findAll();
         assertThat(staticPageTypeList).hasSize(databaseSizeBeforeCreate);
     }
@@ -153,7 +157,7 @@ public class StaticPageTypeResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(staticPageType.getId().intValue())))
             .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE.toString())));
     }
-
+    
     @Test
     @Transactional
     public void getStaticPageType() throws Exception {
@@ -181,12 +185,15 @@ public class StaticPageTypeResourceIntTest {
     public void updateStaticPageType() throws Exception {
         // Initialize the database
         staticPageTypeRepository.saveAndFlush(staticPageType);
+
         int databaseSizeBeforeUpdate = staticPageTypeRepository.findAll().size();
 
         // Update the staticPageType
-        StaticPageType updatedStaticPageType = staticPageTypeRepository.findOne(staticPageType.getId());
+        StaticPageType updatedStaticPageType = staticPageTypeRepository.findById(staticPageType.getId()).get();
+        // Disconnect from session so that the updates on updatedStaticPageType are not directly saved in db
+        em.detach(updatedStaticPageType);
         updatedStaticPageType
-                .title(UPDATED_TITLE);
+            .title(UPDATED_TITLE);
 
         restStaticPageTypeMockMvc.perform(put("/api/static-page-types")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -207,15 +214,15 @@ public class StaticPageTypeResourceIntTest {
 
         // Create the StaticPageType
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restStaticPageTypeMockMvc.perform(put("/api/static-page-types")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(staticPageType)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the StaticPageType in the database
         List<StaticPageType> staticPageTypeList = staticPageTypeRepository.findAll();
-        assertThat(staticPageTypeList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(staticPageTypeList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -223,6 +230,7 @@ public class StaticPageTypeResourceIntTest {
     public void deleteStaticPageType() throws Exception {
         // Initialize the database
         staticPageTypeRepository.saveAndFlush(staticPageType);
+
         int databaseSizeBeforeDelete = staticPageTypeRepository.findAll().size();
 
         // Get the staticPageType
@@ -233,5 +241,20 @@ public class StaticPageTypeResourceIntTest {
         // Validate the database is empty
         List<StaticPageType> staticPageTypeList = staticPageTypeRepository.findAll();
         assertThat(staticPageTypeList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    @Transactional
+    public void equalsVerifier() throws Exception {
+        TestUtil.equalsVerifier(StaticPageType.class);
+        StaticPageType staticPageType1 = new StaticPageType();
+        staticPageType1.setId(1L);
+        StaticPageType staticPageType2 = new StaticPageType();
+        staticPageType2.setId(staticPageType1.getId());
+        assertThat(staticPageType1).isEqualTo(staticPageType2);
+        staticPageType2.setId(2L);
+        assertThat(staticPageType1).isNotEqualTo(staticPageType2);
+        staticPageType1.setId(null);
+        assertThat(staticPageType1).isNotEqualTo(staticPageType2);
     }
 }

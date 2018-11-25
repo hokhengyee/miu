@@ -1,0 +1,213 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-registration-academic-details-heading">Create or edit a Registration Academic Details</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!registrationAcademicDetails.id">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="registrationAcademicDetails.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_nameOfInstitution2">Name Of Institution 2</label>
+                    <input type="text" class="form-control" name="nameOfInstitution2" id="field_nameOfInstitution2"
+                        [(ngModel)]="registrationAcademicDetails.nameOfInstitution2" maxlength="1000"/>
+                    <div [hidden]="!(editForm.controls.nameOfInstitution2?.dirty && editForm.controls.nameOfInstitution2?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.nameOfInstitution2?.errors?.maxlength">
+                        This field cannot be longer than 1000 characters.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_examPassed2">Exam Passed 2</label>
+                    <input type="text" class="form-control" name="examPassed2" id="field_examPassed2"
+                        [(ngModel)]="registrationAcademicDetails.examPassed2" maxlength="1000"/>
+                    <div [hidden]="!(editForm.controls.examPassed2?.dirty && editForm.controls.examPassed2?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.examPassed2?.errors?.maxlength">
+                        This field cannot be longer than 1000 characters.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_year2">Year 2</label>
+                    <input type="number" class="form-control" name="year2" id="field_year2"
+                        [(ngModel)]="registrationAcademicDetails.year2" min="1900" jhiMin="1900" max="9999" jhiMax="9999"/>
+                    <div [hidden]="!(editForm.controls.year2?.dirty && editForm.controls.year2?.invalid)">
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.year2?.errors?.min">
+                            This field should be at least 1900.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.year2?.errors?.max">
+                            This field cannot be more than 9999.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.year2?.errors?.number">
+                            This field should be a number.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_grade2">Grade 2</label>
+                    <input type="text" class="form-control" name="grade2" id="field_grade2"
+                        [(ngModel)]="registrationAcademicDetails.grade2" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_nameOfInstitution3">Name Of Institution 3</label>
+                    <input type="text" class="form-control" name="nameOfInstitution3" id="field_nameOfInstitution3"
+                        [(ngModel)]="registrationAcademicDetails.nameOfInstitution3" maxlength="1000"/>
+                    <div [hidden]="!(editForm.controls.nameOfInstitution3?.dirty && editForm.controls.nameOfInstitution3?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.nameOfInstitution3?.errors?.maxlength">
+                        This field cannot be longer than 1000 characters.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_examPassed3">Exam Passed 3</label>
+                    <input type="text" class="form-control" name="examPassed3" id="field_examPassed3"
+                        [(ngModel)]="registrationAcademicDetails.examPassed3" maxlength="1000"/>
+                    <div [hidden]="!(editForm.controls.examPassed3?.dirty && editForm.controls.examPassed3?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.examPassed3?.errors?.maxlength">
+                        This field cannot be longer than 1000 characters.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_year3">Year 3</label>
+                    <input type="number" class="form-control" name="year3" id="field_year3"
+                        [(ngModel)]="registrationAcademicDetails.year3" min="1900" jhiMin="1900" max="9999" jhiMax="9999"/>
+                    <div [hidden]="!(editForm.controls.year3?.dirty && editForm.controls.year3?.invalid)">
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.year3?.errors?.min">
+                            This field should be at least 1900.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.year3?.errors?.max">
+                            This field cannot be more than 9999.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.year3?.errors?.number">
+                            This field should be a number.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_grade3">Grade 3</label>
+                    <input type="text" class="form-control" name="grade3" id="field_grade3"
+                        [(ngModel)]="registrationAcademicDetails.grade3" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_nameOfInstitution4">Name Of Institution 4</label>
+                    <input type="text" class="form-control" name="nameOfInstitution4" id="field_nameOfInstitution4"
+                        [(ngModel)]="registrationAcademicDetails.nameOfInstitution4" maxlength="1000"/>
+                    <div [hidden]="!(editForm.controls.nameOfInstitution4?.dirty && editForm.controls.nameOfInstitution4?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.nameOfInstitution4?.errors?.maxlength">
+                        This field cannot be longer than 1000 characters.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_examPassed4">Exam Passed 4</label>
+                    <input type="text" class="form-control" name="examPassed4" id="field_examPassed4"
+                        [(ngModel)]="registrationAcademicDetails.examPassed4" maxlength="1000"/>
+                    <div [hidden]="!(editForm.controls.examPassed4?.dirty && editForm.controls.examPassed4?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.examPassed4?.errors?.maxlength">
+                        This field cannot be longer than 1000 characters.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_year4">Year 4</label>
+                    <input type="number" class="form-control" name="year4" id="field_year4"
+                        [(ngModel)]="registrationAcademicDetails.year4" min="1900" jhiMin="1900" max="9999" jhiMax="9999"/>
+                    <div [hidden]="!(editForm.controls.year4?.dirty && editForm.controls.year4?.invalid)">
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.year4?.errors?.min">
+                            This field should be at least 1900.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.year4?.errors?.max">
+                            This field cannot be more than 9999.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.year4?.errors?.number">
+                            This field should be a number.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_grade4">Grade 4</label>
+                    <input type="text" class="form-control" name="grade4" id="field_grade4"
+                        [(ngModel)]="registrationAcademicDetails.grade4" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_md5key">Md 5 Key</label>
+                    <input type="text" class="form-control" name="md5key" id="field_md5key"
+                        [(ngModel)]="registrationAcademicDetails.md5key" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_nameOfInstitution1">Name Of Institution 1</label>
+                    <input type="text" class="form-control" name="nameOfInstitution1" id="field_nameOfInstitution1"
+                        [(ngModel)]="registrationAcademicDetails.nameOfInstitution1" maxlength="1000"/>
+                    <div [hidden]="!(editForm.controls.nameOfInstitution1?.dirty && editForm.controls.nameOfInstitution1?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.nameOfInstitution1?.errors?.maxlength">
+                        This field cannot be longer than 1000 characters.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_examPassed1">Exam Passed 1</label>
+                    <input type="text" class="form-control" name="examPassed1" id="field_examPassed1"
+                        [(ngModel)]="registrationAcademicDetails.examPassed1" maxlength="1000"/>
+                    <div [hidden]="!(editForm.controls.examPassed1?.dirty && editForm.controls.examPassed1?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.examPassed1?.errors?.maxlength">
+                        This field cannot be longer than 1000 characters.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_year1">Year 1</label>
+                    <input type="number" class="form-control" name="year1" id="field_year1"
+                        [(ngModel)]="registrationAcademicDetails.year1" min="1900" jhiMin="1900" max="9999" jhiMax="9999"/>
+                    <div [hidden]="!(editForm.controls.year1?.dirty && editForm.controls.year1?.invalid)">
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.year1?.errors?.min">
+                            This field should be at least 1900.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.year1?.errors?.max">
+                            This field cannot be more than 9999.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.year1?.errors?.number">
+                            This field should be a number.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_grade1">Grade 1</label>
+                    <input type="text" class="form-control" name="grade1" id="field_grade1"
+                        [(ngModel)]="registrationAcademicDetails.grade1" />
+                </div>
+
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

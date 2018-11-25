@@ -5,6 +5,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -19,7 +20,7 @@ public class MinisterialWorkExperience implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Size(max = 1000)
@@ -49,18 +50,18 @@ public class MinisterialWorkExperience implements Serializable {
     @Column(name = "md_5_key")
     private String md5Key;
 
-    @Min(value = 1)
-    @Max(value = 100)
+    @Min(value = 1L)
+    @Max(value = 100L)
     @Column(name = "years_2")
     private Long years2;
 
-    @Min(value = 1)
-    @Max(value = 100)
+    @Min(value = 1L)
+    @Max(value = 100L)
     @Column(name = "years_3")
     private Long years3;
 
-    @Min(value = 1)
-    @Max(value = 100)
+    @Min(value = 1L)
+    @Max(value = 100L)
     @Column(name = "years_4")
     private Long years4;
 
@@ -72,11 +73,12 @@ public class MinisterialWorkExperience implements Serializable {
     @Column(name = "area_of_ministry_1", length = 1000)
     private String areaOfMinistry1;
 
-    @Min(value = 1)
-    @Max(value = 100)
+    @Min(value = 1L)
+    @Max(value = 100L)
     @Column(name = "years_1")
     private Long years1;
 
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -253,6 +255,7 @@ public class MinisterialWorkExperience implements Serializable {
     public void setYears1(Long years1) {
         this.years1 = years1;
     }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -263,34 +266,34 @@ public class MinisterialWorkExperience implements Serializable {
             return false;
         }
         MinisterialWorkExperience ministerialWorkExperience = (MinisterialWorkExperience) o;
-        if (ministerialWorkExperience.id == null || id == null) {
+        if (ministerialWorkExperience.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(id, ministerialWorkExperience.id);
+        return Objects.equals(getId(), ministerialWorkExperience.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(getId());
     }
 
     @Override
     public String toString() {
         return "MinisterialWorkExperience{" +
-            "id=" + id +
-            ", nameOfMinistry2='" + nameOfMinistry2 + "'" +
-            ", areaOfMinistry2='" + areaOfMinistry2 + "'" +
-            ", nameOfMinistry3='" + nameOfMinistry3 + "'" +
-            ", areaOfMinistry3='" + areaOfMinistry3 + "'" +
-            ", nameOfMinistry4='" + nameOfMinistry4 + "'" +
-            ", areaOfMinistry4='" + areaOfMinistry4 + "'" +
-            ", md5Key='" + md5Key + "'" +
-            ", years2='" + years2 + "'" +
-            ", years3='" + years3 + "'" +
-            ", years4='" + years4 + "'" +
-            ", nameOfMinistry1='" + nameOfMinistry1 + "'" +
-            ", areaOfMinistry1='" + areaOfMinistry1 + "'" +
-            ", years1='" + years1 + "'" +
-            '}';
+            "id=" + getId() +
+            ", nameOfMinistry2='" + getNameOfMinistry2() + "'" +
+            ", areaOfMinistry2='" + getAreaOfMinistry2() + "'" +
+            ", nameOfMinistry3='" + getNameOfMinistry3() + "'" +
+            ", areaOfMinistry3='" + getAreaOfMinistry3() + "'" +
+            ", nameOfMinistry4='" + getNameOfMinistry4() + "'" +
+            ", areaOfMinistry4='" + getAreaOfMinistry4() + "'" +
+            ", md5Key='" + getMd5Key() + "'" +
+            ", years2=" + getYears2() +
+            ", years3=" + getYears3() +
+            ", years4=" + getYears4() +
+            ", nameOfMinistry1='" + getNameOfMinistry1() + "'" +
+            ", areaOfMinistry1='" + getAreaOfMinistry1() + "'" +
+            ", years1=" + getYears1() +
+            "}";
     }
 }

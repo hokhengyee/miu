@@ -4,25 +4,27 @@ import com.miu.MiuApp;
 
 import com.miu.domain.ModuleType;
 import com.miu.repository.ModuleTypeRepository;
+import com.miu.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static com.miu.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -46,16 +48,19 @@ public class ModuleTypeResourceIntTest {
     private static final Long DEFAULT_MODULE_TYPE_ORDER = 1L;
     private static final Long UPDATED_MODULE_TYPE_ORDER = 2L;
 
-    @Inject
+    @Autowired
     private ModuleTypeRepository moduleTypeRepository;
 
-    @Inject
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
-    @Inject
+    @Autowired
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
-    @Inject
+    @Autowired
+    private ExceptionTranslator exceptionTranslator;
+
+    @Autowired
     private EntityManager em;
 
     private MockMvc restModuleTypeMockMvc;
@@ -65,10 +70,11 @@ public class ModuleTypeResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        ModuleTypeResource moduleTypeResource = new ModuleTypeResource();
-        ReflectionTestUtils.setField(moduleTypeResource, "moduleTypeRepository", moduleTypeRepository);
+        final ModuleTypeResource moduleTypeResource = new ModuleTypeResource(moduleTypeRepository);
         this.restModuleTypeMockMvc = MockMvcBuilders.standaloneSetup(moduleTypeResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -80,9 +86,9 @@ public class ModuleTypeResourceIntTest {
      */
     public static ModuleType createEntity(EntityManager em) {
         ModuleType moduleType = new ModuleType()
-                .title(DEFAULT_TITLE)
-                .description(DEFAULT_DESCRIPTION)
-                .moduleTypeOrder(DEFAULT_MODULE_TYPE_ORDER);
+            .title(DEFAULT_TITLE)
+            .description(DEFAULT_DESCRIPTION)
+            .moduleTypeOrder(DEFAULT_MODULE_TYPE_ORDER);
         return moduleType;
     }
 
@@ -97,7 +103,6 @@ public class ModuleTypeResourceIntTest {
         int databaseSizeBeforeCreate = moduleTypeRepository.findAll().size();
 
         // Create the ModuleType
-
         restModuleTypeMockMvc.perform(post("/api/module-types")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(moduleType)))
@@ -118,16 +123,15 @@ public class ModuleTypeResourceIntTest {
         int databaseSizeBeforeCreate = moduleTypeRepository.findAll().size();
 
         // Create the ModuleType with an existing ID
-        ModuleType existingModuleType = new ModuleType();
-        existingModuleType.setId(1L);
+        moduleType.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restModuleTypeMockMvc.perform(post("/api/module-types")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(existingModuleType)))
+            .content(TestUtil.convertObjectToJsonBytes(moduleType)))
             .andExpect(status().isBadRequest());
 
-        // Validate the Alice in the database
+        // Validate the ModuleType in the database
         List<ModuleType> moduleTypeList = moduleTypeRepository.findAll();
         assertThat(moduleTypeList).hasSize(databaseSizeBeforeCreate);
     }
@@ -183,7 +187,7 @@ public class ModuleTypeResourceIntTest {
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())))
             .andExpect(jsonPath("$.[*].moduleTypeOrder").value(hasItem(DEFAULT_MODULE_TYPE_ORDER.intValue())));
     }
-
+    
     @Test
     @Transactional
     public void getModuleType() throws Exception {
@@ -213,14 +217,17 @@ public class ModuleTypeResourceIntTest {
     public void updateModuleType() throws Exception {
         // Initialize the database
         moduleTypeRepository.saveAndFlush(moduleType);
+
         int databaseSizeBeforeUpdate = moduleTypeRepository.findAll().size();
 
         // Update the moduleType
-        ModuleType updatedModuleType = moduleTypeRepository.findOne(moduleType.getId());
+        ModuleType updatedModuleType = moduleTypeRepository.findById(moduleType.getId()).get();
+        // Disconnect from session so that the updates on updatedModuleType are not directly saved in db
+        em.detach(updatedModuleType);
         updatedModuleType
-                .title(UPDATED_TITLE)
-                .description(UPDATED_DESCRIPTION)
-                .moduleTypeOrder(UPDATED_MODULE_TYPE_ORDER);
+            .title(UPDATED_TITLE)
+            .description(UPDATED_DESCRIPTION)
+            .moduleTypeOrder(UPDATED_MODULE_TYPE_ORDER);
 
         restModuleTypeMockMvc.perform(put("/api/module-types")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -243,15 +250,15 @@ public class ModuleTypeResourceIntTest {
 
         // Create the ModuleType
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restModuleTypeMockMvc.perform(put("/api/module-types")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(moduleType)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the ModuleType in the database
         List<ModuleType> moduleTypeList = moduleTypeRepository.findAll();
-        assertThat(moduleTypeList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(moduleTypeList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -259,6 +266,7 @@ public class ModuleTypeResourceIntTest {
     public void deleteModuleType() throws Exception {
         // Initialize the database
         moduleTypeRepository.saveAndFlush(moduleType);
+
         int databaseSizeBeforeDelete = moduleTypeRepository.findAll().size();
 
         // Get the moduleType
@@ -269,5 +277,20 @@ public class ModuleTypeResourceIntTest {
         // Validate the database is empty
         List<ModuleType> moduleTypeList = moduleTypeRepository.findAll();
         assertThat(moduleTypeList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    @Transactional
+    public void equalsVerifier() throws Exception {
+        TestUtil.equalsVerifier(ModuleType.class);
+        ModuleType moduleType1 = new ModuleType();
+        moduleType1.setId(1L);
+        ModuleType moduleType2 = new ModuleType();
+        moduleType2.setId(moduleType1.getId());
+        assertThat(moduleType1).isEqualTo(moduleType2);
+        moduleType2.setId(2L);
+        assertThat(moduleType1).isNotEqualTo(moduleType2);
+        moduleType1.setId(null);
+        assertThat(moduleType1).isNotEqualTo(moduleType2);
     }
 }

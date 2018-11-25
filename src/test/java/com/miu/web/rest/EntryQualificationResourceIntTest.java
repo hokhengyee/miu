@@ -5,25 +5,27 @@ import com.miu.MiuApp;
 import com.miu.domain.EntryQualification;
 import com.miu.domain.Course;
 import com.miu.repository.EntryQualificationRepository;
+import com.miu.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static com.miu.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -44,16 +46,19 @@ public class EntryQualificationResourceIntTest {
     private static final Long DEFAULT_DISPLAY_ORDER = 1L;
     private static final Long UPDATED_DISPLAY_ORDER = 2L;
 
-    @Inject
+    @Autowired
     private EntryQualificationRepository entryQualificationRepository;
 
-    @Inject
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
-    @Inject
+    @Autowired
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
-    @Inject
+    @Autowired
+    private ExceptionTranslator exceptionTranslator;
+
+    @Autowired
     private EntityManager em;
 
     private MockMvc restEntryQualificationMockMvc;
@@ -63,10 +68,11 @@ public class EntryQualificationResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        EntryQualificationResource entryQualificationResource = new EntryQualificationResource();
-        ReflectionTestUtils.setField(entryQualificationResource, "entryQualificationRepository", entryQualificationRepository);
+        final EntryQualificationResource entryQualificationResource = new EntryQualificationResource(entryQualificationRepository);
         this.restEntryQualificationMockMvc = MockMvcBuilders.standaloneSetup(entryQualificationResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -78,8 +84,8 @@ public class EntryQualificationResourceIntTest {
      */
     public static EntryQualification createEntity(EntityManager em) {
         EntryQualification entryQualification = new EntryQualification()
-                .content(DEFAULT_CONTENT)
-                .displayOrder(DEFAULT_DISPLAY_ORDER);
+            .content(DEFAULT_CONTENT)
+            .displayOrder(DEFAULT_DISPLAY_ORDER);
         // Add required entity
         Course course = CourseResourceIntTest.createEntity(em);
         em.persist(course);
@@ -99,7 +105,6 @@ public class EntryQualificationResourceIntTest {
         int databaseSizeBeforeCreate = entryQualificationRepository.findAll().size();
 
         // Create the EntryQualification
-
         restEntryQualificationMockMvc.perform(post("/api/entry-qualifications")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(entryQualification)))
@@ -119,16 +124,15 @@ public class EntryQualificationResourceIntTest {
         int databaseSizeBeforeCreate = entryQualificationRepository.findAll().size();
 
         // Create the EntryQualification with an existing ID
-        EntryQualification existingEntryQualification = new EntryQualification();
-        existingEntryQualification.setId(1L);
+        entryQualification.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restEntryQualificationMockMvc.perform(post("/api/entry-qualifications")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(existingEntryQualification)))
+            .content(TestUtil.convertObjectToJsonBytes(entryQualification)))
             .andExpect(status().isBadRequest());
 
-        // Validate the Alice in the database
+        // Validate the EntryQualification in the database
         List<EntryQualification> entryQualificationList = entryQualificationRepository.findAll();
         assertThat(entryQualificationList).hasSize(databaseSizeBeforeCreate);
     }
@@ -165,7 +169,7 @@ public class EntryQualificationResourceIntTest {
             .andExpect(jsonPath("$.[*].content").value(hasItem(DEFAULT_CONTENT.toString())))
             .andExpect(jsonPath("$.[*].displayOrder").value(hasItem(DEFAULT_DISPLAY_ORDER.intValue())));
     }
-
+    
     @Test
     @Transactional
     public void getEntryQualification() throws Exception {
@@ -194,13 +198,16 @@ public class EntryQualificationResourceIntTest {
     public void updateEntryQualification() throws Exception {
         // Initialize the database
         entryQualificationRepository.saveAndFlush(entryQualification);
+
         int databaseSizeBeforeUpdate = entryQualificationRepository.findAll().size();
 
         // Update the entryQualification
-        EntryQualification updatedEntryQualification = entryQualificationRepository.findOne(entryQualification.getId());
+        EntryQualification updatedEntryQualification = entryQualificationRepository.findById(entryQualification.getId()).get();
+        // Disconnect from session so that the updates on updatedEntryQualification are not directly saved in db
+        em.detach(updatedEntryQualification);
         updatedEntryQualification
-                .content(UPDATED_CONTENT)
-                .displayOrder(UPDATED_DISPLAY_ORDER);
+            .content(UPDATED_CONTENT)
+            .displayOrder(UPDATED_DISPLAY_ORDER);
 
         restEntryQualificationMockMvc.perform(put("/api/entry-qualifications")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -222,15 +229,15 @@ public class EntryQualificationResourceIntTest {
 
         // Create the EntryQualification
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restEntryQualificationMockMvc.perform(put("/api/entry-qualifications")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(entryQualification)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the EntryQualification in the database
         List<EntryQualification> entryQualificationList = entryQualificationRepository.findAll();
-        assertThat(entryQualificationList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(entryQualificationList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -238,6 +245,7 @@ public class EntryQualificationResourceIntTest {
     public void deleteEntryQualification() throws Exception {
         // Initialize the database
         entryQualificationRepository.saveAndFlush(entryQualification);
+
         int databaseSizeBeforeDelete = entryQualificationRepository.findAll().size();
 
         // Get the entryQualification
@@ -248,5 +256,20 @@ public class EntryQualificationResourceIntTest {
         // Validate the database is empty
         List<EntryQualification> entryQualificationList = entryQualificationRepository.findAll();
         assertThat(entryQualificationList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    @Transactional
+    public void equalsVerifier() throws Exception {
+        TestUtil.equalsVerifier(EntryQualification.class);
+        EntryQualification entryQualification1 = new EntryQualification();
+        entryQualification1.setId(1L);
+        EntryQualification entryQualification2 = new EntryQualification();
+        entryQualification2.setId(entryQualification1.getId());
+        assertThat(entryQualification1).isEqualTo(entryQualification2);
+        entryQualification2.setId(2L);
+        assertThat(entryQualification1).isNotEqualTo(entryQualification2);
+        entryQualification1.setId(null);
+        assertThat(entryQualification1).isNotEqualTo(entryQualification2);
     }
 }

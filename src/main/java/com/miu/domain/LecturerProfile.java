@@ -1,10 +1,12 @@
 package com.miu.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -19,7 +21,7 @@ public class LecturerProfile implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "other_titles")
@@ -62,13 +64,16 @@ public class LecturerProfile implements Serializable {
     @Column(name = "profile_photo_content_type")
     private String profilePhotoContentType;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("")
     private User user;
 
     @ManyToOne
+    @JsonIgnoreProperties("")
     private Salutation salutation;
 
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -245,6 +250,7 @@ public class LecturerProfile implements Serializable {
     public void setSalutation(Salutation salutation) {
         this.salutation = salutation;
     }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -255,32 +261,32 @@ public class LecturerProfile implements Serializable {
             return false;
         }
         LecturerProfile lecturerProfile = (LecturerProfile) o;
-        if (lecturerProfile.id == null || id == null) {
+        if (lecturerProfile.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(id, lecturerProfile.id);
+        return Objects.equals(getId(), lecturerProfile.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(getId());
     }
 
     @Override
     public String toString() {
         return "LecturerProfile{" +
-            "id=" + id +
-            ", otherTitles='" + otherTitles + "'" +
-            ", age='" + age + "'" +
-            ", ordination='" + ordination + "'" +
-            ", academicHistory='" + academicHistory + "'" +
-            ", professionalHistory='" + professionalHistory + "'" +
-            ", pastAndCurrentMinistry='" + pastAndCurrentMinistry + "'" +
-            ", publications='" + publications + "'" +
-            ", familyDetails='" + familyDetails + "'" +
-            ", reference='" + reference + "'" +
-            ", profilePhoto='" + profilePhoto + "'" +
-            ", profilePhotoContentType='" + profilePhotoContentType + "'" +
-            '}';
+            "id=" + getId() +
+            ", otherTitles='" + getOtherTitles() + "'" +
+            ", age=" + getAge() +
+            ", ordination='" + getOrdination() + "'" +
+            ", academicHistory='" + getAcademicHistory() + "'" +
+            ", professionalHistory='" + getProfessionalHistory() + "'" +
+            ", pastAndCurrentMinistry='" + getPastAndCurrentMinistry() + "'" +
+            ", publications='" + getPublications() + "'" +
+            ", familyDetails='" + getFamilyDetails() + "'" +
+            ", reference='" + getReference() + "'" +
+            ", profilePhoto='" + getProfilePhoto() + "'" +
+            ", profilePhotoContentType='" + getProfilePhotoContentType() + "'" +
+            "}";
     }
 }

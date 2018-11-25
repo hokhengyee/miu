@@ -6,25 +6,27 @@ import com.miu.domain.CourseAccess;
 import com.miu.domain.User;
 import com.miu.domain.Course;
 import com.miu.repository.CourseAccessRepository;
+import com.miu.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static com.miu.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -39,16 +41,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes = MiuApp.class)
 public class CourseAccessResourceIntTest {
 
-    @Inject
+    @Autowired
     private CourseAccessRepository courseAccessRepository;
 
-    @Inject
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
-    @Inject
+    @Autowired
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
-    @Inject
+    @Autowired
+    private ExceptionTranslator exceptionTranslator;
+
+    @Autowired
     private EntityManager em;
 
     private MockMvc restCourseAccessMockMvc;
@@ -58,10 +63,11 @@ public class CourseAccessResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        CourseAccessResource courseAccessResource = new CourseAccessResource();
-        ReflectionTestUtils.setField(courseAccessResource, "courseAccessRepository", courseAccessRepository);
+        final CourseAccessResource courseAccessResource = new CourseAccessResource(courseAccessRepository);
         this.restCourseAccessMockMvc = MockMvcBuilders.standaloneSetup(courseAccessResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -97,7 +103,6 @@ public class CourseAccessResourceIntTest {
         int databaseSizeBeforeCreate = courseAccessRepository.findAll().size();
 
         // Create the CourseAccess
-
         restCourseAccessMockMvc.perform(post("/api/course-accesses")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(courseAccess)))
@@ -115,16 +120,15 @@ public class CourseAccessResourceIntTest {
         int databaseSizeBeforeCreate = courseAccessRepository.findAll().size();
 
         // Create the CourseAccess with an existing ID
-        CourseAccess existingCourseAccess = new CourseAccess();
-        existingCourseAccess.setId(1L);
+        courseAccess.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restCourseAccessMockMvc.perform(post("/api/course-accesses")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(existingCourseAccess)))
+            .content(TestUtil.convertObjectToJsonBytes(courseAccess)))
             .andExpect(status().isBadRequest());
 
-        // Validate the Alice in the database
+        // Validate the CourseAccess in the database
         List<CourseAccess> courseAccessList = courseAccessRepository.findAll();
         assertThat(courseAccessList).hasSize(databaseSizeBeforeCreate);
     }
@@ -141,7 +145,7 @@ public class CourseAccessResourceIntTest {
             .andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE))
             .andExpect(jsonPath("$.[*].id").value(hasItem(courseAccess.getId().intValue())));
     }
-
+    
     @Test
     @Transactional
     public void getCourseAccess() throws Exception {
@@ -168,10 +172,13 @@ public class CourseAccessResourceIntTest {
     public void updateCourseAccess() throws Exception {
         // Initialize the database
         courseAccessRepository.saveAndFlush(courseAccess);
+
         int databaseSizeBeforeUpdate = courseAccessRepository.findAll().size();
 
         // Update the courseAccess
-        CourseAccess updatedCourseAccess = courseAccessRepository.findOne(courseAccess.getId());
+        CourseAccess updatedCourseAccess = courseAccessRepository.findById(courseAccess.getId()).get();
+        // Disconnect from session so that the updates on updatedCourseAccess are not directly saved in db
+        em.detach(updatedCourseAccess);
 
         restCourseAccessMockMvc.perform(put("/api/course-accesses")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -191,15 +198,15 @@ public class CourseAccessResourceIntTest {
 
         // Create the CourseAccess
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restCourseAccessMockMvc.perform(put("/api/course-accesses")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(courseAccess)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the CourseAccess in the database
         List<CourseAccess> courseAccessList = courseAccessRepository.findAll();
-        assertThat(courseAccessList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(courseAccessList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -207,6 +214,7 @@ public class CourseAccessResourceIntTest {
     public void deleteCourseAccess() throws Exception {
         // Initialize the database
         courseAccessRepository.saveAndFlush(courseAccess);
+
         int databaseSizeBeforeDelete = courseAccessRepository.findAll().size();
 
         // Get the courseAccess
@@ -217,5 +225,20 @@ public class CourseAccessResourceIntTest {
         // Validate the database is empty
         List<CourseAccess> courseAccessList = courseAccessRepository.findAll();
         assertThat(courseAccessList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    @Transactional
+    public void equalsVerifier() throws Exception {
+        TestUtil.equalsVerifier(CourseAccess.class);
+        CourseAccess courseAccess1 = new CourseAccess();
+        courseAccess1.setId(1L);
+        CourseAccess courseAccess2 = new CourseAccess();
+        courseAccess2.setId(courseAccess1.getId());
+        assertThat(courseAccess1).isEqualTo(courseAccess2);
+        courseAccess2.setId(2L);
+        assertThat(courseAccess1).isNotEqualTo(courseAccess2);
+        courseAccess1.setId(null);
+        assertThat(courseAccess1).isNotEqualTo(courseAccess2);
     }
 }

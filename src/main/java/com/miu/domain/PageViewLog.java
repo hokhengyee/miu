@@ -4,6 +4,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -19,7 +20,7 @@ public class PageViewLog implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "created_date")
@@ -28,6 +29,7 @@ public class PageViewLog implements Serializable {
     @Column(name = "views")
     private Long views;
 
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -61,6 +63,7 @@ public class PageViewLog implements Serializable {
     public void setViews(Long views) {
         this.views = views;
     }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -71,23 +74,23 @@ public class PageViewLog implements Serializable {
             return false;
         }
         PageViewLog pageViewLog = (PageViewLog) o;
-        if (pageViewLog.id == null || id == null) {
+        if (pageViewLog.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(id, pageViewLog.id);
+        return Objects.equals(getId(), pageViewLog.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(getId());
     }
 
     @Override
     public String toString() {
         return "PageViewLog{" +
-            "id=" + id +
-            ", createdDate='" + createdDate + "'" +
-            ", views='" + views + "'" +
-            '}';
+            "id=" + getId() +
+            ", createdDate='" + getCreatedDate() + "'" +
+            ", views=" + getViews() +
+            "}";
     }
 }

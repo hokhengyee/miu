@@ -1,0 +1,93 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-course-heading">Create or edit a Course</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!course.id">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="course.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_description">Description</label>
+                    <input type="text" class="form-control" name="description" id="field_description"
+                        [(ngModel)]="course.description" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_courseOrder">Course Order</label>
+                    <input type="number" class="form-control" name="courseOrder" id="field_courseOrder"
+                        [(ngModel)]="course.courseOrder" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_title">Title</label>
+                    <input type="text" class="form-control" name="title" id="field_title"
+                        [(ngModel)]="course.title" required/>
+                    <div [hidden]="!(editForm.controls.title?.dirty && editForm.controls.title?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.title?.errors?.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_creditHours">Credit Hours</label>
+                    <input type="number" class="form-control" name="creditHours" id="field_creditHours"
+                        [(ngModel)]="course.creditHours" required/>
+                    <div [hidden]="!(editForm.controls.creditHours?.dirty && editForm.controls.creditHours?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.creditHours?.errors?.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.creditHours?.errors?.number">
+                            This field should be a number.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_applicationFee">Application Fee</label>
+                    <input type="text" class="form-control" name="applicationFee" id="field_applicationFee"
+                        [(ngModel)]="course.applicationFee" required/>
+                    <div [hidden]="!(editForm.controls.applicationFee?.dirty && editForm.controls.applicationFee?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.applicationFee?.errors?.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_registrationFee">Registration Fee</label>
+                    <input type="text" class="form-control" name="registrationFee" id="field_registrationFee"
+                        [(ngModel)]="course.registrationFee" required/>
+                    <div [hidden]="!(editForm.controls.registrationFee?.dirty && editForm.controls.registrationFee?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.registrationFee?.errors?.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_courseFee">Course Fee</label>
+                    <input type="text" class="form-control" name="courseFee" id="field_courseFee"
+                        [(ngModel)]="course.courseFee" required/>
+                    <div [hidden]="!(editForm.controls.courseFee?.dirty && editForm.controls.courseFee?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.courseFee?.errors?.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

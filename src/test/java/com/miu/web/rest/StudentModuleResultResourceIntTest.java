@@ -6,27 +6,29 @@ import com.miu.domain.StudentModuleResult;
 import com.miu.domain.User;
 import com.miu.domain.Module;
 import com.miu.repository.StudentModuleResultRepository;
+import com.miu.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
 
+
+import static com.miu.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -50,16 +52,19 @@ public class StudentModuleResultResourceIntTest {
     private static final Long DEFAULT_RESULT_ORDER = 1L;
     private static final Long UPDATED_RESULT_ORDER = 2L;
 
-    @Inject
+    @Autowired
     private StudentModuleResultRepository studentModuleResultRepository;
 
-    @Inject
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
-    @Inject
+    @Autowired
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
-    @Inject
+    @Autowired
+    private ExceptionTranslator exceptionTranslator;
+
+    @Autowired
     private EntityManager em;
 
     private MockMvc restStudentModuleResultMockMvc;
@@ -69,10 +74,11 @@ public class StudentModuleResultResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        StudentModuleResultResource studentModuleResultResource = new StudentModuleResultResource();
-        ReflectionTestUtils.setField(studentModuleResultResource, "studentModuleResultRepository", studentModuleResultRepository);
+        final StudentModuleResultResource studentModuleResultResource = new StudentModuleResultResource(studentModuleResultRepository);
         this.restStudentModuleResultMockMvc = MockMvcBuilders.standaloneSetup(studentModuleResultResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -84,9 +90,9 @@ public class StudentModuleResultResourceIntTest {
      */
     public static StudentModuleResult createEntity(EntityManager em) {
         StudentModuleResult studentModuleResult = new StudentModuleResult()
-                .result(DEFAULT_RESULT)
-                .dateGraded(DEFAULT_DATE_GRADED)
-                .resultOrder(DEFAULT_RESULT_ORDER);
+            .result(DEFAULT_RESULT)
+            .dateGraded(DEFAULT_DATE_GRADED)
+            .resultOrder(DEFAULT_RESULT_ORDER);
         // Add required entity
         User user = UserResourceIntTest.createEntity(em);
         em.persist(user);
@@ -111,7 +117,6 @@ public class StudentModuleResultResourceIntTest {
         int databaseSizeBeforeCreate = studentModuleResultRepository.findAll().size();
 
         // Create the StudentModuleResult
-
         restStudentModuleResultMockMvc.perform(post("/api/student-module-results")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(studentModuleResult)))
@@ -132,16 +137,15 @@ public class StudentModuleResultResourceIntTest {
         int databaseSizeBeforeCreate = studentModuleResultRepository.findAll().size();
 
         // Create the StudentModuleResult with an existing ID
-        StudentModuleResult existingStudentModuleResult = new StudentModuleResult();
-        existingStudentModuleResult.setId(1L);
+        studentModuleResult.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restStudentModuleResultMockMvc.perform(post("/api/student-module-results")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(existingStudentModuleResult)))
+            .content(TestUtil.convertObjectToJsonBytes(studentModuleResult)))
             .andExpect(status().isBadRequest());
 
-        // Validate the Alice in the database
+        // Validate the StudentModuleResult in the database
         List<StudentModuleResult> studentModuleResultList = studentModuleResultRepository.findAll();
         assertThat(studentModuleResultList).hasSize(databaseSizeBeforeCreate);
     }
@@ -161,7 +165,7 @@ public class StudentModuleResultResourceIntTest {
             .andExpect(jsonPath("$.[*].dateGraded").value(hasItem(DEFAULT_DATE_GRADED.toString())))
             .andExpect(jsonPath("$.[*].resultOrder").value(hasItem(DEFAULT_RESULT_ORDER.intValue())));
     }
-
+    
     @Test
     @Transactional
     public void getStudentModuleResult() throws Exception {
@@ -191,14 +195,17 @@ public class StudentModuleResultResourceIntTest {
     public void updateStudentModuleResult() throws Exception {
         // Initialize the database
         studentModuleResultRepository.saveAndFlush(studentModuleResult);
+
         int databaseSizeBeforeUpdate = studentModuleResultRepository.findAll().size();
 
         // Update the studentModuleResult
-        StudentModuleResult updatedStudentModuleResult = studentModuleResultRepository.findOne(studentModuleResult.getId());
+        StudentModuleResult updatedStudentModuleResult = studentModuleResultRepository.findById(studentModuleResult.getId()).get();
+        // Disconnect from session so that the updates on updatedStudentModuleResult are not directly saved in db
+        em.detach(updatedStudentModuleResult);
         updatedStudentModuleResult
-                .result(UPDATED_RESULT)
-                .dateGraded(UPDATED_DATE_GRADED)
-                .resultOrder(UPDATED_RESULT_ORDER);
+            .result(UPDATED_RESULT)
+            .dateGraded(UPDATED_DATE_GRADED)
+            .resultOrder(UPDATED_RESULT_ORDER);
 
         restStudentModuleResultMockMvc.perform(put("/api/student-module-results")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -221,15 +228,15 @@ public class StudentModuleResultResourceIntTest {
 
         // Create the StudentModuleResult
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restStudentModuleResultMockMvc.perform(put("/api/student-module-results")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(studentModuleResult)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the StudentModuleResult in the database
         List<StudentModuleResult> studentModuleResultList = studentModuleResultRepository.findAll();
-        assertThat(studentModuleResultList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(studentModuleResultList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -237,6 +244,7 @@ public class StudentModuleResultResourceIntTest {
     public void deleteStudentModuleResult() throws Exception {
         // Initialize the database
         studentModuleResultRepository.saveAndFlush(studentModuleResult);
+
         int databaseSizeBeforeDelete = studentModuleResultRepository.findAll().size();
 
         // Get the studentModuleResult
@@ -247,5 +255,20 @@ public class StudentModuleResultResourceIntTest {
         // Validate the database is empty
         List<StudentModuleResult> studentModuleResultList = studentModuleResultRepository.findAll();
         assertThat(studentModuleResultList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    @Transactional
+    public void equalsVerifier() throws Exception {
+        TestUtil.equalsVerifier(StudentModuleResult.class);
+        StudentModuleResult studentModuleResult1 = new StudentModuleResult();
+        studentModuleResult1.setId(1L);
+        StudentModuleResult studentModuleResult2 = new StudentModuleResult();
+        studentModuleResult2.setId(studentModuleResult1.getId());
+        assertThat(studentModuleResult1).isEqualTo(studentModuleResult2);
+        studentModuleResult2.setId(2L);
+        assertThat(studentModuleResult1).isNotEqualTo(studentModuleResult2);
+        studentModuleResult1.setId(null);
+        assertThat(studentModuleResult1).isNotEqualTo(studentModuleResult2);
     }
 }

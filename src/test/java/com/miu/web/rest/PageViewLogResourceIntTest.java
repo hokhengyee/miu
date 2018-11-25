@@ -4,27 +4,29 @@ import com.miu.MiuApp;
 
 import com.miu.domain.PageViewLog;
 import com.miu.repository.PageViewLogRepository;
+import com.miu.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
 
+
+import static com.miu.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -45,16 +47,19 @@ public class PageViewLogResourceIntTest {
     private static final Long DEFAULT_VIEWS = 1L;
     private static final Long UPDATED_VIEWS = 2L;
 
-    @Inject
+    @Autowired
     private PageViewLogRepository pageViewLogRepository;
 
-    @Inject
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
-    @Inject
+    @Autowired
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
-    @Inject
+    @Autowired
+    private ExceptionTranslator exceptionTranslator;
+
+    @Autowired
     private EntityManager em;
 
     private MockMvc restPageViewLogMockMvc;
@@ -64,10 +69,11 @@ public class PageViewLogResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        PageViewLogResource pageViewLogResource = new PageViewLogResource();
-        ReflectionTestUtils.setField(pageViewLogResource, "pageViewLogRepository", pageViewLogRepository);
+        final PageViewLogResource pageViewLogResource = new PageViewLogResource(pageViewLogRepository);
         this.restPageViewLogMockMvc = MockMvcBuilders.standaloneSetup(pageViewLogResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -79,8 +85,8 @@ public class PageViewLogResourceIntTest {
      */
     public static PageViewLog createEntity(EntityManager em) {
         PageViewLog pageViewLog = new PageViewLog()
-                .createdDate(DEFAULT_CREATED_DATE)
-                .views(DEFAULT_VIEWS);
+            .createdDate(DEFAULT_CREATED_DATE)
+            .views(DEFAULT_VIEWS);
         return pageViewLog;
     }
 
@@ -95,7 +101,6 @@ public class PageViewLogResourceIntTest {
         int databaseSizeBeforeCreate = pageViewLogRepository.findAll().size();
 
         // Create the PageViewLog
-
         restPageViewLogMockMvc.perform(post("/api/page-view-logs")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(pageViewLog)))
@@ -115,16 +120,15 @@ public class PageViewLogResourceIntTest {
         int databaseSizeBeforeCreate = pageViewLogRepository.findAll().size();
 
         // Create the PageViewLog with an existing ID
-        PageViewLog existingPageViewLog = new PageViewLog();
-        existingPageViewLog.setId(1L);
+        pageViewLog.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restPageViewLogMockMvc.perform(post("/api/page-view-logs")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(existingPageViewLog)))
+            .content(TestUtil.convertObjectToJsonBytes(pageViewLog)))
             .andExpect(status().isBadRequest());
 
-        // Validate the Alice in the database
+        // Validate the PageViewLog in the database
         List<PageViewLog> pageViewLogList = pageViewLogRepository.findAll();
         assertThat(pageViewLogList).hasSize(databaseSizeBeforeCreate);
     }
@@ -143,7 +147,7 @@ public class PageViewLogResourceIntTest {
             .andExpect(jsonPath("$.[*].createdDate").value(hasItem(DEFAULT_CREATED_DATE.toString())))
             .andExpect(jsonPath("$.[*].views").value(hasItem(DEFAULT_VIEWS.intValue())));
     }
-
+    
     @Test
     @Transactional
     public void getPageViewLog() throws Exception {
@@ -172,13 +176,16 @@ public class PageViewLogResourceIntTest {
     public void updatePageViewLog() throws Exception {
         // Initialize the database
         pageViewLogRepository.saveAndFlush(pageViewLog);
+
         int databaseSizeBeforeUpdate = pageViewLogRepository.findAll().size();
 
         // Update the pageViewLog
-        PageViewLog updatedPageViewLog = pageViewLogRepository.findOne(pageViewLog.getId());
+        PageViewLog updatedPageViewLog = pageViewLogRepository.findById(pageViewLog.getId()).get();
+        // Disconnect from session so that the updates on updatedPageViewLog are not directly saved in db
+        em.detach(updatedPageViewLog);
         updatedPageViewLog
-                .createdDate(UPDATED_CREATED_DATE)
-                .views(UPDATED_VIEWS);
+            .createdDate(UPDATED_CREATED_DATE)
+            .views(UPDATED_VIEWS);
 
         restPageViewLogMockMvc.perform(put("/api/page-view-logs")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -200,15 +207,15 @@ public class PageViewLogResourceIntTest {
 
         // Create the PageViewLog
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restPageViewLogMockMvc.perform(put("/api/page-view-logs")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(pageViewLog)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the PageViewLog in the database
         List<PageViewLog> pageViewLogList = pageViewLogRepository.findAll();
-        assertThat(pageViewLogList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(pageViewLogList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -216,6 +223,7 @@ public class PageViewLogResourceIntTest {
     public void deletePageViewLog() throws Exception {
         // Initialize the database
         pageViewLogRepository.saveAndFlush(pageViewLog);
+
         int databaseSizeBeforeDelete = pageViewLogRepository.findAll().size();
 
         // Get the pageViewLog
@@ -226,5 +234,20 @@ public class PageViewLogResourceIntTest {
         // Validate the database is empty
         List<PageViewLog> pageViewLogList = pageViewLogRepository.findAll();
         assertThat(pageViewLogList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    @Transactional
+    public void equalsVerifier() throws Exception {
+        TestUtil.equalsVerifier(PageViewLog.class);
+        PageViewLog pageViewLog1 = new PageViewLog();
+        pageViewLog1.setId(1L);
+        PageViewLog pageViewLog2 = new PageViewLog();
+        pageViewLog2.setId(pageViewLog1.getId());
+        assertThat(pageViewLog1).isEqualTo(pageViewLog2);
+        pageViewLog2.setId(2L);
+        assertThat(pageViewLog1).isNotEqualTo(pageViewLog2);
+        pageViewLog1.setId(null);
+        assertThat(pageViewLog1).isNotEqualTo(pageViewLog2);
     }
 }

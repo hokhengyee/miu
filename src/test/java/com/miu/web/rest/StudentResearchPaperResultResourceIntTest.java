@@ -6,27 +6,29 @@ import com.miu.domain.StudentResearchPaperResult;
 import com.miu.domain.ResearchPaper;
 import com.miu.domain.User;
 import com.miu.repository.StudentResearchPaperResultRepository;
+import com.miu.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
 
+
+import static com.miu.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -50,16 +52,19 @@ public class StudentResearchPaperResultResourceIntTest {
     private static final Long DEFAULT_RESULT_ORDER = 1L;
     private static final Long UPDATED_RESULT_ORDER = 2L;
 
-    @Inject
+    @Autowired
     private StudentResearchPaperResultRepository studentResearchPaperResultRepository;
 
-    @Inject
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
-    @Inject
+    @Autowired
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
-    @Inject
+    @Autowired
+    private ExceptionTranslator exceptionTranslator;
+
+    @Autowired
     private EntityManager em;
 
     private MockMvc restStudentResearchPaperResultMockMvc;
@@ -69,10 +74,11 @@ public class StudentResearchPaperResultResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        StudentResearchPaperResultResource studentResearchPaperResultResource = new StudentResearchPaperResultResource();
-        ReflectionTestUtils.setField(studentResearchPaperResultResource, "studentResearchPaperResultRepository", studentResearchPaperResultRepository);
+        final StudentResearchPaperResultResource studentResearchPaperResultResource = new StudentResearchPaperResultResource(studentResearchPaperResultRepository);
         this.restStudentResearchPaperResultMockMvc = MockMvcBuilders.standaloneSetup(studentResearchPaperResultResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -84,9 +90,9 @@ public class StudentResearchPaperResultResourceIntTest {
      */
     public static StudentResearchPaperResult createEntity(EntityManager em) {
         StudentResearchPaperResult studentResearchPaperResult = new StudentResearchPaperResult()
-                .result(DEFAULT_RESULT)
-                .dateGraded(DEFAULT_DATE_GRADED)
-                .resultOrder(DEFAULT_RESULT_ORDER);
+            .result(DEFAULT_RESULT)
+            .dateGraded(DEFAULT_DATE_GRADED)
+            .resultOrder(DEFAULT_RESULT_ORDER);
         // Add required entity
         ResearchPaper researchPaper = ResearchPaperResourceIntTest.createEntity(em);
         em.persist(researchPaper);
@@ -111,7 +117,6 @@ public class StudentResearchPaperResultResourceIntTest {
         int databaseSizeBeforeCreate = studentResearchPaperResultRepository.findAll().size();
 
         // Create the StudentResearchPaperResult
-
         restStudentResearchPaperResultMockMvc.perform(post("/api/student-research-paper-results")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(studentResearchPaperResult)))
@@ -132,16 +137,15 @@ public class StudentResearchPaperResultResourceIntTest {
         int databaseSizeBeforeCreate = studentResearchPaperResultRepository.findAll().size();
 
         // Create the StudentResearchPaperResult with an existing ID
-        StudentResearchPaperResult existingStudentResearchPaperResult = new StudentResearchPaperResult();
-        existingStudentResearchPaperResult.setId(1L);
+        studentResearchPaperResult.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restStudentResearchPaperResultMockMvc.perform(post("/api/student-research-paper-results")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(existingStudentResearchPaperResult)))
+            .content(TestUtil.convertObjectToJsonBytes(studentResearchPaperResult)))
             .andExpect(status().isBadRequest());
 
-        // Validate the Alice in the database
+        // Validate the StudentResearchPaperResult in the database
         List<StudentResearchPaperResult> studentResearchPaperResultList = studentResearchPaperResultRepository.findAll();
         assertThat(studentResearchPaperResultList).hasSize(databaseSizeBeforeCreate);
     }
@@ -161,7 +165,7 @@ public class StudentResearchPaperResultResourceIntTest {
             .andExpect(jsonPath("$.[*].dateGraded").value(hasItem(DEFAULT_DATE_GRADED.toString())))
             .andExpect(jsonPath("$.[*].resultOrder").value(hasItem(DEFAULT_RESULT_ORDER.intValue())));
     }
-
+    
     @Test
     @Transactional
     public void getStudentResearchPaperResult() throws Exception {
@@ -191,14 +195,17 @@ public class StudentResearchPaperResultResourceIntTest {
     public void updateStudentResearchPaperResult() throws Exception {
         // Initialize the database
         studentResearchPaperResultRepository.saveAndFlush(studentResearchPaperResult);
+
         int databaseSizeBeforeUpdate = studentResearchPaperResultRepository.findAll().size();
 
         // Update the studentResearchPaperResult
-        StudentResearchPaperResult updatedStudentResearchPaperResult = studentResearchPaperResultRepository.findOne(studentResearchPaperResult.getId());
+        StudentResearchPaperResult updatedStudentResearchPaperResult = studentResearchPaperResultRepository.findById(studentResearchPaperResult.getId()).get();
+        // Disconnect from session so that the updates on updatedStudentResearchPaperResult are not directly saved in db
+        em.detach(updatedStudentResearchPaperResult);
         updatedStudentResearchPaperResult
-                .result(UPDATED_RESULT)
-                .dateGraded(UPDATED_DATE_GRADED)
-                .resultOrder(UPDATED_RESULT_ORDER);
+            .result(UPDATED_RESULT)
+            .dateGraded(UPDATED_DATE_GRADED)
+            .resultOrder(UPDATED_RESULT_ORDER);
 
         restStudentResearchPaperResultMockMvc.perform(put("/api/student-research-paper-results")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -221,15 +228,15 @@ public class StudentResearchPaperResultResourceIntTest {
 
         // Create the StudentResearchPaperResult
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restStudentResearchPaperResultMockMvc.perform(put("/api/student-research-paper-results")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(studentResearchPaperResult)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the StudentResearchPaperResult in the database
         List<StudentResearchPaperResult> studentResearchPaperResultList = studentResearchPaperResultRepository.findAll();
-        assertThat(studentResearchPaperResultList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(studentResearchPaperResultList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -237,6 +244,7 @@ public class StudentResearchPaperResultResourceIntTest {
     public void deleteStudentResearchPaperResult() throws Exception {
         // Initialize the database
         studentResearchPaperResultRepository.saveAndFlush(studentResearchPaperResult);
+
         int databaseSizeBeforeDelete = studentResearchPaperResultRepository.findAll().size();
 
         // Get the studentResearchPaperResult
@@ -247,5 +255,20 @@ public class StudentResearchPaperResultResourceIntTest {
         // Validate the database is empty
         List<StudentResearchPaperResult> studentResearchPaperResultList = studentResearchPaperResultRepository.findAll();
         assertThat(studentResearchPaperResultList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    @Transactional
+    public void equalsVerifier() throws Exception {
+        TestUtil.equalsVerifier(StudentResearchPaperResult.class);
+        StudentResearchPaperResult studentResearchPaperResult1 = new StudentResearchPaperResult();
+        studentResearchPaperResult1.setId(1L);
+        StudentResearchPaperResult studentResearchPaperResult2 = new StudentResearchPaperResult();
+        studentResearchPaperResult2.setId(studentResearchPaperResult1.getId());
+        assertThat(studentResearchPaperResult1).isEqualTo(studentResearchPaperResult2);
+        studentResearchPaperResult2.setId(2L);
+        assertThat(studentResearchPaperResult1).isNotEqualTo(studentResearchPaperResult2);
+        studentResearchPaperResult1.setId(null);
+        assertThat(studentResearchPaperResult1).isNotEqualTo(studentResearchPaperResult2);
     }
 }

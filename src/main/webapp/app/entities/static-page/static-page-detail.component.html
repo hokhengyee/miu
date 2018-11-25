@@ -1,0 +1,33 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="staticPage">
+            <h2><span>Static Page</span> {{staticPage.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Content</span></dt>
+                <dd>
+                    <span>{{staticPage.content}}</span>
+                </dd>
+                <dt><span>Static Page Type</span></dt>
+                <dd>
+                    <div *ngIf="staticPage.staticPageType">
+                        <a [routerLink]="['/static-page-type', staticPage.staticPageType?.id, 'view']">{{staticPage.staticPageType?.title}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/static-page', staticPage.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

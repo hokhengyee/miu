@@ -1,0 +1,91 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="registrationAcademicDetails">
+            <h2><span>Registration Academic Details</span> {{registrationAcademicDetails.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Name Of Institution 2</span></dt>
+                <dd>
+                    <span>{{registrationAcademicDetails.nameOfInstitution2}}</span>
+                </dd>
+                <dt><span>Exam Passed 2</span></dt>
+                <dd>
+                    <span>{{registrationAcademicDetails.examPassed2}}</span>
+                </dd>
+                <dt><span>Year 2</span></dt>
+                <dd>
+                    <span>{{registrationAcademicDetails.year2}}</span>
+                </dd>
+                <dt><span>Grade 2</span></dt>
+                <dd>
+                    <span>{{registrationAcademicDetails.grade2}}</span>
+                </dd>
+                <dt><span>Name Of Institution 3</span></dt>
+                <dd>
+                    <span>{{registrationAcademicDetails.nameOfInstitution3}}</span>
+                </dd>
+                <dt><span>Exam Passed 3</span></dt>
+                <dd>
+                    <span>{{registrationAcademicDetails.examPassed3}}</span>
+                </dd>
+                <dt><span>Year 3</span></dt>
+                <dd>
+                    <span>{{registrationAcademicDetails.year3}}</span>
+                </dd>
+                <dt><span>Grade 3</span></dt>
+                <dd>
+                    <span>{{registrationAcademicDetails.grade3}}</span>
+                </dd>
+                <dt><span>Name Of Institution 4</span></dt>
+                <dd>
+                    <span>{{registrationAcademicDetails.nameOfInstitution4}}</span>
+                </dd>
+                <dt><span>Exam Passed 4</span></dt>
+                <dd>
+                    <span>{{registrationAcademicDetails.examPassed4}}</span>
+                </dd>
+                <dt><span>Year 4</span></dt>
+                <dd>
+                    <span>{{registrationAcademicDetails.year4}}</span>
+                </dd>
+                <dt><span>Grade 4</span></dt>
+                <dd>
+                    <span>{{registrationAcademicDetails.grade4}}</span>
+                </dd>
+                <dt><span>Md 5 Key</span></dt>
+                <dd>
+                    <span>{{registrationAcademicDetails.md5key}}</span>
+                </dd>
+                <dt><span>Name Of Institution 1</span></dt>
+                <dd>
+                    <span>{{registrationAcademicDetails.nameOfInstitution1}}</span>
+                </dd>
+                <dt><span>Exam Passed 1</span></dt>
+                <dd>
+                    <span>{{registrationAcademicDetails.examPassed1}}</span>
+                </dd>
+                <dt><span>Year 1</span></dt>
+                <dd>
+                    <span>{{registrationAcademicDetails.year1}}</span>
+                </dd>
+                <dt><span>Grade 1</span></dt>
+                <dd>
+                    <span>{{registrationAcademicDetails.grade1}}</span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/registration-academic-details', registrationAcademicDetails.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

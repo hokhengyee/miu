@@ -1,15 +1,15 @@
 package com.miu.repository;
 
 import com.miu.domain.OnlineApplication;
-
 import org.springframework.data.jpa.repository.*;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
 
 /**
- * Spring Data JPA repository for the OnlineApplication entity.
+ * Spring Data  repository for the OnlineApplication entity.
  */
 @SuppressWarnings("unused")
-public interface OnlineApplicationRepository extends JpaRepository<OnlineApplication,Long> {
+@Repository
+public interface OnlineApplicationRepository extends JpaRepository<OnlineApplication, Long> {
 
 }

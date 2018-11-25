@@ -4,25 +4,27 @@ import com.miu.MiuApp;
 
 import com.miu.domain.Gender;
 import com.miu.repository.GenderRepository;
+import com.miu.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static com.miu.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -40,16 +42,19 @@ public class GenderResourceIntTest {
     private static final String DEFAULT_TITLE = "AAAAAAAAAA";
     private static final String UPDATED_TITLE = "BBBBBBBBBB";
 
-    @Inject
+    @Autowired
     private GenderRepository genderRepository;
 
-    @Inject
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
-    @Inject
+    @Autowired
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
-    @Inject
+    @Autowired
+    private ExceptionTranslator exceptionTranslator;
+
+    @Autowired
     private EntityManager em;
 
     private MockMvc restGenderMockMvc;
@@ -59,10 +64,11 @@ public class GenderResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        GenderResource genderResource = new GenderResource();
-        ReflectionTestUtils.setField(genderResource, "genderRepository", genderRepository);
+        final GenderResource genderResource = new GenderResource(genderRepository);
         this.restGenderMockMvc = MockMvcBuilders.standaloneSetup(genderResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -74,7 +80,7 @@ public class GenderResourceIntTest {
      */
     public static Gender createEntity(EntityManager em) {
         Gender gender = new Gender()
-                .title(DEFAULT_TITLE);
+            .title(DEFAULT_TITLE);
         return gender;
     }
 
@@ -89,7 +95,6 @@ public class GenderResourceIntTest {
         int databaseSizeBeforeCreate = genderRepository.findAll().size();
 
         // Create the Gender
-
         restGenderMockMvc.perform(post("/api/genders")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(gender)))
@@ -108,16 +113,15 @@ public class GenderResourceIntTest {
         int databaseSizeBeforeCreate = genderRepository.findAll().size();
 
         // Create the Gender with an existing ID
-        Gender existingGender = new Gender();
-        existingGender.setId(1L);
+        gender.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restGenderMockMvc.perform(post("/api/genders")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(existingGender)))
+            .content(TestUtil.convertObjectToJsonBytes(gender)))
             .andExpect(status().isBadRequest());
 
-        // Validate the Alice in the database
+        // Validate the Gender in the database
         List<Gender> genderList = genderRepository.findAll();
         assertThat(genderList).hasSize(databaseSizeBeforeCreate);
     }
@@ -153,7 +157,7 @@ public class GenderResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(gender.getId().intValue())))
             .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE.toString())));
     }
-
+    
     @Test
     @Transactional
     public void getGender() throws Exception {
@@ -181,12 +185,15 @@ public class GenderResourceIntTest {
     public void updateGender() throws Exception {
         // Initialize the database
         genderRepository.saveAndFlush(gender);
+
         int databaseSizeBeforeUpdate = genderRepository.findAll().size();
 
         // Update the gender
-        Gender updatedGender = genderRepository.findOne(gender.getId());
+        Gender updatedGender = genderRepository.findById(gender.getId()).get();
+        // Disconnect from session so that the updates on updatedGender are not directly saved in db
+        em.detach(updatedGender);
         updatedGender
-                .title(UPDATED_TITLE);
+            .title(UPDATED_TITLE);
 
         restGenderMockMvc.perform(put("/api/genders")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -207,15 +214,15 @@ public class GenderResourceIntTest {
 
         // Create the Gender
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restGenderMockMvc.perform(put("/api/genders")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(gender)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the Gender in the database
         List<Gender> genderList = genderRepository.findAll();
-        assertThat(genderList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(genderList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -223,6 +230,7 @@ public class GenderResourceIntTest {
     public void deleteGender() throws Exception {
         // Initialize the database
         genderRepository.saveAndFlush(gender);
+
         int databaseSizeBeforeDelete = genderRepository.findAll().size();
 
         // Get the gender
@@ -233,5 +241,20 @@ public class GenderResourceIntTest {
         // Validate the database is empty
         List<Gender> genderList = genderRepository.findAll();
         assertThat(genderList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    @Transactional
+    public void equalsVerifier() throws Exception {
+        TestUtil.equalsVerifier(Gender.class);
+        Gender gender1 = new Gender();
+        gender1.setId(1L);
+        Gender gender2 = new Gender();
+        gender2.setId(gender1.getId());
+        assertThat(gender1).isEqualTo(gender2);
+        gender2.setId(2L);
+        assertThat(gender1).isNotEqualTo(gender2);
+        gender1.setId(null);
+        assertThat(gender1).isNotEqualTo(gender2);
     }
 }
