@@ -1,10 +1,12 @@
 package com.miu.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -20,7 +22,7 @@ public class StudentProfile implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
@@ -45,7 +47,6 @@ public class StudentProfile implements Serializable {
     @Column(name = "completion_date")
     private LocalDate completionDate;
 
-    @NotNull
     @Size(max = 1000)
     @Lob
     @Column(name = "mailing_address", length = 1000, nullable = false)
@@ -61,22 +62,27 @@ public class StudentProfile implements Serializable {
     @Column(name = "extended_completion_date")
     private LocalDate extendedCompletionDate;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("")
     private Salutation salutation;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("")
     private Gender gender;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("")
     private User supervisor;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("")
     private User user;
 
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -266,6 +272,7 @@ public class StudentProfile implements Serializable {
     public void setUser(User user) {
         this.user = user;
     }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -276,31 +283,31 @@ public class StudentProfile implements Serializable {
             return false;
         }
         StudentProfile studentProfile = (StudentProfile) o;
-        if (studentProfile.id == null || id == null) {
+        if (studentProfile.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(id, studentProfile.id);
+        return Objects.equals(getId(), studentProfile.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(getId());
     }
 
     @Override
     public String toString() {
         return "StudentProfile{" +
-            "id=" + id +
-            ", studentId='" + studentId + "'" +
-            ", dateOfBirth='" + dateOfBirth + "'" +
-            ", phone='" + phone + "'" +
-            ", applicationDate='" + applicationDate + "'" +
-            ", commencementDate='" + commencementDate + "'" +
-            ", completionDate='" + completionDate + "'" +
-            ", mailingAddress='" + mailingAddress + "'" +
-            ", profilePhoto='" + profilePhoto + "'" +
-            ", profilePhotoContentType='" + profilePhotoContentType + "'" +
-            ", extendedCompletionDate='" + extendedCompletionDate + "'" +
-            '}';
+            "id=" + getId() +
+            ", studentId='" + getStudentId() + "'" +
+            ", dateOfBirth='" + getDateOfBirth() + "'" +
+            ", phone='" + getPhone() + "'" +
+            ", applicationDate='" + getApplicationDate() + "'" +
+            ", commencementDate='" + getCommencementDate() + "'" +
+            ", completionDate='" + getCompletionDate() + "'" +
+            ", mailingAddress='" + getMailingAddress() + "'" +
+            ", profilePhoto='" + getProfilePhoto() + "'" +
+            ", profilePhotoContentType='" + getProfilePhotoContentType() + "'" +
+            ", extendedCompletionDate='" + getExtendedCompletionDate() + "'" +
+            "}";
     }
 }

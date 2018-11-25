@@ -4,25 +4,27 @@ import com.miu.MiuApp;
 
 import com.miu.domain.ForumRoom;
 import com.miu.repository.ForumRoomRepository;
+import com.miu.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static com.miu.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -40,16 +42,19 @@ public class ForumRoomResourceIntTest {
     private static final String DEFAULT_FORUM_ROOM_NAME = "AAAAAAAAAA";
     private static final String UPDATED_FORUM_ROOM_NAME = "BBBBBBBBBB";
 
-    @Inject
+    @Autowired
     private ForumRoomRepository forumRoomRepository;
 
-    @Inject
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
-    @Inject
+    @Autowired
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
-    @Inject
+    @Autowired
+    private ExceptionTranslator exceptionTranslator;
+
+    @Autowired
     private EntityManager em;
 
     private MockMvc restForumRoomMockMvc;
@@ -59,10 +64,11 @@ public class ForumRoomResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        ForumRoomResource forumRoomResource = new ForumRoomResource();
-        ReflectionTestUtils.setField(forumRoomResource, "forumRoomRepository", forumRoomRepository);
+        final ForumRoomResource forumRoomResource = new ForumRoomResource(forumRoomRepository);
         this.restForumRoomMockMvc = MockMvcBuilders.standaloneSetup(forumRoomResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -74,7 +80,7 @@ public class ForumRoomResourceIntTest {
      */
     public static ForumRoom createEntity(EntityManager em) {
         ForumRoom forumRoom = new ForumRoom()
-                .forumRoomName(DEFAULT_FORUM_ROOM_NAME);
+            .forumRoomName(DEFAULT_FORUM_ROOM_NAME);
         return forumRoom;
     }
 
@@ -89,7 +95,6 @@ public class ForumRoomResourceIntTest {
         int databaseSizeBeforeCreate = forumRoomRepository.findAll().size();
 
         // Create the ForumRoom
-
         restForumRoomMockMvc.perform(post("/api/forum-rooms")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(forumRoom)))
@@ -108,16 +113,15 @@ public class ForumRoomResourceIntTest {
         int databaseSizeBeforeCreate = forumRoomRepository.findAll().size();
 
         // Create the ForumRoom with an existing ID
-        ForumRoom existingForumRoom = new ForumRoom();
-        existingForumRoom.setId(1L);
+        forumRoom.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restForumRoomMockMvc.perform(post("/api/forum-rooms")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(existingForumRoom)))
+            .content(TestUtil.convertObjectToJsonBytes(forumRoom)))
             .andExpect(status().isBadRequest());
 
-        // Validate the Alice in the database
+        // Validate the ForumRoom in the database
         List<ForumRoom> forumRoomList = forumRoomRepository.findAll();
         assertThat(forumRoomList).hasSize(databaseSizeBeforeCreate);
     }
@@ -153,7 +157,7 @@ public class ForumRoomResourceIntTest {
             .andExpect(jsonPath("$.[*].id").value(hasItem(forumRoom.getId().intValue())))
             .andExpect(jsonPath("$.[*].forumRoomName").value(hasItem(DEFAULT_FORUM_ROOM_NAME.toString())));
     }
-
+    
     @Test
     @Transactional
     public void getForumRoom() throws Exception {
@@ -181,12 +185,15 @@ public class ForumRoomResourceIntTest {
     public void updateForumRoom() throws Exception {
         // Initialize the database
         forumRoomRepository.saveAndFlush(forumRoom);
+
         int databaseSizeBeforeUpdate = forumRoomRepository.findAll().size();
 
         // Update the forumRoom
-        ForumRoom updatedForumRoom = forumRoomRepository.findOne(forumRoom.getId());
+        ForumRoom updatedForumRoom = forumRoomRepository.findById(forumRoom.getId()).get();
+        // Disconnect from session so that the updates on updatedForumRoom are not directly saved in db
+        em.detach(updatedForumRoom);
         updatedForumRoom
-                .forumRoomName(UPDATED_FORUM_ROOM_NAME);
+            .forumRoomName(UPDATED_FORUM_ROOM_NAME);
 
         restForumRoomMockMvc.perform(put("/api/forum-rooms")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -207,15 +214,15 @@ public class ForumRoomResourceIntTest {
 
         // Create the ForumRoom
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restForumRoomMockMvc.perform(put("/api/forum-rooms")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(forumRoom)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the ForumRoom in the database
         List<ForumRoom> forumRoomList = forumRoomRepository.findAll();
-        assertThat(forumRoomList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(forumRoomList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -223,6 +230,7 @@ public class ForumRoomResourceIntTest {
     public void deleteForumRoom() throws Exception {
         // Initialize the database
         forumRoomRepository.saveAndFlush(forumRoom);
+
         int databaseSizeBeforeDelete = forumRoomRepository.findAll().size();
 
         // Get the forumRoom
@@ -233,5 +241,20 @@ public class ForumRoomResourceIntTest {
         // Validate the database is empty
         List<ForumRoom> forumRoomList = forumRoomRepository.findAll();
         assertThat(forumRoomList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    @Transactional
+    public void equalsVerifier() throws Exception {
+        TestUtil.equalsVerifier(ForumRoom.class);
+        ForumRoom forumRoom1 = new ForumRoom();
+        forumRoom1.setId(1L);
+        ForumRoom forumRoom2 = new ForumRoom();
+        forumRoom2.setId(forumRoom1.getId());
+        assertThat(forumRoom1).isEqualTo(forumRoom2);
+        forumRoom2.setId(2L);
+        assertThat(forumRoom1).isNotEqualTo(forumRoom2);
+        forumRoom1.setId(null);
+        assertThat(forumRoom1).isNotEqualTo(forumRoom2);
     }
 }

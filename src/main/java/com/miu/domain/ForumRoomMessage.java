@@ -1,10 +1,12 @@
 package com.miu.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Objects;
@@ -20,7 +22,7 @@ public class ForumRoomMessage implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
@@ -31,11 +33,14 @@ public class ForumRoomMessage implements Serializable {
     private ZonedDateTime messageDatetime;
 
     @ManyToOne
+    @JsonIgnoreProperties("")
     private ForumRoom forumRoom;
 
     @ManyToOne
+    @JsonIgnoreProperties("")
     private User user;
 
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -95,6 +100,7 @@ public class ForumRoomMessage implements Serializable {
     public void setUser(User user) {
         this.user = user;
     }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -105,23 +111,23 @@ public class ForumRoomMessage implements Serializable {
             return false;
         }
         ForumRoomMessage forumRoomMessage = (ForumRoomMessage) o;
-        if (forumRoomMessage.id == null || id == null) {
+        if (forumRoomMessage.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(id, forumRoomMessage.id);
+        return Objects.equals(getId(), forumRoomMessage.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(getId());
     }
 
     @Override
     public String toString() {
         return "ForumRoomMessage{" +
-            "id=" + id +
-            ", message='" + message + "'" +
-            ", messageDatetime='" + messageDatetime + "'" +
-            '}';
+            "id=" + getId() +
+            ", message='" + getMessage() + "'" +
+            ", messageDatetime='" + getMessageDatetime() + "'" +
+            "}";
     }
 }

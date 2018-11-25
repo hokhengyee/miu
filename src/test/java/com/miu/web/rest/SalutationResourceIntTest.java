@@ -4,25 +4,27 @@ import com.miu.MiuApp;
 
 import com.miu.domain.Salutation;
 import com.miu.repository.SalutationRepository;
+import com.miu.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static com.miu.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -43,16 +45,19 @@ public class SalutationResourceIntTest {
     private static final Long DEFAULT_DISPLAY_ORDER = 1L;
     private static final Long UPDATED_DISPLAY_ORDER = 2L;
 
-    @Inject
+    @Autowired
     private SalutationRepository salutationRepository;
 
-    @Inject
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
-    @Inject
+    @Autowired
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
-    @Inject
+    @Autowired
+    private ExceptionTranslator exceptionTranslator;
+
+    @Autowired
     private EntityManager em;
 
     private MockMvc restSalutationMockMvc;
@@ -62,10 +67,11 @@ public class SalutationResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        SalutationResource salutationResource = new SalutationResource();
-        ReflectionTestUtils.setField(salutationResource, "salutationRepository", salutationRepository);
+        final SalutationResource salutationResource = new SalutationResource(salutationRepository);
         this.restSalutationMockMvc = MockMvcBuilders.standaloneSetup(salutationResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -77,8 +83,8 @@ public class SalutationResourceIntTest {
      */
     public static Salutation createEntity(EntityManager em) {
         Salutation salutation = new Salutation()
-                .title(DEFAULT_TITLE)
-                .displayOrder(DEFAULT_DISPLAY_ORDER);
+            .title(DEFAULT_TITLE)
+            .displayOrder(DEFAULT_DISPLAY_ORDER);
         return salutation;
     }
 
@@ -93,7 +99,6 @@ public class SalutationResourceIntTest {
         int databaseSizeBeforeCreate = salutationRepository.findAll().size();
 
         // Create the Salutation
-
         restSalutationMockMvc.perform(post("/api/salutations")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(salutation)))
@@ -113,16 +118,15 @@ public class SalutationResourceIntTest {
         int databaseSizeBeforeCreate = salutationRepository.findAll().size();
 
         // Create the Salutation with an existing ID
-        Salutation existingSalutation = new Salutation();
-        existingSalutation.setId(1L);
+        salutation.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restSalutationMockMvc.perform(post("/api/salutations")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(existingSalutation)))
+            .content(TestUtil.convertObjectToJsonBytes(salutation)))
             .andExpect(status().isBadRequest());
 
-        // Validate the Alice in the database
+        // Validate the Salutation in the database
         List<Salutation> salutationList = salutationRepository.findAll();
         assertThat(salutationList).hasSize(databaseSizeBeforeCreate);
     }
@@ -159,7 +163,7 @@ public class SalutationResourceIntTest {
             .andExpect(jsonPath("$.[*].title").value(hasItem(DEFAULT_TITLE.toString())))
             .andExpect(jsonPath("$.[*].displayOrder").value(hasItem(DEFAULT_DISPLAY_ORDER.intValue())));
     }
-
+    
     @Test
     @Transactional
     public void getSalutation() throws Exception {
@@ -188,13 +192,16 @@ public class SalutationResourceIntTest {
     public void updateSalutation() throws Exception {
         // Initialize the database
         salutationRepository.saveAndFlush(salutation);
+
         int databaseSizeBeforeUpdate = salutationRepository.findAll().size();
 
         // Update the salutation
-        Salutation updatedSalutation = salutationRepository.findOne(salutation.getId());
+        Salutation updatedSalutation = salutationRepository.findById(salutation.getId()).get();
+        // Disconnect from session so that the updates on updatedSalutation are not directly saved in db
+        em.detach(updatedSalutation);
         updatedSalutation
-                .title(UPDATED_TITLE)
-                .displayOrder(UPDATED_DISPLAY_ORDER);
+            .title(UPDATED_TITLE)
+            .displayOrder(UPDATED_DISPLAY_ORDER);
 
         restSalutationMockMvc.perform(put("/api/salutations")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -216,15 +223,15 @@ public class SalutationResourceIntTest {
 
         // Create the Salutation
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restSalutationMockMvc.perform(put("/api/salutations")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(salutation)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the Salutation in the database
         List<Salutation> salutationList = salutationRepository.findAll();
-        assertThat(salutationList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(salutationList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -232,6 +239,7 @@ public class SalutationResourceIntTest {
     public void deleteSalutation() throws Exception {
         // Initialize the database
         salutationRepository.saveAndFlush(salutation);
+
         int databaseSizeBeforeDelete = salutationRepository.findAll().size();
 
         // Get the salutation
@@ -242,5 +250,20 @@ public class SalutationResourceIntTest {
         // Validate the database is empty
         List<Salutation> salutationList = salutationRepository.findAll();
         assertThat(salutationList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    @Transactional
+    public void equalsVerifier() throws Exception {
+        TestUtil.equalsVerifier(Salutation.class);
+        Salutation salutation1 = new Salutation();
+        salutation1.setId(1L);
+        Salutation salutation2 = new Salutation();
+        salutation2.setId(salutation1.getId());
+        assertThat(salutation1).isEqualTo(salutation2);
+        salutation2.setId(2L);
+        assertThat(salutation1).isNotEqualTo(salutation2);
+        salutation1.setId(null);
+        assertThat(salutation1).isNotEqualTo(salutation2);
     }
 }

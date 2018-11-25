@@ -3,17 +3,18 @@ package com.miu.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import java.time.LocalDate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
 import java.io.Serializable;
+import java.time.LocalDate;
 
 /**
  * Persistent tokens are used by Spring Security to automatically log in users.
  *
- * @see com.miu.security.CustomPersistentRememberMeServices
+ * @see com.miu.security.PersistentTokenRememberMeServices
  */
 @Entity
 @Table(name = "jhi_persistent_token")

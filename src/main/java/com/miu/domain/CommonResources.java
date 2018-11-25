@@ -5,6 +5,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -19,7 +20,7 @@ public class CommonResources implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
@@ -43,6 +44,7 @@ public class CommonResources implements Serializable {
     @Column(name = "website_link")
     private String websiteLink;
 
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -128,6 +130,7 @@ public class CommonResources implements Serializable {
     public void setWebsiteLink(String websiteLink) {
         this.websiteLink = websiteLink;
     }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -138,27 +141,27 @@ public class CommonResources implements Serializable {
             return false;
         }
         CommonResources commonResources = (CommonResources) o;
-        if (commonResources.id == null || id == null) {
+        if (commonResources.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(id, commonResources.id);
+        return Objects.equals(getId(), commonResources.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(getId());
     }
 
     @Override
     public String toString() {
         return "CommonResources{" +
-            "id=" + id +
-            ", title='" + title + "'" +
-            ", content='" + content + "'" +
-            ", contentContentType='" + contentContentType + "'" +
-            ", description='" + description + "'" +
-            ", displayOrder='" + displayOrder + "'" +
-            ", websiteLink='" + websiteLink + "'" +
-            '}';
+            "id=" + getId() +
+            ", title='" + getTitle() + "'" +
+            ", content='" + getContent() + "'" +
+            ", contentContentType='" + getContentContentType() + "'" +
+            ", description='" + getDescription() + "'" +
+            ", displayOrder=" + getDisplayOrder() +
+            ", websiteLink='" + getWebsiteLink() + "'" +
+            "}";
     }
 }

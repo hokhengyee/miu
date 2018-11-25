@@ -1,0 +1,52 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="courseMaterial">
+            <h2><span>Course Material</span> {{courseMaterial.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Title</span></dt>
+                <dd>
+                    <span>{{courseMaterial.title}}</span>
+                </dd>
+                <dt><span>Description</span></dt>
+                <dd>
+                    <span>{{courseMaterial.description}}</span>
+                </dd>
+                <dt><span>Website Link</span></dt>
+                <dd>
+                    <span>{{courseMaterial.websiteLink}}</span>
+                </dd>
+                <dt><span>Content</span></dt>
+                <dd>
+                    <div *ngIf="courseMaterial.content">
+                        <a (click)="openFile(courseMaterial.contentContentType, courseMaterial.content)">open</a>
+                        {{courseMaterial.contentContentType}}, {{byteSize(courseMaterial.content)}}
+                    </div>
+                </dd>
+                <dt><span>Display Order</span></dt>
+                <dd>
+                    <span>{{courseMaterial.displayOrder}}</span>
+                </dd>
+                <dt><span>Course</span></dt>
+                <dd>
+                    <div *ngIf="courseMaterial.course">
+                        <a [routerLink]="['/course', courseMaterial.course?.id, 'view']">{{courseMaterial.course?.title}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/course-material', courseMaterial.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

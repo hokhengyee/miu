@@ -1,0 +1,78 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="lecturerProfile">
+            <h2><span>Lecturer Profile</span> {{lecturerProfile.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Other Titles</span></dt>
+                <dd>
+                    <span>{{lecturerProfile.otherTitles}}</span>
+                </dd>
+                <dt><span>Age</span></dt>
+                <dd>
+                    <span>{{lecturerProfile.age}}</span>
+                </dd>
+                <dt><span>Ordination</span></dt>
+                <dd>
+                    <span>{{lecturerProfile.ordination}}</span>
+                </dd>
+                <dt><span>Academic History</span></dt>
+                <dd>
+                    <span>{{lecturerProfile.academicHistory}}</span>
+                </dd>
+                <dt><span>Professional History</span></dt>
+                <dd>
+                    <span>{{lecturerProfile.professionalHistory}}</span>
+                </dd>
+                <dt><span>Past And Current Ministry</span></dt>
+                <dd>
+                    <span>{{lecturerProfile.pastAndCurrentMinistry}}</span>
+                </dd>
+                <dt><span>Publications</span></dt>
+                <dd>
+                    <span>{{lecturerProfile.publications}}</span>
+                </dd>
+                <dt><span>Family Details</span></dt>
+                <dd>
+                    <span>{{lecturerProfile.familyDetails}}</span>
+                </dd>
+                <dt><span>Reference</span></dt>
+                <dd>
+                    <span>{{lecturerProfile.reference}}</span>
+                </dd>
+                <dt><span>Profile Photo</span></dt>
+                <dd>
+                    <div *ngIf="lecturerProfile.profilePhoto">
+                        <a (click)="openFile(lecturerProfile.profilePhotoContentType, lecturerProfile.profilePhoto)">
+                            <img [src]="'data:' + lecturerProfile.profilePhotoContentType + ';base64,' + lecturerProfile.profilePhoto" style="max-width: 100%;" alt="lecturerProfile image"/>
+                        </a>
+                        {{lecturerProfile.profilePhotoContentType}}, {{byteSize(lecturerProfile.profilePhoto)}}
+                    </div>
+                </dd>
+                <dt><span>User</span></dt>
+                <dd>
+                    {{lecturerProfile.user?.login}}
+                </dd>
+                <dt><span>Salutation</span></dt>
+                <dd>
+                    <div *ngIf="lecturerProfile.salutation">
+                        <a [routerLink]="['/salutation', lecturerProfile.salutation?.id, 'view']">{{lecturerProfile.salutation?.title}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/lecturer-profile', lecturerProfile.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

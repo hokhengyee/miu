@@ -5,6 +5,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -19,7 +20,7 @@ public class RegistrationAcademicDetails implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Size(max = 1000)
@@ -30,8 +31,8 @@ public class RegistrationAcademicDetails implements Serializable {
     @Column(name = "exam_passed_2", length = 1000)
     private String examPassed2;
 
-    @Min(value = 1900)
-    @Max(value = 9999)
+    @Min(value = 1900L)
+    @Max(value = 9999L)
     @Column(name = "year_2")
     private Long year2;
 
@@ -46,8 +47,8 @@ public class RegistrationAcademicDetails implements Serializable {
     @Column(name = "exam_passed_3", length = 1000)
     private String examPassed3;
 
-    @Min(value = 1900)
-    @Max(value = 9999)
+    @Min(value = 1900L)
+    @Max(value = 9999L)
     @Column(name = "year_3")
     private Long year3;
 
@@ -62,8 +63,8 @@ public class RegistrationAcademicDetails implements Serializable {
     @Column(name = "exam_passed_4", length = 1000)
     private String examPassed4;
 
-    @Min(value = 1900)
-    @Max(value = 9999)
+    @Min(value = 1900L)
+    @Max(value = 9999L)
     @Column(name = "year_4")
     private Long year4;
 
@@ -81,14 +82,15 @@ public class RegistrationAcademicDetails implements Serializable {
     @Column(name = "exam_passed_1", length = 1000)
     private String examPassed1;
 
-    @Min(value = 1900)
-    @Max(value = 9999)
+    @Min(value = 1900L)
+    @Max(value = 9999L)
     @Column(name = "year_1")
     private Long year1;
 
     @Column(name = "grade_1")
     private String grade1;
 
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -317,6 +319,7 @@ public class RegistrationAcademicDetails implements Serializable {
     public void setGrade1(String grade1) {
         this.grade1 = grade1;
     }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -327,38 +330,38 @@ public class RegistrationAcademicDetails implements Serializable {
             return false;
         }
         RegistrationAcademicDetails registrationAcademicDetails = (RegistrationAcademicDetails) o;
-        if (registrationAcademicDetails.id == null || id == null) {
+        if (registrationAcademicDetails.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(id, registrationAcademicDetails.id);
+        return Objects.equals(getId(), registrationAcademicDetails.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(getId());
     }
 
     @Override
     public String toString() {
         return "RegistrationAcademicDetails{" +
-            "id=" + id +
-            ", nameOfInstitution2='" + nameOfInstitution2 + "'" +
-            ", examPassed2='" + examPassed2 + "'" +
-            ", year2='" + year2 + "'" +
-            ", grade2='" + grade2 + "'" +
-            ", nameOfInstitution3='" + nameOfInstitution3 + "'" +
-            ", examPassed3='" + examPassed3 + "'" +
-            ", year3='" + year3 + "'" +
-            ", grade3='" + grade3 + "'" +
-            ", nameOfInstitution4='" + nameOfInstitution4 + "'" +
-            ", examPassed4='" + examPassed4 + "'" +
-            ", year4='" + year4 + "'" +
-            ", grade4='" + grade4 + "'" +
-            ", md5key='" + md5key + "'" +
-            ", nameOfInstitution1='" + nameOfInstitution1 + "'" +
-            ", examPassed1='" + examPassed1 + "'" +
-            ", year1='" + year1 + "'" +
-            ", grade1='" + grade1 + "'" +
-            '}';
+            "id=" + getId() +
+            ", nameOfInstitution2='" + getNameOfInstitution2() + "'" +
+            ", examPassed2='" + getExamPassed2() + "'" +
+            ", year2=" + getYear2() +
+            ", grade2='" + getGrade2() + "'" +
+            ", nameOfInstitution3='" + getNameOfInstitution3() + "'" +
+            ", examPassed3='" + getExamPassed3() + "'" +
+            ", year3=" + getYear3() +
+            ", grade3='" + getGrade3() + "'" +
+            ", nameOfInstitution4='" + getNameOfInstitution4() + "'" +
+            ", examPassed4='" + getExamPassed4() + "'" +
+            ", year4=" + getYear4() +
+            ", grade4='" + getGrade4() + "'" +
+            ", md5key='" + getMd5key() + "'" +
+            ", nameOfInstitution1='" + getNameOfInstitution1() + "'" +
+            ", examPassed1='" + getExamPassed1() + "'" +
+            ", year1=" + getYear1() +
+            ", grade1='" + getGrade1() + "'" +
+            "}";
     }
 }

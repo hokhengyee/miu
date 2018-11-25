@@ -1,0 +1,104 @@
+<div>
+    <h2 id="page-heading">
+        <span>Student Profiles</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-student-profile" [routerLink]="['/student-profile/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span >
+            Create new Student Profile
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <br/>
+    <div class="table-responsive" *ngIf="studentProfiles">
+        <table class="table table-striped">
+            <thead>
+            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
+            <th jhiSortBy="id"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="studentId"><span>Student Id</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="dateOfBirth"><span>Date Of Birth</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="phone"><span>Phone</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="applicationDate"><span>Application Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="commencementDate"><span>Commencement Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="completionDate"><span>Completion Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="mailingAddress"><span>Mailing Address</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="profilePhoto"><span>Profile Photo</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="extendedCompletionDate"><span>Extended Completion Date</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="salutation.title"><span>Salutation</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="gender.title"><span>Gender</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="supervisor.login"><span>Supervisor</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="user.login"><span>User</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let studentProfile of studentProfiles ;trackBy: trackId">
+                <td><a [routerLink]="['/student-profile', studentProfile.id, 'view' ]">{{studentProfile.id}}</a></td>
+                <td>{{studentProfile.studentId}}</td>
+                <td>{{studentProfile.dateOfBirth | date:'mediumDate'}}</td>
+                <td>{{studentProfile.phone}}</td>
+                <td>{{studentProfile.applicationDate | date:'mediumDate'}}</td>
+                <td>{{studentProfile.commencementDate | date:'mediumDate'}}</td>
+                <td>{{studentProfile.completionDate | date:'mediumDate'}}</td>
+                <td>{{studentProfile.mailingAddress}}</td>
+                <td>
+                    <a *ngIf="studentProfile.profilePhoto" (click)="openFile(studentProfile.profilePhotoContentType, studentProfile.profilePhoto)">
+                        <img [src]="'data:' + studentProfile.profilePhotoContentType + ';base64,' + studentProfile.profilePhoto" style="max-height: 30px;" alt="studentProfile image"/>
+                    </a>
+                    <span *ngIf="studentProfile.profilePhoto">{{studentProfile.profilePhotoContentType}}, {{byteSize(studentProfile.profilePhoto)}}</span>
+                </td>
+                <td>{{studentProfile.extendedCompletionDate | date:'mediumDate'}}</td>
+                <td>
+                    <div *ngIf="studentProfile.salutation">
+                        <a [routerLink]="['../salutation', studentProfile.salutation?.id, 'view' ]" >{{studentProfile.salutation?.title}}</a>
+                    </div>
+                </td>
+                <td>
+                    <div *ngIf="studentProfile.gender">
+                        <a [routerLink]="['../gender', studentProfile.gender?.id, 'view' ]" >{{studentProfile.gender?.title}}</a>
+                    </div>
+                </td>
+                <td>
+                    {{studentProfile.supervisor?.login}}
+                </td>
+                <td>
+                    {{studentProfile.user?.login}}
+                </td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['/student-profile', studentProfile.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/student-profile', studentProfile.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'student-profile/'+ studentProfile.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- Pager is not implemented yet, so this is normal pagination instead -->
+    <div *ngIf="studentProfiles && studentProfiles.length">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="queryCount" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+        </div>
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(page)"></ngb-pagination>
+        </div>
+    </div>
+</div>

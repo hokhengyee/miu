@@ -1,18 +1,19 @@
 package com.miu.repository;
 
 import com.miu.domain.StudentPayment;
-
 import org.springframework.data.jpa.repository.*;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 /**
- * Spring Data JPA repository for the StudentPayment entity.
+ * Spring Data  repository for the StudentPayment entity.
  */
 @SuppressWarnings("unused")
-public interface StudentPaymentRepository extends JpaRepository<StudentPayment,Long> {
+@Repository
+public interface StudentPaymentRepository extends JpaRepository<StudentPayment, Long> {
 
-    @Query("select studentPayment from StudentPayment studentPayment where studentPayment.user.login = ?#{principal.username}")
+    @Query("select student_payment from StudentPayment student_payment where student_payment.user.login = ?#{principal.username}")
     List<StudentPayment> findByUserIsCurrentUser();
 
 }

@@ -1,0 +1,46 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="commonResources">
+            <h2><span>Common Resources</span> {{commonResources.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Title</span></dt>
+                <dd>
+                    <span>{{commonResources.title}}</span>
+                </dd>
+                <dt><span>Content</span></dt>
+                <dd>
+                    <div *ngIf="commonResources.content">
+                        <a (click)="openFile(commonResources.contentContentType, commonResources.content)">open</a>
+                        {{commonResources.contentContentType}}, {{byteSize(commonResources.content)}}
+                    </div>
+                </dd>
+                <dt><span>Description</span></dt>
+                <dd>
+                    <span>{{commonResources.description}}</span>
+                </dd>
+                <dt><span>Display Order</span></dt>
+                <dd>
+                    <span>{{commonResources.displayOrder}}</span>
+                </dd>
+                <dt><span>Website Link</span></dt>
+                <dd>
+                    <span>{{commonResources.websiteLink}}</span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/common-resources', commonResources.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

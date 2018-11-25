@@ -1,10 +1,12 @@
 package com.miu.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -19,7 +21,7 @@ public class CourseMaterial implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
@@ -43,10 +45,12 @@ public class CourseMaterial implements Serializable {
     @Column(name = "display_order")
     private Long displayOrder;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("")
     private Course course;
 
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -145,6 +149,7 @@ public class CourseMaterial implements Serializable {
     public void setCourse(Course course) {
         this.course = course;
     }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -155,27 +160,27 @@ public class CourseMaterial implements Serializable {
             return false;
         }
         CourseMaterial courseMaterial = (CourseMaterial) o;
-        if (courseMaterial.id == null || id == null) {
+        if (courseMaterial.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(id, courseMaterial.id);
+        return Objects.equals(getId(), courseMaterial.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(getId());
     }
 
     @Override
     public String toString() {
         return "CourseMaterial{" +
-            "id=" + id +
-            ", title='" + title + "'" +
-            ", description='" + description + "'" +
-            ", websiteLink='" + websiteLink + "'" +
-            ", content='" + content + "'" +
-            ", contentContentType='" + contentContentType + "'" +
-            ", displayOrder='" + displayOrder + "'" +
-            '}';
+            "id=" + getId() +
+            ", title='" + getTitle() + "'" +
+            ", description='" + getDescription() + "'" +
+            ", websiteLink='" + getWebsiteLink() + "'" +
+            ", content='" + getContent() + "'" +
+            ", contentContentType='" + getContentContentType() + "'" +
+            ", displayOrder=" + getDisplayOrder() +
+            "}";
     }
 }

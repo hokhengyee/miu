@@ -1,0 +1,267 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-online-application-heading">Create or edit a Online Application</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!onlineApplication.id">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="onlineApplication.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_dateOfBirth">Date Of Birth</label>
+                    <div class="input-group">
+                        <input id="field_dateOfBirth" type="text" class="form-control" name="dateOfBirth" ngbDatepicker  #dateOfBirthDp="ngbDatepicker" [(ngModel)]="onlineApplication.dateOfBirth"
+                        required/>
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="dateOfBirthDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
+                        </span>
+                    </div>
+                    <div [hidden]="!(editForm.controls.dateOfBirth?.dirty && editForm.controls.dateOfBirth?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.dateOfBirth?.errors?.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_telephone">Telephone</label>
+                    <input type="text" class="form-control" name="telephone" id="field_telephone"
+                        [(ngModel)]="onlineApplication.telephone" required maxlength="1000"/>
+                    <div [hidden]="!(editForm.controls.telephone?.dirty && editForm.controls.telephone?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.telephone?.errors?.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.telephone?.errors?.maxlength">
+                        This field cannot be longer than 1000 characters.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_email">Email</label>
+                    <input type="text" class="form-control" name="email" id="field_email"
+                        [(ngModel)]="onlineApplication.email" required/>
+                    <div [hidden]="!(editForm.controls.email?.dirty && editForm.controls.email?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.email?.errors?.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_city">City</label>
+                    <input type="text" class="form-control" name="city" id="field_city"
+                        [(ngModel)]="onlineApplication.city" required maxlength="1000"/>
+                    <div [hidden]="!(editForm.controls.city?.dirty && editForm.controls.city?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.city?.errors?.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.city?.errors?.maxlength">
+                        This field cannot be longer than 1000 characters.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_state">State</label>
+                    <input type="text" class="form-control" name="state" id="field_state"
+                        [(ngModel)]="onlineApplication.state" required maxlength="1000"/>
+                    <div [hidden]="!(editForm.controls.state?.dirty && editForm.controls.state?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.state?.errors?.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.state?.errors?.maxlength">
+                        This field cannot be longer than 1000 characters.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_country">Country</label>
+                    <input type="text" class="form-control" name="country" id="field_country"
+                        [(ngModel)]="onlineApplication.country" required maxlength="1000"/>
+                    <div [hidden]="!(editForm.controls.country?.dirty && editForm.controls.country?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.country?.errors?.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.country?.errors?.maxlength">
+                        This field cannot be longer than 1000 characters.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_postcode">Postcode</label>
+                    <input type="text" class="form-control" name="postcode" id="field_postcode"
+                        [(ngModel)]="onlineApplication.postcode" required maxlength="1000"/>
+                    <div [hidden]="!(editForm.controls.postcode?.dirty && editForm.controls.postcode?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.postcode?.errors?.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.postcode?.errors?.maxlength">
+                        This field cannot be longer than 1000 characters.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_registrationDatetime">Registration Datetime</label>
+                    <div class="d-flex">
+                        <input id="field_registrationDatetime" type="datetime-local" class="form-control" name="registrationDatetime" [(ngModel)]="registrationDatetime"
+                        />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_surname">Surname</label>
+                    <input type="text" class="form-control" name="surname" id="field_surname"
+                        [(ngModel)]="onlineApplication.surname" required maxlength="1000"/>
+                    <div [hidden]="!(editForm.controls.surname?.dirty && editForm.controls.surname?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.surname?.errors?.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.surname?.errors?.maxlength">
+                        This field cannot be longer than 1000 characters.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_givenName">Given Name</label>
+                    <input type="text" class="form-control" name="givenName" id="field_givenName"
+                        [(ngModel)]="onlineApplication.givenName" required maxlength="1000"/>
+                    <div [hidden]="!(editForm.controls.givenName?.dirty && editForm.controls.givenName?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.givenName?.errors?.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.givenName?.errors?.maxlength">
+                        This field cannot be longer than 1000 characters.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_address">Address</label>
+                    <input type="text" class="form-control" name="address" id="field_address"
+                        [(ngModel)]="onlineApplication.address" required maxlength="3000"/>
+                    <div [hidden]="!(editForm.controls.address?.dirty && editForm.controls.address?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.address?.errors?.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.address?.errors?.maxlength">
+                        This field cannot be longer than 3000 characters.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_profilePhoto">Profile Photo</label>
+                    <div>
+                        <img [src]="'data:' + onlineApplication.profilePhotoContentType + ';base64,' + onlineApplication.profilePhoto" style="max-height: 100px;" *ngIf="onlineApplication.profilePhoto" alt="onlineApplication image"/>
+                        <div *ngIf="onlineApplication.profilePhoto" class="form-text text-danger clearfix">
+                            <span class="pull-left">{{onlineApplication.profilePhotoContentType}}, {{byteSize(onlineApplication.profilePhoto)}}</span>
+                            <button type="button" (click)="clearInputImage('profilePhoto', 'profilePhotoContentType', 'fileImage')" class="btn btn-secondary btn-xs pull-right">
+                                <fa-icon [icon]="'times'"></fa-icon>
+                            </button>
+                        </div>
+                        <input type="file" id="file_profilePhoto" (change)="setFileData($event, onlineApplication, 'profilePhoto', true)" accept="image/*"/>
+                    </div>
+                    <input type="hidden" class="form-control" name="profilePhoto" id="field_profilePhoto"
+                        [(ngModel)]="onlineApplication.profilePhoto" />
+                    <input type="hidden" class="form-control" name="profilePhotoContentType" id="field_profilePhotoContentType"
+                        [(ngModel)]="onlineApplication.profilePhotoContentType" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_academicCertificate">Academic Certificate</label>
+                    <div>
+                        <div *ngIf="onlineApplication.academicCertificate" class="form-text text-danger clearfix">
+                            <a class="pull-left" (click)="openFile(onlineApplication.academicCertificateContentType, onlineApplication.academicCertificate)">open</a><br>
+                            <span class="pull-left">{{onlineApplication.academicCertificateContentType}}, {{byteSize(onlineApplication.academicCertificate)}}</span>
+                            <button type="button" (click)="onlineApplication.academicCertificate=null;onlineApplication.academicCertificateContentType=null;"
+                                    class="btn btn-secondary btn-xs pull-right">
+                                <fa-icon [icon]="'times'"></fa-icon>
+                            </button>
+                        </div>
+                        <input type="file" id="file_academicCertificate" (change)="setFileData($event, onlineApplication, 'academicCertificate', false)"/>
+                    </div>
+                    <input type="hidden" class="form-control" name="academicCertificate" id="field_academicCertificate"
+                        [(ngModel)]="onlineApplication.academicCertificate" />
+                    <input type="hidden" class="form-control" name="academicCertificateContentType" id="field_academicCertificateContentType"
+                        [(ngModel)]="onlineApplication.academicCertificateContentType" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_letterOfRecommendation">Letter Of Recommendation</label>
+                    <div>
+                        <div *ngIf="onlineApplication.letterOfRecommendation" class="form-text text-danger clearfix">
+                            <a class="pull-left" (click)="openFile(onlineApplication.letterOfRecommendationContentType, onlineApplication.letterOfRecommendation)">open</a><br>
+                            <span class="pull-left">{{onlineApplication.letterOfRecommendationContentType}}, {{byteSize(onlineApplication.letterOfRecommendation)}}</span>
+                            <button type="button" (click)="onlineApplication.letterOfRecommendation=null;onlineApplication.letterOfRecommendationContentType=null;"
+                                    class="btn btn-secondary btn-xs pull-right">
+                                <fa-icon [icon]="'times'"></fa-icon>
+                            </button>
+                        </div>
+                        <input type="file" id="file_letterOfRecommendation" (change)="setFileData($event, onlineApplication, 'letterOfRecommendation', false)"/>
+                    </div>
+                    <input type="hidden" class="form-control" name="letterOfRecommendation" id="field_letterOfRecommendation"
+                        [(ngModel)]="onlineApplication.letterOfRecommendation" />
+                    <input type="hidden" class="form-control" name="letterOfRecommendationContentType" id="field_letterOfRecommendationContentType"
+                        [(ngModel)]="onlineApplication.letterOfRecommendationContentType" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_profileDocument">Profile Document</label>
+                    <div>
+                        <div *ngIf="onlineApplication.profileDocument" class="form-text text-danger clearfix">
+                            <a class="pull-left" (click)="openFile(onlineApplication.profileDocumentContentType, onlineApplication.profileDocument)">open</a><br>
+                            <span class="pull-left">{{onlineApplication.profileDocumentContentType}}, {{byteSize(onlineApplication.profileDocument)}}</span>
+                            <button type="button" (click)="onlineApplication.profileDocument=null;onlineApplication.profileDocumentContentType=null;"
+                                    class="btn btn-secondary btn-xs pull-right">
+                                <fa-icon [icon]="'times'"></fa-icon>
+                            </button>
+                        </div>
+                        <input type="file" id="file_profileDocument" (change)="setFileData($event, onlineApplication, 'profileDocument', false)"/>
+                    </div>
+                    <input type="hidden" class="form-control" name="profileDocument" id="field_profileDocument"
+                        [(ngModel)]="onlineApplication.profileDocument" />
+                    <input type="hidden" class="form-control" name="profileDocumentContentType" id="field_profileDocumentContentType"
+                        [(ngModel)]="onlineApplication.profileDocumentContentType" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_md5key">Md 5 Key</label>
+                    <input type="text" class="form-control" name="md5key" id="field_md5key"
+                        [(ngModel)]="onlineApplication.md5key" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_course">Course</label>
+                    <select class="form-control" id="field_course" name="course" [(ngModel)]="onlineApplication.course"  required>
+                        <option *ngIf="!editForm.value.course" [ngValue]="null" selected></option>
+                        <option [ngValue]="courseOption.id === onlineApplication.course?.id ? onlineApplication.course : courseOption" *ngFor="let courseOption of courses; trackBy: trackCourseById">{{courseOption.title}}</option>
+                    </select>
+                </div>
+                <div [hidden]="!(editForm.controls.course?.dirty && editForm.controls.course?.invalid)">
+                    <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.course?.errors?.required">
+                        This field is required.
+                    </small>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

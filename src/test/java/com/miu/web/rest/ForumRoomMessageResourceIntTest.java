@@ -4,22 +4,22 @@ import com.miu.MiuApp;
 
 import com.miu.domain.ForumRoomMessage;
 import com.miu.repository.ForumRoomMessageRepository;
+import com.miu.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.time.Instant;
 import java.time.ZonedDateTime;
@@ -27,7 +27,9 @@ import java.time.ZoneOffset;
 import java.time.ZoneId;
 import java.util.List;
 
+
 import static com.miu.web.rest.TestUtil.sameInstant;
+import static com.miu.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -48,16 +50,19 @@ public class ForumRoomMessageResourceIntTest {
     private static final ZonedDateTime DEFAULT_MESSAGE_DATETIME = ZonedDateTime.ofInstant(Instant.ofEpochMilli(0L), ZoneOffset.UTC);
     private static final ZonedDateTime UPDATED_MESSAGE_DATETIME = ZonedDateTime.now(ZoneId.systemDefault()).withNano(0);
 
-    @Inject
+    @Autowired
     private ForumRoomMessageRepository forumRoomMessageRepository;
 
-    @Inject
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
-    @Inject
+    @Autowired
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
-    @Inject
+    @Autowired
+    private ExceptionTranslator exceptionTranslator;
+
+    @Autowired
     private EntityManager em;
 
     private MockMvc restForumRoomMessageMockMvc;
@@ -67,10 +72,11 @@ public class ForumRoomMessageResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        ForumRoomMessageResource forumRoomMessageResource = new ForumRoomMessageResource();
-        ReflectionTestUtils.setField(forumRoomMessageResource, "forumRoomMessageRepository", forumRoomMessageRepository);
+        final ForumRoomMessageResource forumRoomMessageResource = new ForumRoomMessageResource(forumRoomMessageRepository);
         this.restForumRoomMessageMockMvc = MockMvcBuilders.standaloneSetup(forumRoomMessageResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -82,8 +88,8 @@ public class ForumRoomMessageResourceIntTest {
      */
     public static ForumRoomMessage createEntity(EntityManager em) {
         ForumRoomMessage forumRoomMessage = new ForumRoomMessage()
-                .message(DEFAULT_MESSAGE)
-                .messageDatetime(DEFAULT_MESSAGE_DATETIME);
+            .message(DEFAULT_MESSAGE)
+            .messageDatetime(DEFAULT_MESSAGE_DATETIME);
         return forumRoomMessage;
     }
 
@@ -98,7 +104,6 @@ public class ForumRoomMessageResourceIntTest {
         int databaseSizeBeforeCreate = forumRoomMessageRepository.findAll().size();
 
         // Create the ForumRoomMessage
-
         restForumRoomMessageMockMvc.perform(post("/api/forum-room-messages")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(forumRoomMessage)))
@@ -118,16 +123,15 @@ public class ForumRoomMessageResourceIntTest {
         int databaseSizeBeforeCreate = forumRoomMessageRepository.findAll().size();
 
         // Create the ForumRoomMessage with an existing ID
-        ForumRoomMessage existingForumRoomMessage = new ForumRoomMessage();
-        existingForumRoomMessage.setId(1L);
+        forumRoomMessage.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restForumRoomMessageMockMvc.perform(post("/api/forum-room-messages")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(existingForumRoomMessage)))
+            .content(TestUtil.convertObjectToJsonBytes(forumRoomMessage)))
             .andExpect(status().isBadRequest());
 
-        // Validate the Alice in the database
+        // Validate the ForumRoomMessage in the database
         List<ForumRoomMessage> forumRoomMessageList = forumRoomMessageRepository.findAll();
         assertThat(forumRoomMessageList).hasSize(databaseSizeBeforeCreate);
     }
@@ -164,7 +168,7 @@ public class ForumRoomMessageResourceIntTest {
             .andExpect(jsonPath("$.[*].message").value(hasItem(DEFAULT_MESSAGE.toString())))
             .andExpect(jsonPath("$.[*].messageDatetime").value(hasItem(sameInstant(DEFAULT_MESSAGE_DATETIME))));
     }
-
+    
     @Test
     @Transactional
     public void getForumRoomMessage() throws Exception {
@@ -193,13 +197,16 @@ public class ForumRoomMessageResourceIntTest {
     public void updateForumRoomMessage() throws Exception {
         // Initialize the database
         forumRoomMessageRepository.saveAndFlush(forumRoomMessage);
+
         int databaseSizeBeforeUpdate = forumRoomMessageRepository.findAll().size();
 
         // Update the forumRoomMessage
-        ForumRoomMessage updatedForumRoomMessage = forumRoomMessageRepository.findOne(forumRoomMessage.getId());
+        ForumRoomMessage updatedForumRoomMessage = forumRoomMessageRepository.findById(forumRoomMessage.getId()).get();
+        // Disconnect from session so that the updates on updatedForumRoomMessage are not directly saved in db
+        em.detach(updatedForumRoomMessage);
         updatedForumRoomMessage
-                .message(UPDATED_MESSAGE)
-                .messageDatetime(UPDATED_MESSAGE_DATETIME);
+            .message(UPDATED_MESSAGE)
+            .messageDatetime(UPDATED_MESSAGE_DATETIME);
 
         restForumRoomMessageMockMvc.perform(put("/api/forum-room-messages")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -221,15 +228,15 @@ public class ForumRoomMessageResourceIntTest {
 
         // Create the ForumRoomMessage
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restForumRoomMessageMockMvc.perform(put("/api/forum-room-messages")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(forumRoomMessage)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the ForumRoomMessage in the database
         List<ForumRoomMessage> forumRoomMessageList = forumRoomMessageRepository.findAll();
-        assertThat(forumRoomMessageList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(forumRoomMessageList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -237,6 +244,7 @@ public class ForumRoomMessageResourceIntTest {
     public void deleteForumRoomMessage() throws Exception {
         // Initialize the database
         forumRoomMessageRepository.saveAndFlush(forumRoomMessage);
+
         int databaseSizeBeforeDelete = forumRoomMessageRepository.findAll().size();
 
         // Get the forumRoomMessage
@@ -247,5 +255,20 @@ public class ForumRoomMessageResourceIntTest {
         // Validate the database is empty
         List<ForumRoomMessage> forumRoomMessageList = forumRoomMessageRepository.findAll();
         assertThat(forumRoomMessageList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    @Transactional
+    public void equalsVerifier() throws Exception {
+        TestUtil.equalsVerifier(ForumRoomMessage.class);
+        ForumRoomMessage forumRoomMessage1 = new ForumRoomMessage();
+        forumRoomMessage1.setId(1L);
+        ForumRoomMessage forumRoomMessage2 = new ForumRoomMessage();
+        forumRoomMessage2.setId(forumRoomMessage1.getId());
+        assertThat(forumRoomMessage1).isEqualTo(forumRoomMessage2);
+        forumRoomMessage2.setId(2L);
+        assertThat(forumRoomMessage1).isNotEqualTo(forumRoomMessage2);
+        forumRoomMessage1.setId(null);
+        assertThat(forumRoomMessage1).isNotEqualTo(forumRoomMessage2);
     }
 }

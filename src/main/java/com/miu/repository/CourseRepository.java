@@ -1,15 +1,15 @@
 package com.miu.repository;
 
 import com.miu.domain.Course;
-
 import org.springframework.data.jpa.repository.*;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
 
 /**
- * Spring Data JPA repository for the Course entity.
+ * Spring Data  repository for the Course entity.
  */
 @SuppressWarnings("unused")
-public interface CourseRepository extends JpaRepository<Course,Long> {
+@Repository
+public interface CourseRepository extends JpaRepository<Course, Long> {
 
 }

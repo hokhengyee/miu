@@ -1,0 +1,75 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="ministerialWorkExperience">
+            <h2><span>Ministerial Work Experience</span> {{ministerialWorkExperience.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Name Of Ministry 2</span></dt>
+                <dd>
+                    <span>{{ministerialWorkExperience.nameOfMinistry2}}</span>
+                </dd>
+                <dt><span>Area Of Ministry 2</span></dt>
+                <dd>
+                    <span>{{ministerialWorkExperience.areaOfMinistry2}}</span>
+                </dd>
+                <dt><span>Name Of Ministry 3</span></dt>
+                <dd>
+                    <span>{{ministerialWorkExperience.nameOfMinistry3}}</span>
+                </dd>
+                <dt><span>Area Of Ministry 3</span></dt>
+                <dd>
+                    <span>{{ministerialWorkExperience.areaOfMinistry3}}</span>
+                </dd>
+                <dt><span>Name Of Ministry 4</span></dt>
+                <dd>
+                    <span>{{ministerialWorkExperience.nameOfMinistry4}}</span>
+                </dd>
+                <dt><span>Area Of Ministry 4</span></dt>
+                <dd>
+                    <span>{{ministerialWorkExperience.areaOfMinistry4}}</span>
+                </dd>
+                <dt><span>Md 5 Key</span></dt>
+                <dd>
+                    <span>{{ministerialWorkExperience.md5Key}}</span>
+                </dd>
+                <dt><span>Years 2</span></dt>
+                <dd>
+                    <span>{{ministerialWorkExperience.years2}}</span>
+                </dd>
+                <dt><span>Years 3</span></dt>
+                <dd>
+                    <span>{{ministerialWorkExperience.years3}}</span>
+                </dd>
+                <dt><span>Years 4</span></dt>
+                <dd>
+                    <span>{{ministerialWorkExperience.years4}}</span>
+                </dd>
+                <dt><span>Name Of Ministry 1</span></dt>
+                <dd>
+                    <span>{{ministerialWorkExperience.nameOfMinistry1}}</span>
+                </dd>
+                <dt><span>Area Of Ministry 1</span></dt>
+                <dd>
+                    <span>{{ministerialWorkExperience.areaOfMinistry1}}</span>
+                </dd>
+                <dt><span>Years 1</span></dt>
+                <dd>
+                    <span>{{ministerialWorkExperience.years1}}</span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/ministerial-work-experience', ministerialWorkExperience.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

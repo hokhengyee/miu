@@ -1,0 +1,74 @@
+<div>
+    <h2 id="page-heading">
+        <span>Common Resources</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-common-resources" [routerLink]="['/common-resources/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span >
+            Create new Common Resources
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <br/>
+    <div class="table-responsive" *ngIf="commonResources">
+        <table class="table table-striped">
+            <thead>
+            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
+            <th jhiSortBy="id"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="title"><span>Title</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="content"><span>Content</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="description"><span>Description</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="displayOrder"><span>Display Order</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="websiteLink"><span>Website Link</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let commonResources of commonResources ;trackBy: trackId">
+                <td><a [routerLink]="['/common-resources', commonResources.id, 'view' ]">{{commonResources.id}}</a></td>
+                <td>{{commonResources.title}}</td>
+                <td>
+                    <a *ngIf="commonResources.content" (click)="openFile(commonResources.contentContentType, commonResources.content)">open</a>
+                    <span *ngIf="commonResources.content">{{commonResources.contentContentType}}, {{byteSize(commonResources.content)}}</span>
+                </td>
+                <td>{{commonResources.description}}</td>
+                <td>{{commonResources.displayOrder}}</td>
+                <td>{{commonResources.websiteLink}}</td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['/common-resources', commonResources.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/common-resources', commonResources.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'common-resources/'+ commonResources.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- Pager is not implemented yet, so this is normal pagination instead -->
+    <div *ngIf="commonResources && commonResources.length">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="queryCount" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+        </div>
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(page)"></ngb-pagination>
+        </div>
+    </div>
+</div>

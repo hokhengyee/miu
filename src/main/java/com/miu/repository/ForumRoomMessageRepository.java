@@ -1,18 +1,19 @@
 package com.miu.repository;
 
 import com.miu.domain.ForumRoomMessage;
-
 import org.springframework.data.jpa.repository.*;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 /**
- * Spring Data JPA repository for the ForumRoomMessage entity.
+ * Spring Data  repository for the ForumRoomMessage entity.
  */
 @SuppressWarnings("unused")
-public interface ForumRoomMessageRepository extends JpaRepository<ForumRoomMessage,Long> {
+@Repository
+public interface ForumRoomMessageRepository extends JpaRepository<ForumRoomMessage, Long> {
 
-    @Query("select forumRoomMessage from ForumRoomMessage forumRoomMessage where forumRoomMessage.user.login = ?#{principal.username}")
+    @Query("select forum_room_message from ForumRoomMessage forum_room_message where forum_room_message.user.login = ?#{principal.username}")
     List<ForumRoomMessage> findByUserIsCurrentUser();
 
 }

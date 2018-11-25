@@ -1,0 +1,78 @@
+<div>
+    <h2 id="page-heading">
+        <span>Academic Certificates</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-academic-certificate" [routerLink]="['/academic-certificate/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span >
+            Create new Academic Certificate
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <br/>
+    <div class="table-responsive" *ngIf="academicCertificates">
+        <table class="table table-striped">
+            <thead>
+            <tr jhiSort [(predicate)]="predicate" [(ascending)]="reverse" [callback]="transition.bind(this)">
+            <th jhiSortBy="id"><span>ID</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="md5Key"><span>Md 5 Key</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="academicCertificate1"><span>Academic Certificate 1</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="academicCertificate2"><span>Academic Certificate 2</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th jhiSortBy="academicCertificate3"><span>Academic Certificate 3</span> <fa-icon [icon]="'sort'"></fa-icon></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let academicCertificate of academicCertificates ;trackBy: trackId">
+                <td><a [routerLink]="['/academic-certificate', academicCertificate.id, 'view' ]">{{academicCertificate.id}}</a></td>
+                <td>{{academicCertificate.md5Key}}</td>
+                <td>
+                    <a *ngIf="academicCertificate.academicCertificate1" (click)="openFile(academicCertificate.academicCertificate1ContentType, academicCertificate.academicCertificate1)">open</a>
+                    <span *ngIf="academicCertificate.academicCertificate1">{{academicCertificate.academicCertificate1ContentType}}, {{byteSize(academicCertificate.academicCertificate1)}}</span>
+                </td>
+                <td>
+                    <a *ngIf="academicCertificate.academicCertificate2" (click)="openFile(academicCertificate.academicCertificate2ContentType, academicCertificate.academicCertificate2)">open</a>
+                    <span *ngIf="academicCertificate.academicCertificate2">{{academicCertificate.academicCertificate2ContentType}}, {{byteSize(academicCertificate.academicCertificate2)}}</span>
+                </td>
+                <td>
+                    <a *ngIf="academicCertificate.academicCertificate3" (click)="openFile(academicCertificate.academicCertificate3ContentType, academicCertificate.academicCertificate3)">open</a>
+                    <span *ngIf="academicCertificate.academicCertificate3">{{academicCertificate.academicCertificate3ContentType}}, {{byteSize(academicCertificate.academicCertificate3)}}</span>
+                </td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['/academic-certificate', academicCertificate.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/academic-certificate', academicCertificate.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'academic-certificate/'+ academicCertificate.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- Pager is not implemented yet, so this is normal pagination instead -->
+    <div *ngIf="academicCertificates && academicCertificates.length">
+        <div class="row justify-content-center">
+            <jhi-item-count [page]="page" [total]="queryCount" [itemsPerPage]="itemsPerPage"></jhi-item-count>
+        </div>
+        <div class="row justify-content-center">
+            <ngb-pagination [collectionSize]="totalItems" [(page)]="page" [pageSize]="itemsPerPage" [maxSize]="5" [rotate]="true" [boundaryLinks]="true" (pageChange)="loadPage(page)"></ngb-pagination>
+        </div>
+    </div>
+</div>

@@ -2,12 +2,11 @@ package com.miu.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.miu.domain.Gallery;
-
 import com.miu.repository.GalleryRepository;
+import com.miu.web.rest.errors.BadRequestAlertException;
 import com.miu.web.rest.util.HeaderUtil;
 import com.miu.web.rest.util.PaginationUtil;
-
-import io.swagger.annotations.ApiParam;
+import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -17,10 +16,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.inject.Inject;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -32,9 +31,14 @@ import java.util.Optional;
 public class GalleryResource {
 
     private final Logger log = LoggerFactory.getLogger(GalleryResource.class);
-        
-    @Inject
-    private GalleryRepository galleryRepository;
+
+    private static final String ENTITY_NAME = "gallery";
+
+    private final GalleryRepository galleryRepository;
+
+    public GalleryResource(GalleryRepository galleryRepository) {
+        this.galleryRepository = galleryRepository;
+    }
 
     /**
      * POST  /galleries : Create a new gallery.
@@ -48,11 +52,11 @@ public class GalleryResource {
     public ResponseEntity<Gallery> createGallery(@Valid @RequestBody Gallery gallery) throws URISyntaxException {
         log.debug("REST request to save Gallery : {}", gallery);
         if (gallery.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("gallery", "idexists", "A new gallery cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new gallery cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Gallery result = galleryRepository.save(gallery);
         return ResponseEntity.created(new URI("/api/galleries/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert("gallery", result.getId().toString()))
+            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
@@ -62,7 +66,7 @@ public class GalleryResource {
      * @param gallery the gallery to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated gallery,
      * or with status 400 (Bad Request) if the gallery is not valid,
-     * or with status 500 (Internal Server Error) if the gallery couldnt be updated
+     * or with status 500 (Internal Server Error) if the gallery couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/galleries")
@@ -70,11 +74,11 @@ public class GalleryResource {
     public ResponseEntity<Gallery> updateGallery(@Valid @RequestBody Gallery gallery) throws URISyntaxException {
         log.debug("REST request to update Gallery : {}", gallery);
         if (gallery.getId() == null) {
-            return createGallery(gallery);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         Gallery result = galleryRepository.save(gallery);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert("gallery", gallery.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, gallery.getId().toString()))
             .body(result);
     }
 
@@ -83,16 +87,14 @@ public class GalleryResource {
      *
      * @param pageable the pagination information
      * @return the ResponseEntity with status 200 (OK) and the list of galleries in body
-     * @throws URISyntaxException if there is an error to generate the pagination HTTP headers
      */
     @GetMapping("/galleries")
     @Timed
-    public ResponseEntity<List<Gallery>> getAllGalleries(@ApiParam Pageable pageable)
-        throws URISyntaxException {
+    public ResponseEntity<List<Gallery>> getAllGalleries(Pageable pageable) {
         log.debug("REST request to get a page of Galleries");
         Page<Gallery> page = galleryRepository.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/galleries");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**
@@ -105,12 +107,8 @@ public class GalleryResource {
     @Timed
     public ResponseEntity<Gallery> getGallery(@PathVariable Long id) {
         log.debug("REST request to get Gallery : {}", id);
-        Gallery gallery = galleryRepository.findOne(id);
-        return Optional.ofNullable(gallery)
-            .map(result -> new ResponseEntity<>(
-                result,
-                HttpStatus.OK))
-            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        Optional<Gallery> gallery = galleryRepository.findById(id);
+        return ResponseUtil.wrapOrNotFound(gallery);
     }
 
     /**
@@ -123,8 +121,8 @@ public class GalleryResource {
     @Timed
     public ResponseEntity<Void> deleteGallery(@PathVariable Long id) {
         log.debug("REST request to delete Gallery : {}", id);
-        galleryRepository.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("gallery", id.toString())).build();
-    }
 
+        galleryRepository.deleteById(id);
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+    }
 }

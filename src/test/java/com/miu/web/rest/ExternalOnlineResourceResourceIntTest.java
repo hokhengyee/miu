@@ -4,26 +4,28 @@ import com.miu.MiuApp;
 
 import com.miu.domain.ExternalOnlineResource;
 import com.miu.repository.ExternalOnlineResourceRepository;
+import com.miu.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
 
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static com.miu.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -47,16 +49,19 @@ public class ExternalOnlineResourceResourceIntTest {
     private static final String DEFAULT_DESCRIPTION = "AAAAAAAAAA";
     private static final String UPDATED_DESCRIPTION = "BBBBBBBBBB";
 
-    @Inject
+    @Autowired
     private ExternalOnlineResourceRepository externalOnlineResourceRepository;
 
-    @Inject
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
-    @Inject
+    @Autowired
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
-    @Inject
+    @Autowired
+    private ExceptionTranslator exceptionTranslator;
+
+    @Autowired
     private EntityManager em;
 
     private MockMvc restExternalOnlineResourceMockMvc;
@@ -66,10 +71,11 @@ public class ExternalOnlineResourceResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        ExternalOnlineResourceResource externalOnlineResourceResource = new ExternalOnlineResourceResource();
-        ReflectionTestUtils.setField(externalOnlineResourceResource, "externalOnlineResourceRepository", externalOnlineResourceRepository);
+        final ExternalOnlineResourceResource externalOnlineResourceResource = new ExternalOnlineResourceResource(externalOnlineResourceRepository);
         this.restExternalOnlineResourceMockMvc = MockMvcBuilders.standaloneSetup(externalOnlineResourceResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -81,9 +87,9 @@ public class ExternalOnlineResourceResourceIntTest {
      */
     public static ExternalOnlineResource createEntity(EntityManager em) {
         ExternalOnlineResource externalOnlineResource = new ExternalOnlineResource()
-                .title(DEFAULT_TITLE)
-                .websiteLink(DEFAULT_WEBSITE_LINK)
-                .description(DEFAULT_DESCRIPTION);
+            .title(DEFAULT_TITLE)
+            .websiteLink(DEFAULT_WEBSITE_LINK)
+            .description(DEFAULT_DESCRIPTION);
         return externalOnlineResource;
     }
 
@@ -98,7 +104,6 @@ public class ExternalOnlineResourceResourceIntTest {
         int databaseSizeBeforeCreate = externalOnlineResourceRepository.findAll().size();
 
         // Create the ExternalOnlineResource
-
         restExternalOnlineResourceMockMvc.perform(post("/api/external-online-resources")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(externalOnlineResource)))
@@ -119,16 +124,15 @@ public class ExternalOnlineResourceResourceIntTest {
         int databaseSizeBeforeCreate = externalOnlineResourceRepository.findAll().size();
 
         // Create the ExternalOnlineResource with an existing ID
-        ExternalOnlineResource existingExternalOnlineResource = new ExternalOnlineResource();
-        existingExternalOnlineResource.setId(1L);
+        externalOnlineResource.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restExternalOnlineResourceMockMvc.perform(post("/api/external-online-resources")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(existingExternalOnlineResource)))
+            .content(TestUtil.convertObjectToJsonBytes(externalOnlineResource)))
             .andExpect(status().isBadRequest());
 
-        // Validate the Alice in the database
+        // Validate the ExternalOnlineResource in the database
         List<ExternalOnlineResource> externalOnlineResourceList = externalOnlineResourceRepository.findAll();
         assertThat(externalOnlineResourceList).hasSize(databaseSizeBeforeCreate);
     }
@@ -166,7 +170,7 @@ public class ExternalOnlineResourceResourceIntTest {
             .andExpect(jsonPath("$.[*].websiteLink").value(hasItem(DEFAULT_WEBSITE_LINK.toString())))
             .andExpect(jsonPath("$.[*].description").value(hasItem(DEFAULT_DESCRIPTION.toString())));
     }
-
+    
     @Test
     @Transactional
     public void getExternalOnlineResource() throws Exception {
@@ -196,14 +200,17 @@ public class ExternalOnlineResourceResourceIntTest {
     public void updateExternalOnlineResource() throws Exception {
         // Initialize the database
         externalOnlineResourceRepository.saveAndFlush(externalOnlineResource);
+
         int databaseSizeBeforeUpdate = externalOnlineResourceRepository.findAll().size();
 
         // Update the externalOnlineResource
-        ExternalOnlineResource updatedExternalOnlineResource = externalOnlineResourceRepository.findOne(externalOnlineResource.getId());
+        ExternalOnlineResource updatedExternalOnlineResource = externalOnlineResourceRepository.findById(externalOnlineResource.getId()).get();
+        // Disconnect from session so that the updates on updatedExternalOnlineResource are not directly saved in db
+        em.detach(updatedExternalOnlineResource);
         updatedExternalOnlineResource
-                .title(UPDATED_TITLE)
-                .websiteLink(UPDATED_WEBSITE_LINK)
-                .description(UPDATED_DESCRIPTION);
+            .title(UPDATED_TITLE)
+            .websiteLink(UPDATED_WEBSITE_LINK)
+            .description(UPDATED_DESCRIPTION);
 
         restExternalOnlineResourceMockMvc.perform(put("/api/external-online-resources")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -226,15 +233,15 @@ public class ExternalOnlineResourceResourceIntTest {
 
         // Create the ExternalOnlineResource
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restExternalOnlineResourceMockMvc.perform(put("/api/external-online-resources")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(externalOnlineResource)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the ExternalOnlineResource in the database
         List<ExternalOnlineResource> externalOnlineResourceList = externalOnlineResourceRepository.findAll();
-        assertThat(externalOnlineResourceList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(externalOnlineResourceList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -242,6 +249,7 @@ public class ExternalOnlineResourceResourceIntTest {
     public void deleteExternalOnlineResource() throws Exception {
         // Initialize the database
         externalOnlineResourceRepository.saveAndFlush(externalOnlineResource);
+
         int databaseSizeBeforeDelete = externalOnlineResourceRepository.findAll().size();
 
         // Get the externalOnlineResource
@@ -252,5 +260,20 @@ public class ExternalOnlineResourceResourceIntTest {
         // Validate the database is empty
         List<ExternalOnlineResource> externalOnlineResourceList = externalOnlineResourceRepository.findAll();
         assertThat(externalOnlineResourceList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    @Transactional
+    public void equalsVerifier() throws Exception {
+        TestUtil.equalsVerifier(ExternalOnlineResource.class);
+        ExternalOnlineResource externalOnlineResource1 = new ExternalOnlineResource();
+        externalOnlineResource1.setId(1L);
+        ExternalOnlineResource externalOnlineResource2 = new ExternalOnlineResource();
+        externalOnlineResource2.setId(externalOnlineResource1.getId());
+        assertThat(externalOnlineResource1).isEqualTo(externalOnlineResource2);
+        externalOnlineResource2.setId(2L);
+        assertThat(externalOnlineResource1).isNotEqualTo(externalOnlineResource2);
+        externalOnlineResource1.setId(null);
+        assertThat(externalOnlineResource1).isNotEqualTo(externalOnlineResource2);
     }
 }

@@ -2,12 +2,11 @@ package com.miu.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.miu.domain.CourseMaterial;
-
 import com.miu.repository.CourseMaterialRepository;
+import com.miu.web.rest.errors.BadRequestAlertException;
 import com.miu.web.rest.util.HeaderUtil;
 import com.miu.web.rest.util.PaginationUtil;
-
-import io.swagger.annotations.ApiParam;
+import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -17,10 +16,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.inject.Inject;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -32,9 +31,14 @@ import java.util.Optional;
 public class CourseMaterialResource {
 
     private final Logger log = LoggerFactory.getLogger(CourseMaterialResource.class);
-        
-    @Inject
-    private CourseMaterialRepository courseMaterialRepository;
+
+    private static final String ENTITY_NAME = "courseMaterial";
+
+    private final CourseMaterialRepository courseMaterialRepository;
+
+    public CourseMaterialResource(CourseMaterialRepository courseMaterialRepository) {
+        this.courseMaterialRepository = courseMaterialRepository;
+    }
 
     /**
      * POST  /course-materials : Create a new courseMaterial.
@@ -48,11 +52,11 @@ public class CourseMaterialResource {
     public ResponseEntity<CourseMaterial> createCourseMaterial(@Valid @RequestBody CourseMaterial courseMaterial) throws URISyntaxException {
         log.debug("REST request to save CourseMaterial : {}", courseMaterial);
         if (courseMaterial.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("courseMaterial", "idexists", "A new courseMaterial cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new courseMaterial cannot already have an ID", ENTITY_NAME, "idexists");
         }
         CourseMaterial result = courseMaterialRepository.save(courseMaterial);
         return ResponseEntity.created(new URI("/api/course-materials/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert("courseMaterial", result.getId().toString()))
+            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
@@ -62,7 +66,7 @@ public class CourseMaterialResource {
      * @param courseMaterial the courseMaterial to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated courseMaterial,
      * or with status 400 (Bad Request) if the courseMaterial is not valid,
-     * or with status 500 (Internal Server Error) if the courseMaterial couldnt be updated
+     * or with status 500 (Internal Server Error) if the courseMaterial couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/course-materials")
@@ -70,11 +74,11 @@ public class CourseMaterialResource {
     public ResponseEntity<CourseMaterial> updateCourseMaterial(@Valid @RequestBody CourseMaterial courseMaterial) throws URISyntaxException {
         log.debug("REST request to update CourseMaterial : {}", courseMaterial);
         if (courseMaterial.getId() == null) {
-            return createCourseMaterial(courseMaterial);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         CourseMaterial result = courseMaterialRepository.save(courseMaterial);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert("courseMaterial", courseMaterial.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, courseMaterial.getId().toString()))
             .body(result);
     }
 
@@ -83,16 +87,14 @@ public class CourseMaterialResource {
      *
      * @param pageable the pagination information
      * @return the ResponseEntity with status 200 (OK) and the list of courseMaterials in body
-     * @throws URISyntaxException if there is an error to generate the pagination HTTP headers
      */
     @GetMapping("/course-materials")
     @Timed
-    public ResponseEntity<List<CourseMaterial>> getAllCourseMaterials(@ApiParam Pageable pageable)
-        throws URISyntaxException {
+    public ResponseEntity<List<CourseMaterial>> getAllCourseMaterials(Pageable pageable) {
         log.debug("REST request to get a page of CourseMaterials");
         Page<CourseMaterial> page = courseMaterialRepository.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/course-materials");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**
@@ -105,12 +107,8 @@ public class CourseMaterialResource {
     @Timed
     public ResponseEntity<CourseMaterial> getCourseMaterial(@PathVariable Long id) {
         log.debug("REST request to get CourseMaterial : {}", id);
-        CourseMaterial courseMaterial = courseMaterialRepository.findOne(id);
-        return Optional.ofNullable(courseMaterial)
-            .map(result -> new ResponseEntity<>(
-                result,
-                HttpStatus.OK))
-            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        Optional<CourseMaterial> courseMaterial = courseMaterialRepository.findById(id);
+        return ResponseUtil.wrapOrNotFound(courseMaterial);
     }
 
     /**
@@ -123,8 +121,8 @@ public class CourseMaterialResource {
     @Timed
     public ResponseEntity<Void> deleteCourseMaterial(@PathVariable Long id) {
         log.debug("REST request to delete CourseMaterial : {}", id);
-        courseMaterialRepository.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("courseMaterial", id.toString())).build();
-    }
 
+        courseMaterialRepository.deleteById(id);
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+    }
 }

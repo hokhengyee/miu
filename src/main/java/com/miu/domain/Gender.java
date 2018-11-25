@@ -5,6 +5,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -19,13 +20,14 @@ public class Gender implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
     @Column(name = "title", nullable = false)
     private String title;
 
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -46,6 +48,7 @@ public class Gender implements Serializable {
     public void setTitle(String title) {
         this.title = title;
     }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -56,22 +59,22 @@ public class Gender implements Serializable {
             return false;
         }
         Gender gender = (Gender) o;
-        if (gender.id == null || id == null) {
+        if (gender.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(id, gender.id);
+        return Objects.equals(getId(), gender.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(getId());
     }
 
     @Override
     public String toString() {
         return "Gender{" +
-            "id=" + id +
-            ", title='" + title + "'" +
-            '}';
+            "id=" + getId() +
+            ", title='" + getTitle() + "'" +
+            "}";
     }
 }

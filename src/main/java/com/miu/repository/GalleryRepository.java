@@ -1,15 +1,15 @@
 package com.miu.repository;
 
 import com.miu.domain.Gallery;
-
 import org.springframework.data.jpa.repository.*;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
 
 /**
- * Spring Data JPA repository for the Gallery entity.
+ * Spring Data  repository for the Gallery entity.
  */
 @SuppressWarnings("unused")
-public interface GalleryRepository extends JpaRepository<Gallery,Long> {
+@Repository
+public interface GalleryRepository extends JpaRepository<Gallery, Long> {
 
 }

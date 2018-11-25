@@ -1,10 +1,12 @@
 package com.miu.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -19,7 +21,7 @@ public class Module implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "description")
@@ -36,14 +38,17 @@ public class Module implements Serializable {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("")
     private ModuleType moduleType;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("")
     private Course course;
 
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -129,6 +134,7 @@ public class Module implements Serializable {
     public void setCourse(Course course) {
         this.course = course;
     }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -139,25 +145,25 @@ public class Module implements Serializable {
             return false;
         }
         Module module = (Module) o;
-        if (module.id == null || id == null) {
+        if (module.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(id, module.id);
+        return Objects.equals(getId(), module.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(getId());
     }
 
     @Override
     public String toString() {
         return "Module{" +
-            "id=" + id +
-            ", description='" + description + "'" +
-            ", moduleOrder='" + moduleOrder + "'" +
-            ", moduleCode='" + moduleCode + "'" +
-            ", title='" + title + "'" +
-            '}';
+            "id=" + getId() +
+            ", description='" + getDescription() + "'" +
+            ", moduleOrder=" + getModuleOrder() +
+            ", moduleCode='" + getModuleCode() + "'" +
+            ", title='" + getTitle() + "'" +
+            "}";
     }
 }

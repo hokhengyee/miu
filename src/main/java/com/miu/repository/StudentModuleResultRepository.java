@@ -1,18 +1,19 @@
 package com.miu.repository;
 
 import com.miu.domain.StudentModuleResult;
-
 import org.springframework.data.jpa.repository.*;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 /**
- * Spring Data JPA repository for the StudentModuleResult entity.
+ * Spring Data  repository for the StudentModuleResult entity.
  */
 @SuppressWarnings("unused")
-public interface StudentModuleResultRepository extends JpaRepository<StudentModuleResult,Long> {
+@Repository
+public interface StudentModuleResultRepository extends JpaRepository<StudentModuleResult, Long> {
 
-    @Query("select studentModuleResult from StudentModuleResult studentModuleResult where studentModuleResult.user.login = ?#{principal.username}")
+    @Query("select student_module_result from StudentModuleResult student_module_result where student_module_result.user.login = ?#{principal.username}")
     List<StudentModuleResult> findByUserIsCurrentUser();
 
 }

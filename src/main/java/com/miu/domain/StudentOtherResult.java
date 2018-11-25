@@ -1,10 +1,12 @@
 package com.miu.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -20,7 +22,7 @@ public class StudentOtherResult implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "code")
@@ -38,14 +40,17 @@ public class StudentOtherResult implements Serializable {
     @Column(name = "result_order")
     private Long resultOrder;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("")
     private CustomStudentReportType customStudentReportType;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @NotNull
+    @JsonIgnoreProperties("")
     private User user;
 
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -144,6 +149,7 @@ public class StudentOtherResult implements Serializable {
     public void setUser(User user) {
         this.user = user;
     }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -154,26 +160,26 @@ public class StudentOtherResult implements Serializable {
             return false;
         }
         StudentOtherResult studentOtherResult = (StudentOtherResult) o;
-        if (studentOtherResult.id == null || id == null) {
+        if (studentOtherResult.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(id, studentOtherResult.id);
+        return Objects.equals(getId(), studentOtherResult.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(getId());
     }
 
     @Override
     public String toString() {
         return "StudentOtherResult{" +
-            "id=" + id +
-            ", code='" + code + "'" +
-            ", title='" + title + "'" +
-            ", result='" + result + "'" +
-            ", dateGraded='" + dateGraded + "'" +
-            ", resultOrder='" + resultOrder + "'" +
-            '}';
+            "id=" + getId() +
+            ", code='" + getCode() + "'" +
+            ", title='" + getTitle() + "'" +
+            ", result='" + getResult() + "'" +
+            ", dateGraded='" + getDateGraded() + "'" +
+            ", resultOrder=" + getResultOrder() +
+            "}";
     }
 }

@@ -1,0 +1,104 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-record-of-certificate-heading">Create or edit a Record Of Certificate</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!recordOfCertificate.id">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="recordOfCertificate.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_name">Name</label>
+                    <input type="text" class="form-control" name="name" id="field_name"
+                        [(ngModel)]="recordOfCertificate.name" required minlength="3" maxlength="1000"/>
+                    <div [hidden]="!(editForm.controls.name?.dirty && editForm.controls.name?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.name?.errors?.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.name?.errors?.minlength">
+                        This field is required to be at least 3 characters.
+                        </small>
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.name?.errors?.maxlength">
+                        This field cannot be longer than 1000 characters.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_degree">Degree</label>
+                    <input type="text" class="form-control" name="degree" id="field_degree"
+                        [(ngModel)]="recordOfCertificate.degree" required/>
+                    <div [hidden]="!(editForm.controls.degree?.dirty && editForm.controls.degree?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.degree?.errors?.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_studentNo">Student No</label>
+                    <input type="text" class="form-control" name="studentNo" id="field_studentNo"
+                        [(ngModel)]="recordOfCertificate.studentNo" required/>
+                    <div [hidden]="!(editForm.controls.studentNo?.dirty && editForm.controls.studentNo?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.studentNo?.errors?.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_certNumber">Cert Number</label>
+                    <input type="text" class="form-control" name="certNumber" id="field_certNumber"
+                        [(ngModel)]="recordOfCertificate.certNumber" required/>
+                    <div [hidden]="!(editForm.controls.certNumber?.dirty && editForm.controls.certNumber?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.certNumber?.errors?.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_certScanFile">Cert Scan File</label>
+                    <div>
+                        <div *ngIf="recordOfCertificate.certScanFile" class="form-text text-danger clearfix">
+                            <a class="pull-left" (click)="openFile(recordOfCertificate.certScanFileContentType, recordOfCertificate.certScanFile)">open</a><br>
+                            <span class="pull-left">{{recordOfCertificate.certScanFileContentType}}, {{byteSize(recordOfCertificate.certScanFile)}}</span>
+                            <button type="button" (click)="recordOfCertificate.certScanFile=null;recordOfCertificate.certScanFileContentType=null;"
+                                    class="btn btn-secondary btn-xs pull-right">
+                                <fa-icon [icon]="'times'"></fa-icon>
+                            </button>
+                        </div>
+                        <input type="file" id="file_certScanFile" (change)="setFileData($event, recordOfCertificate, 'certScanFile', false)"/>
+                    </div>
+                    <input type="hidden" class="form-control" name="certScanFile" id="field_certScanFile"
+                        [(ngModel)]="recordOfCertificate.certScanFile" />
+                    <input type="hidden" class="form-control" name="certScanFileContentType" id="field_certScanFileContentType"
+                        [(ngModel)]="recordOfCertificate.certScanFileContentType" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_certDate">Cert Date</label>
+                    <div class="input-group">
+                        <input id="field_certDate" type="text" class="form-control" name="certDate" ngbDatepicker  #certDateDp="ngbDatepicker" [(ngModel)]="recordOfCertificate.certDate"
+                        />
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="certDateDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

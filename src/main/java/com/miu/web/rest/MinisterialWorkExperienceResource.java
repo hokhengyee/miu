@@ -2,12 +2,11 @@ package com.miu.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.miu.domain.MinisterialWorkExperience;
-
 import com.miu.repository.MinisterialWorkExperienceRepository;
+import com.miu.web.rest.errors.BadRequestAlertException;
 import com.miu.web.rest.util.HeaderUtil;
 import com.miu.web.rest.util.PaginationUtil;
-
-import io.swagger.annotations.ApiParam;
+import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -17,10 +16,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.inject.Inject;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -32,9 +31,14 @@ import java.util.Optional;
 public class MinisterialWorkExperienceResource {
 
     private final Logger log = LoggerFactory.getLogger(MinisterialWorkExperienceResource.class);
-        
-    @Inject
-    private MinisterialWorkExperienceRepository ministerialWorkExperienceRepository;
+
+    private static final String ENTITY_NAME = "ministerialWorkExperience";
+
+    private final MinisterialWorkExperienceRepository ministerialWorkExperienceRepository;
+
+    public MinisterialWorkExperienceResource(MinisterialWorkExperienceRepository ministerialWorkExperienceRepository) {
+        this.ministerialWorkExperienceRepository = ministerialWorkExperienceRepository;
+    }
 
     /**
      * POST  /ministerial-work-experiences : Create a new ministerialWorkExperience.
@@ -48,11 +52,11 @@ public class MinisterialWorkExperienceResource {
     public ResponseEntity<MinisterialWorkExperience> createMinisterialWorkExperience(@Valid @RequestBody MinisterialWorkExperience ministerialWorkExperience) throws URISyntaxException {
         log.debug("REST request to save MinisterialWorkExperience : {}", ministerialWorkExperience);
         if (ministerialWorkExperience.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("ministerialWorkExperience", "idexists", "A new ministerialWorkExperience cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new ministerialWorkExperience cannot already have an ID", ENTITY_NAME, "idexists");
         }
         MinisterialWorkExperience result = ministerialWorkExperienceRepository.save(ministerialWorkExperience);
         return ResponseEntity.created(new URI("/api/ministerial-work-experiences/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert("ministerialWorkExperience", result.getId().toString()))
+            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
@@ -62,7 +66,7 @@ public class MinisterialWorkExperienceResource {
      * @param ministerialWorkExperience the ministerialWorkExperience to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated ministerialWorkExperience,
      * or with status 400 (Bad Request) if the ministerialWorkExperience is not valid,
-     * or with status 500 (Internal Server Error) if the ministerialWorkExperience couldnt be updated
+     * or with status 500 (Internal Server Error) if the ministerialWorkExperience couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/ministerial-work-experiences")
@@ -70,11 +74,11 @@ public class MinisterialWorkExperienceResource {
     public ResponseEntity<MinisterialWorkExperience> updateMinisterialWorkExperience(@Valid @RequestBody MinisterialWorkExperience ministerialWorkExperience) throws URISyntaxException {
         log.debug("REST request to update MinisterialWorkExperience : {}", ministerialWorkExperience);
         if (ministerialWorkExperience.getId() == null) {
-            return createMinisterialWorkExperience(ministerialWorkExperience);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         MinisterialWorkExperience result = ministerialWorkExperienceRepository.save(ministerialWorkExperience);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert("ministerialWorkExperience", ministerialWorkExperience.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, ministerialWorkExperience.getId().toString()))
             .body(result);
     }
 
@@ -83,16 +87,14 @@ public class MinisterialWorkExperienceResource {
      *
      * @param pageable the pagination information
      * @return the ResponseEntity with status 200 (OK) and the list of ministerialWorkExperiences in body
-     * @throws URISyntaxException if there is an error to generate the pagination HTTP headers
      */
     @GetMapping("/ministerial-work-experiences")
     @Timed
-    public ResponseEntity<List<MinisterialWorkExperience>> getAllMinisterialWorkExperiences(@ApiParam Pageable pageable)
-        throws URISyntaxException {
+    public ResponseEntity<List<MinisterialWorkExperience>> getAllMinisterialWorkExperiences(Pageable pageable) {
         log.debug("REST request to get a page of MinisterialWorkExperiences");
         Page<MinisterialWorkExperience> page = ministerialWorkExperienceRepository.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/ministerial-work-experiences");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**
@@ -105,12 +107,8 @@ public class MinisterialWorkExperienceResource {
     @Timed
     public ResponseEntity<MinisterialWorkExperience> getMinisterialWorkExperience(@PathVariable Long id) {
         log.debug("REST request to get MinisterialWorkExperience : {}", id);
-        MinisterialWorkExperience ministerialWorkExperience = ministerialWorkExperienceRepository.findOne(id);
-        return Optional.ofNullable(ministerialWorkExperience)
-            .map(result -> new ResponseEntity<>(
-                result,
-                HttpStatus.OK))
-            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        Optional<MinisterialWorkExperience> ministerialWorkExperience = ministerialWorkExperienceRepository.findById(id);
+        return ResponseUtil.wrapOrNotFound(ministerialWorkExperience);
     }
 
     /**
@@ -123,8 +121,8 @@ public class MinisterialWorkExperienceResource {
     @Timed
     public ResponseEntity<Void> deleteMinisterialWorkExperience(@PathVariable Long id) {
         log.debug("REST request to delete MinisterialWorkExperience : {}", id);
-        ministerialWorkExperienceRepository.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("ministerialWorkExperience", id.toString())).build();
-    }
 
+        ministerialWorkExperienceRepository.deleteById(id);
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+    }
 }

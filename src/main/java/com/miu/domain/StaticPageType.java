@@ -5,6 +5,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -19,7 +20,7 @@ public class StaticPageType implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
@@ -27,6 +28,7 @@ public class StaticPageType implements Serializable {
     @Column(name = "title", length = 1000, nullable = false)
     private String title;
 
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -47,6 +49,7 @@ public class StaticPageType implements Serializable {
     public void setTitle(String title) {
         this.title = title;
     }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -57,22 +60,22 @@ public class StaticPageType implements Serializable {
             return false;
         }
         StaticPageType staticPageType = (StaticPageType) o;
-        if (staticPageType.id == null || id == null) {
+        if (staticPageType.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(id, staticPageType.id);
+        return Objects.equals(getId(), staticPageType.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(getId());
     }
 
     @Override
     public String toString() {
         return "StaticPageType{" +
-            "id=" + id +
-            ", title='" + title + "'" +
-            '}';
+            "id=" + getId() +
+            ", title='" + getTitle() + "'" +
+            "}";
     }
 }

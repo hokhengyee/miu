@@ -1,0 +1,107 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="onlineApplication">
+            <h2><span>Online Application</span> {{onlineApplication.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Date Of Birth</span></dt>
+                <dd>
+                    <span>{{onlineApplication.dateOfBirth}}</span>
+                </dd>
+                <dt><span>Telephone</span></dt>
+                <dd>
+                    <span>{{onlineApplication.telephone}}</span>
+                </dd>
+                <dt><span>Email</span></dt>
+                <dd>
+                    <span>{{onlineApplication.email}}</span>
+                </dd>
+                <dt><span>City</span></dt>
+                <dd>
+                    <span>{{onlineApplication.city}}</span>
+                </dd>
+                <dt><span>State</span></dt>
+                <dd>
+                    <span>{{onlineApplication.state}}</span>
+                </dd>
+                <dt><span>Country</span></dt>
+                <dd>
+                    <span>{{onlineApplication.country}}</span>
+                </dd>
+                <dt><span>Postcode</span></dt>
+                <dd>
+                    <span>{{onlineApplication.postcode}}</span>
+                </dd>
+                <dt><span>Registration Datetime</span></dt>
+                <dd>
+                    <span>{{onlineApplication.registrationDatetime}}</span>
+                </dd>
+                <dt><span>Surname</span></dt>
+                <dd>
+                    <span>{{onlineApplication.surname}}</span>
+                </dd>
+                <dt><span>Given Name</span></dt>
+                <dd>
+                    <span>{{onlineApplication.givenName}}</span>
+                </dd>
+                <dt><span>Address</span></dt>
+                <dd>
+                    <span>{{onlineApplication.address}}</span>
+                </dd>
+                <dt><span>Profile Photo</span></dt>
+                <dd>
+                    <div *ngIf="onlineApplication.profilePhoto">
+                        <a (click)="openFile(onlineApplication.profilePhotoContentType, onlineApplication.profilePhoto)">
+                            <img [src]="'data:' + onlineApplication.profilePhotoContentType + ';base64,' + onlineApplication.profilePhoto" style="max-width: 100%;" alt="onlineApplication image"/>
+                        </a>
+                        {{onlineApplication.profilePhotoContentType}}, {{byteSize(onlineApplication.profilePhoto)}}
+                    </div>
+                </dd>
+                <dt><span>Academic Certificate</span></dt>
+                <dd>
+                    <div *ngIf="onlineApplication.academicCertificate">
+                        <a (click)="openFile(onlineApplication.academicCertificateContentType, onlineApplication.academicCertificate)">open</a>
+                        {{onlineApplication.academicCertificateContentType}}, {{byteSize(onlineApplication.academicCertificate)}}
+                    </div>
+                </dd>
+                <dt><span>Letter Of Recommendation</span></dt>
+                <dd>
+                    <div *ngIf="onlineApplication.letterOfRecommendation">
+                        <a (click)="openFile(onlineApplication.letterOfRecommendationContentType, onlineApplication.letterOfRecommendation)">open</a>
+                        {{onlineApplication.letterOfRecommendationContentType}}, {{byteSize(onlineApplication.letterOfRecommendation)}}
+                    </div>
+                </dd>
+                <dt><span>Profile Document</span></dt>
+                <dd>
+                    <div *ngIf="onlineApplication.profileDocument">
+                        <a (click)="openFile(onlineApplication.profileDocumentContentType, onlineApplication.profileDocument)">open</a>
+                        {{onlineApplication.profileDocumentContentType}}, {{byteSize(onlineApplication.profileDocument)}}
+                    </div>
+                </dd>
+                <dt><span>Md 5 Key</span></dt>
+                <dd>
+                    <span>{{onlineApplication.md5key}}</span>
+                </dd>
+                <dt><span>Course</span></dt>
+                <dd>
+                    <div *ngIf="onlineApplication.course">
+                        <a [routerLink]="['/course', onlineApplication.course?.id, 'view']">{{onlineApplication.course?.title}}</a>
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/online-application', onlineApplication.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

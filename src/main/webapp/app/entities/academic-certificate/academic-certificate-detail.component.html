@@ -1,0 +1,48 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="academicCertificate">
+            <h2><span>Academic Certificate</span> {{academicCertificate.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Md 5 Key</span></dt>
+                <dd>
+                    <span>{{academicCertificate.md5Key}}</span>
+                </dd>
+                <dt><span>Academic Certificate 1</span></dt>
+                <dd>
+                    <div *ngIf="academicCertificate.academicCertificate1">
+                        <a (click)="openFile(academicCertificate.academicCertificate1ContentType, academicCertificate.academicCertificate1)">open</a>
+                        {{academicCertificate.academicCertificate1ContentType}}, {{byteSize(academicCertificate.academicCertificate1)}}
+                    </div>
+                </dd>
+                <dt><span>Academic Certificate 2</span></dt>
+                <dd>
+                    <div *ngIf="academicCertificate.academicCertificate2">
+                        <a (click)="openFile(academicCertificate.academicCertificate2ContentType, academicCertificate.academicCertificate2)">open</a>
+                        {{academicCertificate.academicCertificate2ContentType}}, {{byteSize(academicCertificate.academicCertificate2)}}
+                    </div>
+                </dd>
+                <dt><span>Academic Certificate 3</span></dt>
+                <dd>
+                    <div *ngIf="academicCertificate.academicCertificate3">
+                        <a (click)="openFile(academicCertificate.academicCertificate3ContentType, academicCertificate.academicCertificate3)">open</a>
+                        {{academicCertificate.academicCertificate3ContentType}}, {{byteSize(academicCertificate.academicCertificate3)}}
+                    </div>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/academic-certificate', academicCertificate.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

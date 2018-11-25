@@ -5,26 +5,28 @@ import com.miu.MiuApp;
 import com.miu.domain.LecturerProfile;
 import com.miu.domain.User;
 import com.miu.repository.LecturerProfileRepository;
+import com.miu.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
 
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static com.miu.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -67,20 +69,23 @@ public class LecturerProfileResourceIntTest {
     private static final String UPDATED_REFERENCE = "BBBBBBBBBB";
 
     private static final byte[] DEFAULT_PROFILE_PHOTO = TestUtil.createByteArray(1, "0");
-    private static final byte[] UPDATED_PROFILE_PHOTO = TestUtil.createByteArray(2, "1");
+    private static final byte[] UPDATED_PROFILE_PHOTO = TestUtil.createByteArray(1, "1");
     private static final String DEFAULT_PROFILE_PHOTO_CONTENT_TYPE = "image/jpg";
     private static final String UPDATED_PROFILE_PHOTO_CONTENT_TYPE = "image/png";
 
-    @Inject
+    @Autowired
     private LecturerProfileRepository lecturerProfileRepository;
 
-    @Inject
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
-    @Inject
+    @Autowired
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
-    @Inject
+    @Autowired
+    private ExceptionTranslator exceptionTranslator;
+
+    @Autowired
     private EntityManager em;
 
     private MockMvc restLecturerProfileMockMvc;
@@ -90,10 +95,11 @@ public class LecturerProfileResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        LecturerProfileResource lecturerProfileResource = new LecturerProfileResource();
-        ReflectionTestUtils.setField(lecturerProfileResource, "lecturerProfileRepository", lecturerProfileRepository);
+        final LecturerProfileResource lecturerProfileResource = new LecturerProfileResource(lecturerProfileRepository);
         this.restLecturerProfileMockMvc = MockMvcBuilders.standaloneSetup(lecturerProfileResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -105,17 +111,17 @@ public class LecturerProfileResourceIntTest {
      */
     public static LecturerProfile createEntity(EntityManager em) {
         LecturerProfile lecturerProfile = new LecturerProfile()
-                .otherTitles(DEFAULT_OTHER_TITLES)
-                .age(DEFAULT_AGE)
-                .ordination(DEFAULT_ORDINATION)
-                .academicHistory(DEFAULT_ACADEMIC_HISTORY)
-                .professionalHistory(DEFAULT_PROFESSIONAL_HISTORY)
-                .pastAndCurrentMinistry(DEFAULT_PAST_AND_CURRENT_MINISTRY)
-                .publications(DEFAULT_PUBLICATIONS)
-                .familyDetails(DEFAULT_FAMILY_DETAILS)
-                .reference(DEFAULT_REFERENCE)
-                .profilePhoto(DEFAULT_PROFILE_PHOTO)
-                .profilePhotoContentType(DEFAULT_PROFILE_PHOTO_CONTENT_TYPE);
+            .otherTitles(DEFAULT_OTHER_TITLES)
+            .age(DEFAULT_AGE)
+            .ordination(DEFAULT_ORDINATION)
+            .academicHistory(DEFAULT_ACADEMIC_HISTORY)
+            .professionalHistory(DEFAULT_PROFESSIONAL_HISTORY)
+            .pastAndCurrentMinistry(DEFAULT_PAST_AND_CURRENT_MINISTRY)
+            .publications(DEFAULT_PUBLICATIONS)
+            .familyDetails(DEFAULT_FAMILY_DETAILS)
+            .reference(DEFAULT_REFERENCE)
+            .profilePhoto(DEFAULT_PROFILE_PHOTO)
+            .profilePhotoContentType(DEFAULT_PROFILE_PHOTO_CONTENT_TYPE);
         // Add required entity
         User user = UserResourceIntTest.createEntity(em);
         em.persist(user);
@@ -135,7 +141,6 @@ public class LecturerProfileResourceIntTest {
         int databaseSizeBeforeCreate = lecturerProfileRepository.findAll().size();
 
         // Create the LecturerProfile
-
         restLecturerProfileMockMvc.perform(post("/api/lecturer-profiles")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(lecturerProfile)))
@@ -164,16 +169,15 @@ public class LecturerProfileResourceIntTest {
         int databaseSizeBeforeCreate = lecturerProfileRepository.findAll().size();
 
         // Create the LecturerProfile with an existing ID
-        LecturerProfile existingLecturerProfile = new LecturerProfile();
-        existingLecturerProfile.setId(1L);
+        lecturerProfile.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restLecturerProfileMockMvc.perform(post("/api/lecturer-profiles")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(existingLecturerProfile)))
+            .content(TestUtil.convertObjectToJsonBytes(lecturerProfile)))
             .andExpect(status().isBadRequest());
 
-        // Validate the Alice in the database
+        // Validate the LecturerProfile in the database
         List<LecturerProfile> lecturerProfileList = lecturerProfileRepository.findAll();
         assertThat(lecturerProfileList).hasSize(databaseSizeBeforeCreate);
     }
@@ -201,7 +205,7 @@ public class LecturerProfileResourceIntTest {
             .andExpect(jsonPath("$.[*].profilePhotoContentType").value(hasItem(DEFAULT_PROFILE_PHOTO_CONTENT_TYPE)))
             .andExpect(jsonPath("$.[*].profilePhoto").value(hasItem(Base64Utils.encodeToString(DEFAULT_PROFILE_PHOTO))));
     }
-
+    
     @Test
     @Transactional
     public void getLecturerProfile() throws Exception {
@@ -239,22 +243,25 @@ public class LecturerProfileResourceIntTest {
     public void updateLecturerProfile() throws Exception {
         // Initialize the database
         lecturerProfileRepository.saveAndFlush(lecturerProfile);
+
         int databaseSizeBeforeUpdate = lecturerProfileRepository.findAll().size();
 
         // Update the lecturerProfile
-        LecturerProfile updatedLecturerProfile = lecturerProfileRepository.findOne(lecturerProfile.getId());
+        LecturerProfile updatedLecturerProfile = lecturerProfileRepository.findById(lecturerProfile.getId()).get();
+        // Disconnect from session so that the updates on updatedLecturerProfile are not directly saved in db
+        em.detach(updatedLecturerProfile);
         updatedLecturerProfile
-                .otherTitles(UPDATED_OTHER_TITLES)
-                .age(UPDATED_AGE)
-                .ordination(UPDATED_ORDINATION)
-                .academicHistory(UPDATED_ACADEMIC_HISTORY)
-                .professionalHistory(UPDATED_PROFESSIONAL_HISTORY)
-                .pastAndCurrentMinistry(UPDATED_PAST_AND_CURRENT_MINISTRY)
-                .publications(UPDATED_PUBLICATIONS)
-                .familyDetails(UPDATED_FAMILY_DETAILS)
-                .reference(UPDATED_REFERENCE)
-                .profilePhoto(UPDATED_PROFILE_PHOTO)
-                .profilePhotoContentType(UPDATED_PROFILE_PHOTO_CONTENT_TYPE);
+            .otherTitles(UPDATED_OTHER_TITLES)
+            .age(UPDATED_AGE)
+            .ordination(UPDATED_ORDINATION)
+            .academicHistory(UPDATED_ACADEMIC_HISTORY)
+            .professionalHistory(UPDATED_PROFESSIONAL_HISTORY)
+            .pastAndCurrentMinistry(UPDATED_PAST_AND_CURRENT_MINISTRY)
+            .publications(UPDATED_PUBLICATIONS)
+            .familyDetails(UPDATED_FAMILY_DETAILS)
+            .reference(UPDATED_REFERENCE)
+            .profilePhoto(UPDATED_PROFILE_PHOTO)
+            .profilePhotoContentType(UPDATED_PROFILE_PHOTO_CONTENT_TYPE);
 
         restLecturerProfileMockMvc.perform(put("/api/lecturer-profiles")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -285,15 +292,15 @@ public class LecturerProfileResourceIntTest {
 
         // Create the LecturerProfile
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restLecturerProfileMockMvc.perform(put("/api/lecturer-profiles")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(lecturerProfile)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the LecturerProfile in the database
         List<LecturerProfile> lecturerProfileList = lecturerProfileRepository.findAll();
-        assertThat(lecturerProfileList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(lecturerProfileList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -301,6 +308,7 @@ public class LecturerProfileResourceIntTest {
     public void deleteLecturerProfile() throws Exception {
         // Initialize the database
         lecturerProfileRepository.saveAndFlush(lecturerProfile);
+
         int databaseSizeBeforeDelete = lecturerProfileRepository.findAll().size();
 
         // Get the lecturerProfile
@@ -311,5 +319,20 @@ public class LecturerProfileResourceIntTest {
         // Validate the database is empty
         List<LecturerProfile> lecturerProfileList = lecturerProfileRepository.findAll();
         assertThat(lecturerProfileList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    @Transactional
+    public void equalsVerifier() throws Exception {
+        TestUtil.equalsVerifier(LecturerProfile.class);
+        LecturerProfile lecturerProfile1 = new LecturerProfile();
+        lecturerProfile1.setId(1L);
+        LecturerProfile lecturerProfile2 = new LecturerProfile();
+        lecturerProfile2.setId(lecturerProfile1.getId());
+        assertThat(lecturerProfile1).isEqualTo(lecturerProfile2);
+        lecturerProfile2.setId(2L);
+        assertThat(lecturerProfile1).isNotEqualTo(lecturerProfile2);
+        lecturerProfile1.setId(null);
+        assertThat(lecturerProfile1).isNotEqualTo(lecturerProfile2);
     }
 }

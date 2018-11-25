@@ -1,0 +1,192 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-student-profile-heading">Create or edit a Student Profile</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!studentProfile.id">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="studentProfile.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_studentId">Student Id</label>
+                    <input type="text" class="form-control" name="studentId" id="field_studentId"
+                        [(ngModel)]="studentProfile.studentId" required/>
+                    <div [hidden]="!(editForm.controls.studentId?.dirty && editForm.controls.studentId?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.studentId?.errors?.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_dateOfBirth">Date Of Birth</label>
+                    <div class="input-group">
+                        <input id="field_dateOfBirth" type="text" class="form-control" name="dateOfBirth" ngbDatepicker  #dateOfBirthDp="ngbDatepicker" [(ngModel)]="studentProfile.dateOfBirth"
+                        />
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="dateOfBirthDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_phone">Phone</label>
+                    <input type="text" class="form-control" name="phone" id="field_phone"
+                        [(ngModel)]="studentProfile.phone" required/>
+                    <div [hidden]="!(editForm.controls.phone?.dirty && editForm.controls.phone?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.phone?.errors?.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_applicationDate">Application Date</label>
+                    <div class="input-group">
+                        <input id="field_applicationDate" type="text" class="form-control" name="applicationDate" ngbDatepicker  #applicationDateDp="ngbDatepicker" [(ngModel)]="studentProfile.applicationDate"
+                        required/>
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="applicationDateDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
+                        </span>
+                    </div>
+                    <div [hidden]="!(editForm.controls.applicationDate?.dirty && editForm.controls.applicationDate?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.applicationDate?.errors?.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_commencementDate">Commencement Date</label>
+                    <div class="input-group">
+                        <input id="field_commencementDate" type="text" class="form-control" name="commencementDate" ngbDatepicker  #commencementDateDp="ngbDatepicker" [(ngModel)]="studentProfile.commencementDate"
+                        required/>
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="commencementDateDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
+                        </span>
+                    </div>
+                    <div [hidden]="!(editForm.controls.commencementDate?.dirty && editForm.controls.commencementDate?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.commencementDate?.errors?.required">
+                        This field is required.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_completionDate">Completion Date</label>
+                    <div class="input-group">
+                        <input id="field_completionDate" type="text" class="form-control" name="completionDate" ngbDatepicker  #completionDateDp="ngbDatepicker" [(ngModel)]="studentProfile.completionDate"
+                        />
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="completionDateDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_mailingAddress">Mailing Address</label>
+                    <textarea class="form-control" name="mailingAddress" id="field_mailingAddress"
+                        [(ngModel)]="studentProfile.mailingAddress" required maxlength="1000"></textarea>
+                    <div [hidden]="!(editForm.controls.mailingAddress?.dirty && editForm.controls.mailingAddress?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.mailingAddress?.errors?.required">
+                        This field is required.
+                        </small>
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.mailingAddress?.errors?.maxlength">
+                        This field cannot be longer than 1000 characters.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_profilePhoto">Profile Photo</label>
+                    <div>
+                        <img [src]="'data:' + studentProfile.profilePhotoContentType + ';base64,' + studentProfile.profilePhoto" style="max-height: 100px;" *ngIf="studentProfile.profilePhoto" alt="studentProfile image"/>
+                        <div *ngIf="studentProfile.profilePhoto" class="form-text text-danger clearfix">
+                            <span class="pull-left">{{studentProfile.profilePhotoContentType}}, {{byteSize(studentProfile.profilePhoto)}}</span>
+                            <button type="button" (click)="clearInputImage('profilePhoto', 'profilePhotoContentType', 'fileImage')" class="btn btn-secondary btn-xs pull-right">
+                                <fa-icon [icon]="'times'"></fa-icon>
+                            </button>
+                        </div>
+                        <input type="file" id="file_profilePhoto" (change)="setFileData($event, studentProfile, 'profilePhoto', true)" accept="image/*"/>
+                    </div>
+                    <input type="hidden" class="form-control" name="profilePhoto" id="field_profilePhoto"
+                        [(ngModel)]="studentProfile.profilePhoto" />
+                    <input type="hidden" class="form-control" name="profilePhotoContentType" id="field_profilePhotoContentType"
+                        [(ngModel)]="studentProfile.profilePhotoContentType" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_extendedCompletionDate">Extended Completion Date</label>
+                    <div class="input-group">
+                        <input id="field_extendedCompletionDate" type="text" class="form-control" name="extendedCompletionDate" ngbDatepicker  #extendedCompletionDateDp="ngbDatepicker" [(ngModel)]="studentProfile.extendedCompletionDate"
+                        />
+                        <span class="input-group-append">
+                            <button type="button" class="btn btn-secondary" (click)="extendedCompletionDateDp.toggle()"><fa-icon [icon]="'calendar-alt'"></fa-icon></button>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_salutation">Salutation</label>
+                    <select class="form-control" id="field_salutation" name="salutation" [(ngModel)]="studentProfile.salutation"  required>
+                        <option *ngIf="!editForm.value.salutation" [ngValue]="null" selected></option>
+                        <option [ngValue]="salutationOption.id === studentProfile.salutation?.id ? studentProfile.salutation : salutationOption" *ngFor="let salutationOption of salutations; trackBy: trackSalutationById">{{salutationOption.title}}</option>
+                    </select>
+                </div>
+                <div [hidden]="!(editForm.controls.salutation?.dirty && editForm.controls.salutation?.invalid)">
+                    <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.salutation?.errors?.required">
+                        This field is required.
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_gender">Gender</label>
+                    <select class="form-control" id="field_gender" name="gender" [(ngModel)]="studentProfile.gender"  required>
+                        <option *ngIf="!editForm.value.gender" [ngValue]="null" selected></option>
+                        <option [ngValue]="genderOption.id === studentProfile.gender?.id ? studentProfile.gender : genderOption" *ngFor="let genderOption of genders; trackBy: trackGenderById">{{genderOption.title}}</option>
+                    </select>
+                </div>
+                <div [hidden]="!(editForm.controls.gender?.dirty && editForm.controls.gender?.invalid)">
+                    <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.gender?.errors?.required">
+                        This field is required.
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_supervisor">Supervisor</label>
+                    <select class="form-control" id="field_supervisor" name="supervisor" [(ngModel)]="studentProfile.supervisor"  required>
+                        <option *ngIf="!editForm.value.supervisor" [ngValue]="null" selected></option>
+                        <option [ngValue]="userOption.id === studentProfile.supervisor?.id ? studentProfile.supervisor : userOption" *ngFor="let userOption of users; trackBy: trackUserById">{{userOption.login}}</option>
+                    </select>
+                </div>
+                <div [hidden]="!(editForm.controls.supervisor?.dirty && editForm.controls.supervisor?.invalid)">
+                    <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.supervisor?.errors?.required">
+                        This field is required.
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_user">User</label>
+                    <select class="form-control" id="field_user" name="user" [(ngModel)]="studentProfile.user"  required>
+                        <option *ngIf="!editForm.value.user" [ngValue]="null" selected></option>
+                        <option [ngValue]="userOption.id === studentProfile.user?.id ? studentProfile.user : userOption" *ngFor="let userOption of users; trackBy: trackUserById">{{userOption.login}}</option>
+                    </select>
+                </div>
+                <div [hidden]="!(editForm.controls.user?.dirty && editForm.controls.user?.invalid)">
+                    <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.user?.errors?.required">
+                        This field is required.
+                    </small>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -2,12 +2,11 @@ package com.miu.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.miu.domain.CourseAccess;
-
 import com.miu.repository.CourseAccessRepository;
+import com.miu.web.rest.errors.BadRequestAlertException;
 import com.miu.web.rest.util.HeaderUtil;
 import com.miu.web.rest.util.PaginationUtil;
-
-import io.swagger.annotations.ApiParam;
+import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -17,10 +16,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.inject.Inject;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -32,9 +31,14 @@ import java.util.Optional;
 public class CourseAccessResource {
 
     private final Logger log = LoggerFactory.getLogger(CourseAccessResource.class);
-        
-    @Inject
-    private CourseAccessRepository courseAccessRepository;
+
+    private static final String ENTITY_NAME = "courseAccess";
+
+    private final CourseAccessRepository courseAccessRepository;
+
+    public CourseAccessResource(CourseAccessRepository courseAccessRepository) {
+        this.courseAccessRepository = courseAccessRepository;
+    }
 
     /**
      * POST  /course-accesses : Create a new courseAccess.
@@ -48,11 +52,11 @@ public class CourseAccessResource {
     public ResponseEntity<CourseAccess> createCourseAccess(@Valid @RequestBody CourseAccess courseAccess) throws URISyntaxException {
         log.debug("REST request to save CourseAccess : {}", courseAccess);
         if (courseAccess.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("courseAccess", "idexists", "A new courseAccess cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new courseAccess cannot already have an ID", ENTITY_NAME, "idexists");
         }
         CourseAccess result = courseAccessRepository.save(courseAccess);
         return ResponseEntity.created(new URI("/api/course-accesses/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert("courseAccess", result.getId().toString()))
+            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
@@ -62,7 +66,7 @@ public class CourseAccessResource {
      * @param courseAccess the courseAccess to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated courseAccess,
      * or with status 400 (Bad Request) if the courseAccess is not valid,
-     * or with status 500 (Internal Server Error) if the courseAccess couldnt be updated
+     * or with status 500 (Internal Server Error) if the courseAccess couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/course-accesses")
@@ -70,11 +74,11 @@ public class CourseAccessResource {
     public ResponseEntity<CourseAccess> updateCourseAccess(@Valid @RequestBody CourseAccess courseAccess) throws URISyntaxException {
         log.debug("REST request to update CourseAccess : {}", courseAccess);
         if (courseAccess.getId() == null) {
-            return createCourseAccess(courseAccess);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         CourseAccess result = courseAccessRepository.save(courseAccess);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert("courseAccess", courseAccess.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, courseAccess.getId().toString()))
             .body(result);
     }
 
@@ -83,16 +87,14 @@ public class CourseAccessResource {
      *
      * @param pageable the pagination information
      * @return the ResponseEntity with status 200 (OK) and the list of courseAccesses in body
-     * @throws URISyntaxException if there is an error to generate the pagination HTTP headers
      */
     @GetMapping("/course-accesses")
     @Timed
-    public ResponseEntity<List<CourseAccess>> getAllCourseAccesses(@ApiParam Pageable pageable)
-        throws URISyntaxException {
+    public ResponseEntity<List<CourseAccess>> getAllCourseAccesses(Pageable pageable) {
         log.debug("REST request to get a page of CourseAccesses");
         Page<CourseAccess> page = courseAccessRepository.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/course-accesses");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**
@@ -105,12 +107,8 @@ public class CourseAccessResource {
     @Timed
     public ResponseEntity<CourseAccess> getCourseAccess(@PathVariable Long id) {
         log.debug("REST request to get CourseAccess : {}", id);
-        CourseAccess courseAccess = courseAccessRepository.findOne(id);
-        return Optional.ofNullable(courseAccess)
-            .map(result -> new ResponseEntity<>(
-                result,
-                HttpStatus.OK))
-            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        Optional<CourseAccess> courseAccess = courseAccessRepository.findById(id);
+        return ResponseUtil.wrapOrNotFound(courseAccess);
     }
 
     /**
@@ -123,8 +121,8 @@ public class CourseAccessResource {
     @Timed
     public ResponseEntity<Void> deleteCourseAccess(@PathVariable Long id) {
         log.debug("REST request to delete CourseAccess : {}", id);
-        courseAccessRepository.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("courseAccess", id.toString())).build();
-    }
 
+        courseAccessRepository.deleteById(id);
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+    }
 }

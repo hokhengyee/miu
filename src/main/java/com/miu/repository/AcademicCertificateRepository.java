@@ -1,15 +1,15 @@
 package com.miu.repository;
 
 import com.miu.domain.AcademicCertificate;
-
 import org.springframework.data.jpa.repository.*;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
 
 /**
- * Spring Data JPA repository for the AcademicCertificate entity.
+ * Spring Data  repository for the AcademicCertificate entity.
  */
 @SuppressWarnings("unused")
-public interface AcademicCertificateRepository extends JpaRepository<AcademicCertificate,Long> {
+@Repository
+public interface AcademicCertificateRepository extends JpaRepository<AcademicCertificate, Long> {
 
 }

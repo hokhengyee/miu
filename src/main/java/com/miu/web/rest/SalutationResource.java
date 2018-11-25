@@ -2,12 +2,11 @@ package com.miu.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.miu.domain.Salutation;
-
 import com.miu.repository.SalutationRepository;
+import com.miu.web.rest.errors.BadRequestAlertException;
 import com.miu.web.rest.util.HeaderUtil;
 import com.miu.web.rest.util.PaginationUtil;
-
-import io.swagger.annotations.ApiParam;
+import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -17,10 +16,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.inject.Inject;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -32,9 +31,14 @@ import java.util.Optional;
 public class SalutationResource {
 
     private final Logger log = LoggerFactory.getLogger(SalutationResource.class);
-        
-    @Inject
-    private SalutationRepository salutationRepository;
+
+    private static final String ENTITY_NAME = "salutation";
+
+    private final SalutationRepository salutationRepository;
+
+    public SalutationResource(SalutationRepository salutationRepository) {
+        this.salutationRepository = salutationRepository;
+    }
 
     /**
      * POST  /salutations : Create a new salutation.
@@ -48,11 +52,11 @@ public class SalutationResource {
     public ResponseEntity<Salutation> createSalutation(@Valid @RequestBody Salutation salutation) throws URISyntaxException {
         log.debug("REST request to save Salutation : {}", salutation);
         if (salutation.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("salutation", "idexists", "A new salutation cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new salutation cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Salutation result = salutationRepository.save(salutation);
         return ResponseEntity.created(new URI("/api/salutations/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert("salutation", result.getId().toString()))
+            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
@@ -62,7 +66,7 @@ public class SalutationResource {
      * @param salutation the salutation to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated salutation,
      * or with status 400 (Bad Request) if the salutation is not valid,
-     * or with status 500 (Internal Server Error) if the salutation couldnt be updated
+     * or with status 500 (Internal Server Error) if the salutation couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/salutations")
@@ -70,11 +74,11 @@ public class SalutationResource {
     public ResponseEntity<Salutation> updateSalutation(@Valid @RequestBody Salutation salutation) throws URISyntaxException {
         log.debug("REST request to update Salutation : {}", salutation);
         if (salutation.getId() == null) {
-            return createSalutation(salutation);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         Salutation result = salutationRepository.save(salutation);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert("salutation", salutation.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, salutation.getId().toString()))
             .body(result);
     }
 
@@ -83,16 +87,14 @@ public class SalutationResource {
      *
      * @param pageable the pagination information
      * @return the ResponseEntity with status 200 (OK) and the list of salutations in body
-     * @throws URISyntaxException if there is an error to generate the pagination HTTP headers
      */
     @GetMapping("/salutations")
     @Timed
-    public ResponseEntity<List<Salutation>> getAllSalutations(@ApiParam Pageable pageable)
-        throws URISyntaxException {
+    public ResponseEntity<List<Salutation>> getAllSalutations(Pageable pageable) {
         log.debug("REST request to get a page of Salutations");
         Page<Salutation> page = salutationRepository.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/salutations");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**
@@ -105,12 +107,8 @@ public class SalutationResource {
     @Timed
     public ResponseEntity<Salutation> getSalutation(@PathVariable Long id) {
         log.debug("REST request to get Salutation : {}", id);
-        Salutation salutation = salutationRepository.findOne(id);
-        return Optional.ofNullable(salutation)
-            .map(result -> new ResponseEntity<>(
-                result,
-                HttpStatus.OK))
-            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        Optional<Salutation> salutation = salutationRepository.findById(id);
+        return ResponseUtil.wrapOrNotFound(salutation);
     }
 
     /**
@@ -123,8 +121,8 @@ public class SalutationResource {
     @Timed
     public ResponseEntity<Void> deleteSalutation(@PathVariable Long id) {
         log.debug("REST request to delete Salutation : {}", id);
-        salutationRepository.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("salutation", id.toString())).build();
-    }
 
+        salutationRepository.deleteById(id);
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+    }
 }

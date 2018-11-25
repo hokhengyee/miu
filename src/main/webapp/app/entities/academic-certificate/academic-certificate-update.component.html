@@ -1,0 +1,83 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-academic-certificate-heading">Create or edit a Academic Certificate</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!academicCertificate.id">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="academicCertificate.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_md5Key">Md 5 Key</label>
+                    <input type="text" class="form-control" name="md5Key" id="field_md5Key"
+                        [(ngModel)]="academicCertificate.md5Key" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_academicCertificate1">Academic Certificate 1</label>
+                    <div>
+                        <div *ngIf="academicCertificate.academicCertificate1" class="form-text text-danger clearfix">
+                            <a class="pull-left" (click)="openFile(academicCertificate.academicCertificate1ContentType, academicCertificate.academicCertificate1)">open</a><br>
+                            <span class="pull-left">{{academicCertificate.academicCertificate1ContentType}}, {{byteSize(academicCertificate.academicCertificate1)}}</span>
+                            <button type="button" (click)="academicCertificate.academicCertificate1=null;academicCertificate.academicCertificate1ContentType=null;"
+                                    class="btn btn-secondary btn-xs pull-right">
+                                <fa-icon [icon]="'times'"></fa-icon>
+                            </button>
+                        </div>
+                        <input type="file" id="file_academicCertificate1" (change)="setFileData($event, academicCertificate, 'academicCertificate1', false)"/>
+                    </div>
+                    <input type="hidden" class="form-control" name="academicCertificate1" id="field_academicCertificate1"
+                        [(ngModel)]="academicCertificate.academicCertificate1" />
+                    <input type="hidden" class="form-control" name="academicCertificate1ContentType" id="field_academicCertificate1ContentType"
+                        [(ngModel)]="academicCertificate.academicCertificate1ContentType" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_academicCertificate2">Academic Certificate 2</label>
+                    <div>
+                        <div *ngIf="academicCertificate.academicCertificate2" class="form-text text-danger clearfix">
+                            <a class="pull-left" (click)="openFile(academicCertificate.academicCertificate2ContentType, academicCertificate.academicCertificate2)">open</a><br>
+                            <span class="pull-left">{{academicCertificate.academicCertificate2ContentType}}, {{byteSize(academicCertificate.academicCertificate2)}}</span>
+                            <button type="button" (click)="academicCertificate.academicCertificate2=null;academicCertificate.academicCertificate2ContentType=null;"
+                                    class="btn btn-secondary btn-xs pull-right">
+                                <fa-icon [icon]="'times'"></fa-icon>
+                            </button>
+                        </div>
+                        <input type="file" id="file_academicCertificate2" (change)="setFileData($event, academicCertificate, 'academicCertificate2', false)"/>
+                    </div>
+                    <input type="hidden" class="form-control" name="academicCertificate2" id="field_academicCertificate2"
+                        [(ngModel)]="academicCertificate.academicCertificate2" />
+                    <input type="hidden" class="form-control" name="academicCertificate2ContentType" id="field_academicCertificate2ContentType"
+                        [(ngModel)]="academicCertificate.academicCertificate2ContentType" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_academicCertificate3">Academic Certificate 3</label>
+                    <div>
+                        <div *ngIf="academicCertificate.academicCertificate3" class="form-text text-danger clearfix">
+                            <a class="pull-left" (click)="openFile(academicCertificate.academicCertificate3ContentType, academicCertificate.academicCertificate3)">open</a><br>
+                            <span class="pull-left">{{academicCertificate.academicCertificate3ContentType}}, {{byteSize(academicCertificate.academicCertificate3)}}</span>
+                            <button type="button" (click)="academicCertificate.academicCertificate3=null;academicCertificate.academicCertificate3ContentType=null;"
+                                    class="btn btn-secondary btn-xs pull-right">
+                                <fa-icon [icon]="'times'"></fa-icon>
+                            </button>
+                        </div>
+                        <input type="file" id="file_academicCertificate3" (change)="setFileData($event, academicCertificate, 'academicCertificate3', false)"/>
+                    </div>
+                    <input type="hidden" class="form-control" name="academicCertificate3" id="field_academicCertificate3"
+                        [(ngModel)]="academicCertificate.academicCertificate3" />
+                    <input type="hidden" class="form-control" name="academicCertificate3ContentType" id="field_academicCertificate3ContentType"
+                        [(ngModel)]="academicCertificate.academicCertificate3ContentType" />
+                </div>
+
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

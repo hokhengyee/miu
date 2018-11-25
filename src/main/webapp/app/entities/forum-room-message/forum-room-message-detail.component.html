@@ -1,0 +1,41 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="forumRoomMessage">
+            <h2><span>Forum Room Message</span> {{forumRoomMessage.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Message</span></dt>
+                <dd>
+                    <span>{{forumRoomMessage.message}}</span>
+                </dd>
+                <dt><span>Message Datetime</span></dt>
+                <dd>
+                    <span>{{forumRoomMessage.messageDatetime}}</span>
+                </dd>
+                <dt><span>Forum Room</span></dt>
+                <dd>
+                    <div *ngIf="forumRoomMessage.forumRoom">
+                        <a [routerLink]="['/forum-room', forumRoomMessage.forumRoom?.id, 'view']">{{forumRoomMessage.forumRoom?.forumRoomName}}</a>
+                    </div>
+                </dd>
+                <dt><span>User</span></dt>
+                <dd>
+                    {{forumRoomMessage.user?.login}}
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/forum-room-message', forumRoomMessage.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

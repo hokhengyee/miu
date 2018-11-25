@@ -1,0 +1,84 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="studentProfile">
+            <h2><span>Student Profile</span> {{studentProfile.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Student Id</span></dt>
+                <dd>
+                    <span>{{studentProfile.studentId}}</span>
+                </dd>
+                <dt><span>Date Of Birth</span></dt>
+                <dd>
+                    <span>{{studentProfile.dateOfBirth}}</span>
+                </dd>
+                <dt><span>Phone</span></dt>
+                <dd>
+                    <span>{{studentProfile.phone}}</span>
+                </dd>
+                <dt><span>Application Date</span></dt>
+                <dd>
+                    <span>{{studentProfile.applicationDate}}</span>
+                </dd>
+                <dt><span>Commencement Date</span></dt>
+                <dd>
+                    <span>{{studentProfile.commencementDate}}</span>
+                </dd>
+                <dt><span>Completion Date</span></dt>
+                <dd>
+                    <span>{{studentProfile.completionDate}}</span>
+                </dd>
+                <dt><span>Mailing Address</span></dt>
+                <dd>
+                    <span>{{studentProfile.mailingAddress}}</span>
+                </dd>
+                <dt><span>Profile Photo</span></dt>
+                <dd>
+                    <div *ngIf="studentProfile.profilePhoto">
+                        <a (click)="openFile(studentProfile.profilePhotoContentType, studentProfile.profilePhoto)">
+                            <img [src]="'data:' + studentProfile.profilePhotoContentType + ';base64,' + studentProfile.profilePhoto" style="max-width: 100%;" alt="studentProfile image"/>
+                        </a>
+                        {{studentProfile.profilePhotoContentType}}, {{byteSize(studentProfile.profilePhoto)}}
+                    </div>
+                </dd>
+                <dt><span>Extended Completion Date</span></dt>
+                <dd>
+                    <span>{{studentProfile.extendedCompletionDate}}</span>
+                </dd>
+                <dt><span>Salutation</span></dt>
+                <dd>
+                    <div *ngIf="studentProfile.salutation">
+                        <a [routerLink]="['/salutation', studentProfile.salutation?.id, 'view']">{{studentProfile.salutation?.title}}</a>
+                    </div>
+                </dd>
+                <dt><span>Gender</span></dt>
+                <dd>
+                    <div *ngIf="studentProfile.gender">
+                        <a [routerLink]="['/gender', studentProfile.gender?.id, 'view']">{{studentProfile.gender?.title}}</a>
+                    </div>
+                </dd>
+                <dt><span>Supervisor</span></dt>
+                <dd>
+                    {{studentProfile.supervisor?.login}}
+                </dd>
+                <dt><span>User</span></dt>
+                <dd>
+                    {{studentProfile.user?.login}}
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/student-profile', studentProfile.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

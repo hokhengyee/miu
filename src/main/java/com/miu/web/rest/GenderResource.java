@@ -2,12 +2,11 @@ package com.miu.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.miu.domain.Gender;
-
 import com.miu.repository.GenderRepository;
+import com.miu.web.rest.errors.BadRequestAlertException;
 import com.miu.web.rest.util.HeaderUtil;
 import com.miu.web.rest.util.PaginationUtil;
-
-import io.swagger.annotations.ApiParam;
+import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -17,10 +16,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.inject.Inject;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -32,9 +31,14 @@ import java.util.Optional;
 public class GenderResource {
 
     private final Logger log = LoggerFactory.getLogger(GenderResource.class);
-        
-    @Inject
-    private GenderRepository genderRepository;
+
+    private static final String ENTITY_NAME = "gender";
+
+    private final GenderRepository genderRepository;
+
+    public GenderResource(GenderRepository genderRepository) {
+        this.genderRepository = genderRepository;
+    }
 
     /**
      * POST  /genders : Create a new gender.
@@ -48,11 +52,11 @@ public class GenderResource {
     public ResponseEntity<Gender> createGender(@Valid @RequestBody Gender gender) throws URISyntaxException {
         log.debug("REST request to save Gender : {}", gender);
         if (gender.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("gender", "idexists", "A new gender cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new gender cannot already have an ID", ENTITY_NAME, "idexists");
         }
         Gender result = genderRepository.save(gender);
         return ResponseEntity.created(new URI("/api/genders/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert("gender", result.getId().toString()))
+            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
@@ -62,7 +66,7 @@ public class GenderResource {
      * @param gender the gender to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated gender,
      * or with status 400 (Bad Request) if the gender is not valid,
-     * or with status 500 (Internal Server Error) if the gender couldnt be updated
+     * or with status 500 (Internal Server Error) if the gender couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/genders")
@@ -70,11 +74,11 @@ public class GenderResource {
     public ResponseEntity<Gender> updateGender(@Valid @RequestBody Gender gender) throws URISyntaxException {
         log.debug("REST request to update Gender : {}", gender);
         if (gender.getId() == null) {
-            return createGender(gender);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         Gender result = genderRepository.save(gender);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert("gender", gender.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, gender.getId().toString()))
             .body(result);
     }
 
@@ -83,16 +87,14 @@ public class GenderResource {
      *
      * @param pageable the pagination information
      * @return the ResponseEntity with status 200 (OK) and the list of genders in body
-     * @throws URISyntaxException if there is an error to generate the pagination HTTP headers
      */
     @GetMapping("/genders")
     @Timed
-    public ResponseEntity<List<Gender>> getAllGenders(@ApiParam Pageable pageable)
-        throws URISyntaxException {
+    public ResponseEntity<List<Gender>> getAllGenders(Pageable pageable) {
         log.debug("REST request to get a page of Genders");
         Page<Gender> page = genderRepository.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/genders");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**
@@ -105,12 +107,8 @@ public class GenderResource {
     @Timed
     public ResponseEntity<Gender> getGender(@PathVariable Long id) {
         log.debug("REST request to get Gender : {}", id);
-        Gender gender = genderRepository.findOne(id);
-        return Optional.ofNullable(gender)
-            .map(result -> new ResponseEntity<>(
-                result,
-                HttpStatus.OK))
-            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        Optional<Gender> gender = genderRepository.findById(id);
+        return ResponseUtil.wrapOrNotFound(gender);
     }
 
     /**
@@ -123,8 +121,8 @@ public class GenderResource {
     @Timed
     public ResponseEntity<Void> deleteGender(@PathVariable Long id) {
         log.debug("REST request to delete Gender : {}", id);
-        genderRepository.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("gender", id.toString())).build();
-    }
 
+        genderRepository.deleteById(id);
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+    }
 }

@@ -7,23 +7,23 @@ import com.miu.domain.User;
 import com.miu.domain.Course;
 import com.miu.domain.PaymentType;
 import com.miu.repository.StudentPaymentRepository;
+import com.miu.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
 
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.Instant;
@@ -32,7 +32,9 @@ import java.time.ZoneOffset;
 import java.time.ZoneId;
 import java.util.List;
 
+
 import static com.miu.web.rest.TestUtil.sameInstant;
+import static com.miu.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -62,16 +64,19 @@ public class StudentPaymentResourceIntTest {
     private static final Boolean DEFAULT_PAID = false;
     private static final Boolean UPDATED_PAID = true;
 
-    @Inject
+    @Autowired
     private StudentPaymentRepository studentPaymentRepository;
 
-    @Inject
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
-    @Inject
+    @Autowired
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
-    @Inject
+    @Autowired
+    private ExceptionTranslator exceptionTranslator;
+
+    @Autowired
     private EntityManager em;
 
     private MockMvc restStudentPaymentMockMvc;
@@ -81,10 +86,11 @@ public class StudentPaymentResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        StudentPaymentResource studentPaymentResource = new StudentPaymentResource();
-        ReflectionTestUtils.setField(studentPaymentResource, "studentPaymentRepository", studentPaymentRepository);
+        final StudentPaymentResource studentPaymentResource = new StudentPaymentResource(studentPaymentRepository);
         this.restStudentPaymentMockMvc = MockMvcBuilders.standaloneSetup(studentPaymentResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -96,11 +102,11 @@ public class StudentPaymentResourceIntTest {
      */
     public static StudentPayment createEntity(EntityManager em) {
         StudentPayment studentPayment = new StudentPayment()
-                .createdDate(DEFAULT_CREATED_DATE)
-                .amount(DEFAULT_AMOUNT)
-                .description(DEFAULT_DESCRIPTION)
-                .paymentDate(DEFAULT_PAYMENT_DATE)
-                .paid(DEFAULT_PAID);
+            .createdDate(DEFAULT_CREATED_DATE)
+            .amount(DEFAULT_AMOUNT)
+            .description(DEFAULT_DESCRIPTION)
+            .paymentDate(DEFAULT_PAYMENT_DATE)
+            .paid(DEFAULT_PAID);
         // Add required entity
         User user = UserResourceIntTest.createEntity(em);
         em.persist(user);
@@ -130,7 +136,6 @@ public class StudentPaymentResourceIntTest {
         int databaseSizeBeforeCreate = studentPaymentRepository.findAll().size();
 
         // Create the StudentPayment
-
         restStudentPaymentMockMvc.perform(post("/api/student-payments")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(studentPayment)))
@@ -153,16 +158,15 @@ public class StudentPaymentResourceIntTest {
         int databaseSizeBeforeCreate = studentPaymentRepository.findAll().size();
 
         // Create the StudentPayment with an existing ID
-        StudentPayment existingStudentPayment = new StudentPayment();
-        existingStudentPayment.setId(1L);
+        studentPayment.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restStudentPaymentMockMvc.perform(post("/api/student-payments")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(existingStudentPayment)))
+            .content(TestUtil.convertObjectToJsonBytes(studentPayment)))
             .andExpect(status().isBadRequest());
 
-        // Validate the Alice in the database
+        // Validate the StudentPayment in the database
         List<StudentPayment> studentPaymentList = studentPaymentRepository.findAll();
         assertThat(studentPaymentList).hasSize(databaseSizeBeforeCreate);
     }
@@ -202,7 +206,7 @@ public class StudentPaymentResourceIntTest {
             .andExpect(jsonPath("$.[*].paymentDate").value(hasItem(DEFAULT_PAYMENT_DATE.toString())))
             .andExpect(jsonPath("$.[*].paid").value(hasItem(DEFAULT_PAID.booleanValue())));
     }
-
+    
     @Test
     @Transactional
     public void getStudentPayment() throws Exception {
@@ -234,16 +238,19 @@ public class StudentPaymentResourceIntTest {
     public void updateStudentPayment() throws Exception {
         // Initialize the database
         studentPaymentRepository.saveAndFlush(studentPayment);
+
         int databaseSizeBeforeUpdate = studentPaymentRepository.findAll().size();
 
         // Update the studentPayment
-        StudentPayment updatedStudentPayment = studentPaymentRepository.findOne(studentPayment.getId());
+        StudentPayment updatedStudentPayment = studentPaymentRepository.findById(studentPayment.getId()).get();
+        // Disconnect from session so that the updates on updatedStudentPayment are not directly saved in db
+        em.detach(updatedStudentPayment);
         updatedStudentPayment
-                .createdDate(UPDATED_CREATED_DATE)
-                .amount(UPDATED_AMOUNT)
-                .description(UPDATED_DESCRIPTION)
-                .paymentDate(UPDATED_PAYMENT_DATE)
-                .paid(UPDATED_PAID);
+            .createdDate(UPDATED_CREATED_DATE)
+            .amount(UPDATED_AMOUNT)
+            .description(UPDATED_DESCRIPTION)
+            .paymentDate(UPDATED_PAYMENT_DATE)
+            .paid(UPDATED_PAID);
 
         restStudentPaymentMockMvc.perform(put("/api/student-payments")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -268,15 +275,15 @@ public class StudentPaymentResourceIntTest {
 
         // Create the StudentPayment
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restStudentPaymentMockMvc.perform(put("/api/student-payments")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(studentPayment)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the StudentPayment in the database
         List<StudentPayment> studentPaymentList = studentPaymentRepository.findAll();
-        assertThat(studentPaymentList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(studentPaymentList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -284,6 +291,7 @@ public class StudentPaymentResourceIntTest {
     public void deleteStudentPayment() throws Exception {
         // Initialize the database
         studentPaymentRepository.saveAndFlush(studentPayment);
+
         int databaseSizeBeforeDelete = studentPaymentRepository.findAll().size();
 
         // Get the studentPayment
@@ -294,5 +302,20 @@ public class StudentPaymentResourceIntTest {
         // Validate the database is empty
         List<StudentPayment> studentPaymentList = studentPaymentRepository.findAll();
         assertThat(studentPaymentList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    @Transactional
+    public void equalsVerifier() throws Exception {
+        TestUtil.equalsVerifier(StudentPayment.class);
+        StudentPayment studentPayment1 = new StudentPayment();
+        studentPayment1.setId(1L);
+        StudentPayment studentPayment2 = new StudentPayment();
+        studentPayment2.setId(studentPayment1.getId());
+        assertThat(studentPayment1).isEqualTo(studentPayment2);
+        studentPayment2.setId(2L);
+        assertThat(studentPayment1).isNotEqualTo(studentPayment2);
+        studentPayment1.setId(null);
+        assertThat(studentPayment1).isNotEqualTo(studentPayment2);
     }
 }

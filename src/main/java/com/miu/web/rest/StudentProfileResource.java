@@ -2,12 +2,11 @@ package com.miu.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.miu.domain.StudentProfile;
-
 import com.miu.repository.StudentProfileRepository;
+import com.miu.web.rest.errors.BadRequestAlertException;
 import com.miu.web.rest.util.HeaderUtil;
 import com.miu.web.rest.util.PaginationUtil;
-
-import io.swagger.annotations.ApiParam;
+import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -17,10 +16,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.inject.Inject;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -32,9 +31,14 @@ import java.util.Optional;
 public class StudentProfileResource {
 
     private final Logger log = LoggerFactory.getLogger(StudentProfileResource.class);
-        
-    @Inject
-    private StudentProfileRepository studentProfileRepository;
+
+    private static final String ENTITY_NAME = "studentProfile";
+
+    private final StudentProfileRepository studentProfileRepository;
+
+    public StudentProfileResource(StudentProfileRepository studentProfileRepository) {
+        this.studentProfileRepository = studentProfileRepository;
+    }
 
     /**
      * POST  /student-profiles : Create a new studentProfile.
@@ -48,11 +52,11 @@ public class StudentProfileResource {
     public ResponseEntity<StudentProfile> createStudentProfile(@Valid @RequestBody StudentProfile studentProfile) throws URISyntaxException {
         log.debug("REST request to save StudentProfile : {}", studentProfile);
         if (studentProfile.getId() != null) {
-            return ResponseEntity.badRequest().headers(HeaderUtil.createFailureAlert("studentProfile", "idexists", "A new studentProfile cannot already have an ID")).body(null);
+            throw new BadRequestAlertException("A new studentProfile cannot already have an ID", ENTITY_NAME, "idexists");
         }
         StudentProfile result = studentProfileRepository.save(studentProfile);
         return ResponseEntity.created(new URI("/api/student-profiles/" + result.getId()))
-            .headers(HeaderUtil.createEntityCreationAlert("studentProfile", result.getId().toString()))
+            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
     }
 
@@ -62,7 +66,7 @@ public class StudentProfileResource {
      * @param studentProfile the studentProfile to update
      * @return the ResponseEntity with status 200 (OK) and with body the updated studentProfile,
      * or with status 400 (Bad Request) if the studentProfile is not valid,
-     * or with status 500 (Internal Server Error) if the studentProfile couldnt be updated
+     * or with status 500 (Internal Server Error) if the studentProfile couldn't be updated
      * @throws URISyntaxException if the Location URI syntax is incorrect
      */
     @PutMapping("/student-profiles")
@@ -70,11 +74,11 @@ public class StudentProfileResource {
     public ResponseEntity<StudentProfile> updateStudentProfile(@Valid @RequestBody StudentProfile studentProfile) throws URISyntaxException {
         log.debug("REST request to update StudentProfile : {}", studentProfile);
         if (studentProfile.getId() == null) {
-            return createStudentProfile(studentProfile);
+            throw new BadRequestAlertException("Invalid id", ENTITY_NAME, "idnull");
         }
         StudentProfile result = studentProfileRepository.save(studentProfile);
         return ResponseEntity.ok()
-            .headers(HeaderUtil.createEntityUpdateAlert("studentProfile", studentProfile.getId().toString()))
+            .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, studentProfile.getId().toString()))
             .body(result);
     }
 
@@ -83,16 +87,14 @@ public class StudentProfileResource {
      *
      * @param pageable the pagination information
      * @return the ResponseEntity with status 200 (OK) and the list of studentProfiles in body
-     * @throws URISyntaxException if there is an error to generate the pagination HTTP headers
      */
     @GetMapping("/student-profiles")
     @Timed
-    public ResponseEntity<List<StudentProfile>> getAllStudentProfiles(@ApiParam Pageable pageable)
-        throws URISyntaxException {
+    public ResponseEntity<List<StudentProfile>> getAllStudentProfiles(Pageable pageable) {
         log.debug("REST request to get a page of StudentProfiles");
         Page<StudentProfile> page = studentProfileRepository.findAll(pageable);
         HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/student-profiles");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
+        return ResponseEntity.ok().headers(headers).body(page.getContent());
     }
 
     /**
@@ -105,12 +107,8 @@ public class StudentProfileResource {
     @Timed
     public ResponseEntity<StudentProfile> getStudentProfile(@PathVariable Long id) {
         log.debug("REST request to get StudentProfile : {}", id);
-        StudentProfile studentProfile = studentProfileRepository.findOne(id);
-        return Optional.ofNullable(studentProfile)
-            .map(result -> new ResponseEntity<>(
-                result,
-                HttpStatus.OK))
-            .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        Optional<StudentProfile> studentProfile = studentProfileRepository.findById(id);
+        return ResponseUtil.wrapOrNotFound(studentProfile);
     }
 
     /**
@@ -123,8 +121,8 @@ public class StudentProfileResource {
     @Timed
     public ResponseEntity<Void> deleteStudentProfile(@PathVariable Long id) {
         log.debug("REST request to delete StudentProfile : {}", id);
-        studentProfileRepository.delete(id);
-        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("studentProfile", id.toString())).build();
-    }
 
+        studentProfileRepository.deleteById(id);
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
+    }
 }

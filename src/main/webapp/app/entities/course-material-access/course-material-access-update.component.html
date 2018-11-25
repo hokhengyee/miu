@@ -1,0 +1,55 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-course-material-access-heading">Create or edit a Course Material Access</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!courseMaterialAccess.id">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="courseMaterialAccess.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_displayOrder">Display Order</label>
+                    <input type="number" class="form-control" name="displayOrder" id="field_displayOrder"
+                        [(ngModel)]="courseMaterialAccess.displayOrder" />
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="field_course">Course</label>
+                    <select class="form-control" id="field_course" name="course" [(ngModel)]="courseMaterialAccess.course"  required>
+                        <option *ngIf="!editForm.value.course" [ngValue]="null" selected></option>
+                        <option [ngValue]="courseOption.id === courseMaterialAccess.course?.id ? courseMaterialAccess.course : courseOption" *ngFor="let courseOption of courses; trackBy: trackCourseById">{{courseOption.title}}</option>
+                    </select>
+                </div>
+                <div [hidden]="!(editForm.controls.course?.dirty && editForm.controls.course?.invalid)">
+                    <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.course?.errors?.required">
+                        This field is required.
+                    </small>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_courseMaterial">Course Material</label>
+                    <select class="form-control" id="field_courseMaterial" name="courseMaterial" [(ngModel)]="courseMaterialAccess.courseMaterial"  required>
+                        <option *ngIf="!editForm.value.courseMaterial" [ngValue]="null" selected></option>
+                        <option [ngValue]="courseMaterialOption.id === courseMaterialAccess.courseMaterial?.id ? courseMaterialAccess.courseMaterial : courseMaterialOption" *ngFor="let courseMaterialOption of coursematerials; trackBy: trackCourseMaterialById">{{courseMaterialOption.title}}</option>
+                    </select>
+                </div>
+                <div [hidden]="!(editForm.controls.courseMaterial?.dirty && editForm.controls.courseMaterial?.invalid)">
+                    <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.courseMaterial?.errors?.required">
+                        This field is required.
+                    </small>
+                </div>
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

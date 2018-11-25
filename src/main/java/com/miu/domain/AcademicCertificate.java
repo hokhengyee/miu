@@ -4,6 +4,7 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -18,7 +19,7 @@ public class AcademicCertificate implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "md_5_key")
@@ -45,6 +46,7 @@ public class AcademicCertificate implements Serializable {
     @Column(name = "academic_certificate_3_content_type")
     private String academicCertificate3ContentType;
 
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -143,6 +145,7 @@ public class AcademicCertificate implements Serializable {
     public void setAcademicCertificate3ContentType(String academicCertificate3ContentType) {
         this.academicCertificate3ContentType = academicCertificate3ContentType;
     }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -153,28 +156,28 @@ public class AcademicCertificate implements Serializable {
             return false;
         }
         AcademicCertificate academicCertificate = (AcademicCertificate) o;
-        if (academicCertificate.id == null || id == null) {
+        if (academicCertificate.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(id, academicCertificate.id);
+        return Objects.equals(getId(), academicCertificate.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(getId());
     }
 
     @Override
     public String toString() {
         return "AcademicCertificate{" +
-            "id=" + id +
-            ", md5Key='" + md5Key + "'" +
-            ", academicCertificate1='" + academicCertificate1 + "'" +
-            ", academicCertificate1ContentType='" + academicCertificate1ContentType + "'" +
-            ", academicCertificate2='" + academicCertificate2 + "'" +
-            ", academicCertificate2ContentType='" + academicCertificate2ContentType + "'" +
-            ", academicCertificate3='" + academicCertificate3 + "'" +
-            ", academicCertificate3ContentType='" + academicCertificate3ContentType + "'" +
-            '}';
+            "id=" + getId() +
+            ", md5Key='" + getMd5Key() + "'" +
+            ", academicCertificate1='" + getAcademicCertificate1() + "'" +
+            ", academicCertificate1ContentType='" + getAcademicCertificate1ContentType() + "'" +
+            ", academicCertificate2='" + getAcademicCertificate2() + "'" +
+            ", academicCertificate2ContentType='" + getAcademicCertificate2ContentType() + "'" +
+            ", academicCertificate3='" + getAcademicCertificate3() + "'" +
+            ", academicCertificate3ContentType='" + getAcademicCertificate3ContentType() + "'" +
+            "}";
     }
 }

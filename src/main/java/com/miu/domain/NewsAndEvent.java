@@ -5,6 +5,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 import java.util.Objects;
@@ -20,7 +21,7 @@ public class NewsAndEvent implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
@@ -45,6 +46,7 @@ public class NewsAndEvent implements Serializable {
     @Column(name = "event_detail")
     private String eventDetail;
 
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -130,6 +132,7 @@ public class NewsAndEvent implements Serializable {
     public void setEventDetail(String eventDetail) {
         this.eventDetail = eventDetail;
     }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -140,27 +143,27 @@ public class NewsAndEvent implements Serializable {
             return false;
         }
         NewsAndEvent newsAndEvent = (NewsAndEvent) o;
-        if (newsAndEvent.id == null || id == null) {
+        if (newsAndEvent.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(id, newsAndEvent.id);
+        return Objects.equals(getId(), newsAndEvent.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(getId());
     }
 
     @Override
     public String toString() {
         return "NewsAndEvent{" +
-            "id=" + id +
-            ", title='" + title + "'" +
-            ", websiteLink='" + websiteLink + "'" +
-            ", startDT='" + startDT + "'" +
-            ", endDT='" + endDT + "'" +
-            ", venue='" + venue + "'" +
-            ", eventDetail='" + eventDetail + "'" +
-            '}';
+            "id=" + getId() +
+            ", title='" + getTitle() + "'" +
+            ", websiteLink='" + getWebsiteLink() + "'" +
+            ", startDT='" + getStartDT() + "'" +
+            ", endDT='" + getEndDT() + "'" +
+            ", venue='" + getVenue() + "'" +
+            ", eventDetail='" + getEventDetail() + "'" +
+            "}";
     }
 }

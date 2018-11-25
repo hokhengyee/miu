@@ -4,25 +4,27 @@ import com.miu.MiuApp;
 
 import com.miu.domain.RegistrationAcademicDetails;
 import com.miu.repository.RegistrationAcademicDetailsRepository;
+import com.miu.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static com.miu.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -88,16 +90,19 @@ public class RegistrationAcademicDetailsResourceIntTest {
     private static final String DEFAULT_GRADE_1 = "AAAAAAAAAA";
     private static final String UPDATED_GRADE_1 = "BBBBBBBBBB";
 
-    @Inject
+    @Autowired
     private RegistrationAcademicDetailsRepository registrationAcademicDetailsRepository;
 
-    @Inject
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
-    @Inject
+    @Autowired
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
-    @Inject
+    @Autowired
+    private ExceptionTranslator exceptionTranslator;
+
+    @Autowired
     private EntityManager em;
 
     private MockMvc restRegistrationAcademicDetailsMockMvc;
@@ -107,10 +112,11 @@ public class RegistrationAcademicDetailsResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        RegistrationAcademicDetailsResource registrationAcademicDetailsResource = new RegistrationAcademicDetailsResource();
-        ReflectionTestUtils.setField(registrationAcademicDetailsResource, "registrationAcademicDetailsRepository", registrationAcademicDetailsRepository);
+        final RegistrationAcademicDetailsResource registrationAcademicDetailsResource = new RegistrationAcademicDetailsResource(registrationAcademicDetailsRepository);
         this.restRegistrationAcademicDetailsMockMvc = MockMvcBuilders.standaloneSetup(registrationAcademicDetailsResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -122,23 +128,23 @@ public class RegistrationAcademicDetailsResourceIntTest {
      */
     public static RegistrationAcademicDetails createEntity(EntityManager em) {
         RegistrationAcademicDetails registrationAcademicDetails = new RegistrationAcademicDetails()
-                .nameOfInstitution2(DEFAULT_NAME_OF_INSTITUTION_2)
-                .examPassed2(DEFAULT_EXAM_PASSED_2)
-                .year2(DEFAULT_YEAR_2)
-                .grade2(DEFAULT_GRADE_2)
-                .nameOfInstitution3(DEFAULT_NAME_OF_INSTITUTION_3)
-                .examPassed3(DEFAULT_EXAM_PASSED_3)
-                .year3(DEFAULT_YEAR_3)
-                .grade3(DEFAULT_GRADE_3)
-                .nameOfInstitution4(DEFAULT_NAME_OF_INSTITUTION_4)
-                .examPassed4(DEFAULT_EXAM_PASSED_4)
-                .year4(DEFAULT_YEAR_4)
-                .grade4(DEFAULT_GRADE_4)
-                .md5key(DEFAULT_MD_5_KEY)
-                .nameOfInstitution1(DEFAULT_NAME_OF_INSTITUTION_1)
-                .examPassed1(DEFAULT_EXAM_PASSED_1)
-                .year1(DEFAULT_YEAR_1)
-                .grade1(DEFAULT_GRADE_1);
+            .nameOfInstitution2(DEFAULT_NAME_OF_INSTITUTION_2)
+            .examPassed2(DEFAULT_EXAM_PASSED_2)
+            .year2(DEFAULT_YEAR_2)
+            .grade2(DEFAULT_GRADE_2)
+            .nameOfInstitution3(DEFAULT_NAME_OF_INSTITUTION_3)
+            .examPassed3(DEFAULT_EXAM_PASSED_3)
+            .year3(DEFAULT_YEAR_3)
+            .grade3(DEFAULT_GRADE_3)
+            .nameOfInstitution4(DEFAULT_NAME_OF_INSTITUTION_4)
+            .examPassed4(DEFAULT_EXAM_PASSED_4)
+            .year4(DEFAULT_YEAR_4)
+            .grade4(DEFAULT_GRADE_4)
+            .md5key(DEFAULT_MD_5_KEY)
+            .nameOfInstitution1(DEFAULT_NAME_OF_INSTITUTION_1)
+            .examPassed1(DEFAULT_EXAM_PASSED_1)
+            .year1(DEFAULT_YEAR_1)
+            .grade1(DEFAULT_GRADE_1);
         return registrationAcademicDetails;
     }
 
@@ -153,7 +159,6 @@ public class RegistrationAcademicDetailsResourceIntTest {
         int databaseSizeBeforeCreate = registrationAcademicDetailsRepository.findAll().size();
 
         // Create the RegistrationAcademicDetails
-
         restRegistrationAcademicDetailsMockMvc.perform(post("/api/registration-academic-details")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(registrationAcademicDetails)))
@@ -188,16 +193,15 @@ public class RegistrationAcademicDetailsResourceIntTest {
         int databaseSizeBeforeCreate = registrationAcademicDetailsRepository.findAll().size();
 
         // Create the RegistrationAcademicDetails with an existing ID
-        RegistrationAcademicDetails existingRegistrationAcademicDetails = new RegistrationAcademicDetails();
-        existingRegistrationAcademicDetails.setId(1L);
+        registrationAcademicDetails.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restRegistrationAcademicDetailsMockMvc.perform(post("/api/registration-academic-details")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(existingRegistrationAcademicDetails)))
+            .content(TestUtil.convertObjectToJsonBytes(registrationAcademicDetails)))
             .andExpect(status().isBadRequest());
 
-        // Validate the Alice in the database
+        // Validate the RegistrationAcademicDetails in the database
         List<RegistrationAcademicDetails> registrationAcademicDetailsList = registrationAcademicDetailsRepository.findAll();
         assertThat(registrationAcademicDetailsList).hasSize(databaseSizeBeforeCreate);
     }
@@ -231,7 +235,7 @@ public class RegistrationAcademicDetailsResourceIntTest {
             .andExpect(jsonPath("$.[*].year1").value(hasItem(DEFAULT_YEAR_1.intValue())))
             .andExpect(jsonPath("$.[*].grade1").value(hasItem(DEFAULT_GRADE_1.toString())));
     }
-
+    
     @Test
     @Transactional
     public void getRegistrationAcademicDetails() throws Exception {
@@ -275,28 +279,31 @@ public class RegistrationAcademicDetailsResourceIntTest {
     public void updateRegistrationAcademicDetails() throws Exception {
         // Initialize the database
         registrationAcademicDetailsRepository.saveAndFlush(registrationAcademicDetails);
+
         int databaseSizeBeforeUpdate = registrationAcademicDetailsRepository.findAll().size();
 
         // Update the registrationAcademicDetails
-        RegistrationAcademicDetails updatedRegistrationAcademicDetails = registrationAcademicDetailsRepository.findOne(registrationAcademicDetails.getId());
+        RegistrationAcademicDetails updatedRegistrationAcademicDetails = registrationAcademicDetailsRepository.findById(registrationAcademicDetails.getId()).get();
+        // Disconnect from session so that the updates on updatedRegistrationAcademicDetails are not directly saved in db
+        em.detach(updatedRegistrationAcademicDetails);
         updatedRegistrationAcademicDetails
-                .nameOfInstitution2(UPDATED_NAME_OF_INSTITUTION_2)
-                .examPassed2(UPDATED_EXAM_PASSED_2)
-                .year2(UPDATED_YEAR_2)
-                .grade2(UPDATED_GRADE_2)
-                .nameOfInstitution3(UPDATED_NAME_OF_INSTITUTION_3)
-                .examPassed3(UPDATED_EXAM_PASSED_3)
-                .year3(UPDATED_YEAR_3)
-                .grade3(UPDATED_GRADE_3)
-                .nameOfInstitution4(UPDATED_NAME_OF_INSTITUTION_4)
-                .examPassed4(UPDATED_EXAM_PASSED_4)
-                .year4(UPDATED_YEAR_4)
-                .grade4(UPDATED_GRADE_4)
-                .md5key(UPDATED_MD_5_KEY)
-                .nameOfInstitution1(UPDATED_NAME_OF_INSTITUTION_1)
-                .examPassed1(UPDATED_EXAM_PASSED_1)
-                .year1(UPDATED_YEAR_1)
-                .grade1(UPDATED_GRADE_1);
+            .nameOfInstitution2(UPDATED_NAME_OF_INSTITUTION_2)
+            .examPassed2(UPDATED_EXAM_PASSED_2)
+            .year2(UPDATED_YEAR_2)
+            .grade2(UPDATED_GRADE_2)
+            .nameOfInstitution3(UPDATED_NAME_OF_INSTITUTION_3)
+            .examPassed3(UPDATED_EXAM_PASSED_3)
+            .year3(UPDATED_YEAR_3)
+            .grade3(UPDATED_GRADE_3)
+            .nameOfInstitution4(UPDATED_NAME_OF_INSTITUTION_4)
+            .examPassed4(UPDATED_EXAM_PASSED_4)
+            .year4(UPDATED_YEAR_4)
+            .grade4(UPDATED_GRADE_4)
+            .md5key(UPDATED_MD_5_KEY)
+            .nameOfInstitution1(UPDATED_NAME_OF_INSTITUTION_1)
+            .examPassed1(UPDATED_EXAM_PASSED_1)
+            .year1(UPDATED_YEAR_1)
+            .grade1(UPDATED_GRADE_1);
 
         restRegistrationAcademicDetailsMockMvc.perform(put("/api/registration-academic-details")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -333,15 +340,15 @@ public class RegistrationAcademicDetailsResourceIntTest {
 
         // Create the RegistrationAcademicDetails
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restRegistrationAcademicDetailsMockMvc.perform(put("/api/registration-academic-details")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(registrationAcademicDetails)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the RegistrationAcademicDetails in the database
         List<RegistrationAcademicDetails> registrationAcademicDetailsList = registrationAcademicDetailsRepository.findAll();
-        assertThat(registrationAcademicDetailsList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(registrationAcademicDetailsList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -349,6 +356,7 @@ public class RegistrationAcademicDetailsResourceIntTest {
     public void deleteRegistrationAcademicDetails() throws Exception {
         // Initialize the database
         registrationAcademicDetailsRepository.saveAndFlush(registrationAcademicDetails);
+
         int databaseSizeBeforeDelete = registrationAcademicDetailsRepository.findAll().size();
 
         // Get the registrationAcademicDetails
@@ -359,5 +367,20 @@ public class RegistrationAcademicDetailsResourceIntTest {
         // Validate the database is empty
         List<RegistrationAcademicDetails> registrationAcademicDetailsList = registrationAcademicDetailsRepository.findAll();
         assertThat(registrationAcademicDetailsList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    @Transactional
+    public void equalsVerifier() throws Exception {
+        TestUtil.equalsVerifier(RegistrationAcademicDetails.class);
+        RegistrationAcademicDetails registrationAcademicDetails1 = new RegistrationAcademicDetails();
+        registrationAcademicDetails1.setId(1L);
+        RegistrationAcademicDetails registrationAcademicDetails2 = new RegistrationAcademicDetails();
+        registrationAcademicDetails2.setId(registrationAcademicDetails1.getId());
+        assertThat(registrationAcademicDetails1).isEqualTo(registrationAcademicDetails2);
+        registrationAcademicDetails2.setId(2L);
+        assertThat(registrationAcademicDetails1).isNotEqualTo(registrationAcademicDetails2);
+        registrationAcademicDetails1.setId(null);
+        assertThat(registrationAcademicDetails1).isNotEqualTo(registrationAcademicDetails2);
     }
 }

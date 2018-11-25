@@ -4,25 +4,27 @@ import com.miu.MiuApp;
 
 import com.miu.domain.MinisterialWorkExperience;
 import com.miu.repository.MinisterialWorkExperienceRepository;
+import com.miu.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static com.miu.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -76,16 +78,19 @@ public class MinisterialWorkExperienceResourceIntTest {
     private static final Long DEFAULT_YEARS_1 = 1L;
     private static final Long UPDATED_YEARS_1 = 2L;
 
-    @Inject
+    @Autowired
     private MinisterialWorkExperienceRepository ministerialWorkExperienceRepository;
 
-    @Inject
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
-    @Inject
+    @Autowired
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
-    @Inject
+    @Autowired
+    private ExceptionTranslator exceptionTranslator;
+
+    @Autowired
     private EntityManager em;
 
     private MockMvc restMinisterialWorkExperienceMockMvc;
@@ -95,10 +100,11 @@ public class MinisterialWorkExperienceResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        MinisterialWorkExperienceResource ministerialWorkExperienceResource = new MinisterialWorkExperienceResource();
-        ReflectionTestUtils.setField(ministerialWorkExperienceResource, "ministerialWorkExperienceRepository", ministerialWorkExperienceRepository);
+        final MinisterialWorkExperienceResource ministerialWorkExperienceResource = new MinisterialWorkExperienceResource(ministerialWorkExperienceRepository);
         this.restMinisterialWorkExperienceMockMvc = MockMvcBuilders.standaloneSetup(ministerialWorkExperienceResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -110,19 +116,19 @@ public class MinisterialWorkExperienceResourceIntTest {
      */
     public static MinisterialWorkExperience createEntity(EntityManager em) {
         MinisterialWorkExperience ministerialWorkExperience = new MinisterialWorkExperience()
-                .nameOfMinistry2(DEFAULT_NAME_OF_MINISTRY_2)
-                .areaOfMinistry2(DEFAULT_AREA_OF_MINISTRY_2)
-                .nameOfMinistry3(DEFAULT_NAME_OF_MINISTRY_3)
-                .areaOfMinistry3(DEFAULT_AREA_OF_MINISTRY_3)
-                .nameOfMinistry4(DEFAULT_NAME_OF_MINISTRY_4)
-                .areaOfMinistry4(DEFAULT_AREA_OF_MINISTRY_4)
-                .md5Key(DEFAULT_MD_5_KEY)
-                .years2(DEFAULT_YEARS_2)
-                .years3(DEFAULT_YEARS_3)
-                .years4(DEFAULT_YEARS_4)
-                .nameOfMinistry1(DEFAULT_NAME_OF_MINISTRY_1)
-                .areaOfMinistry1(DEFAULT_AREA_OF_MINISTRY_1)
-                .years1(DEFAULT_YEARS_1);
+            .nameOfMinistry2(DEFAULT_NAME_OF_MINISTRY_2)
+            .areaOfMinistry2(DEFAULT_AREA_OF_MINISTRY_2)
+            .nameOfMinistry3(DEFAULT_NAME_OF_MINISTRY_3)
+            .areaOfMinistry3(DEFAULT_AREA_OF_MINISTRY_3)
+            .nameOfMinistry4(DEFAULT_NAME_OF_MINISTRY_4)
+            .areaOfMinistry4(DEFAULT_AREA_OF_MINISTRY_4)
+            .md5Key(DEFAULT_MD_5_KEY)
+            .years2(DEFAULT_YEARS_2)
+            .years3(DEFAULT_YEARS_3)
+            .years4(DEFAULT_YEARS_4)
+            .nameOfMinistry1(DEFAULT_NAME_OF_MINISTRY_1)
+            .areaOfMinistry1(DEFAULT_AREA_OF_MINISTRY_1)
+            .years1(DEFAULT_YEARS_1);
         return ministerialWorkExperience;
     }
 
@@ -137,7 +143,6 @@ public class MinisterialWorkExperienceResourceIntTest {
         int databaseSizeBeforeCreate = ministerialWorkExperienceRepository.findAll().size();
 
         // Create the MinisterialWorkExperience
-
         restMinisterialWorkExperienceMockMvc.perform(post("/api/ministerial-work-experiences")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(ministerialWorkExperience)))
@@ -168,16 +173,15 @@ public class MinisterialWorkExperienceResourceIntTest {
         int databaseSizeBeforeCreate = ministerialWorkExperienceRepository.findAll().size();
 
         // Create the MinisterialWorkExperience with an existing ID
-        MinisterialWorkExperience existingMinisterialWorkExperience = new MinisterialWorkExperience();
-        existingMinisterialWorkExperience.setId(1L);
+        ministerialWorkExperience.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restMinisterialWorkExperienceMockMvc.perform(post("/api/ministerial-work-experiences")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(existingMinisterialWorkExperience)))
+            .content(TestUtil.convertObjectToJsonBytes(ministerialWorkExperience)))
             .andExpect(status().isBadRequest());
 
-        // Validate the Alice in the database
+        // Validate the MinisterialWorkExperience in the database
         List<MinisterialWorkExperience> ministerialWorkExperienceList = ministerialWorkExperienceRepository.findAll();
         assertThat(ministerialWorkExperienceList).hasSize(databaseSizeBeforeCreate);
     }
@@ -207,7 +211,7 @@ public class MinisterialWorkExperienceResourceIntTest {
             .andExpect(jsonPath("$.[*].areaOfMinistry1").value(hasItem(DEFAULT_AREA_OF_MINISTRY_1.toString())))
             .andExpect(jsonPath("$.[*].years1").value(hasItem(DEFAULT_YEARS_1.intValue())));
     }
-
+    
     @Test
     @Transactional
     public void getMinisterialWorkExperience() throws Exception {
@@ -247,24 +251,27 @@ public class MinisterialWorkExperienceResourceIntTest {
     public void updateMinisterialWorkExperience() throws Exception {
         // Initialize the database
         ministerialWorkExperienceRepository.saveAndFlush(ministerialWorkExperience);
+
         int databaseSizeBeforeUpdate = ministerialWorkExperienceRepository.findAll().size();
 
         // Update the ministerialWorkExperience
-        MinisterialWorkExperience updatedMinisterialWorkExperience = ministerialWorkExperienceRepository.findOne(ministerialWorkExperience.getId());
+        MinisterialWorkExperience updatedMinisterialWorkExperience = ministerialWorkExperienceRepository.findById(ministerialWorkExperience.getId()).get();
+        // Disconnect from session so that the updates on updatedMinisterialWorkExperience are not directly saved in db
+        em.detach(updatedMinisterialWorkExperience);
         updatedMinisterialWorkExperience
-                .nameOfMinistry2(UPDATED_NAME_OF_MINISTRY_2)
-                .areaOfMinistry2(UPDATED_AREA_OF_MINISTRY_2)
-                .nameOfMinistry3(UPDATED_NAME_OF_MINISTRY_3)
-                .areaOfMinistry3(UPDATED_AREA_OF_MINISTRY_3)
-                .nameOfMinistry4(UPDATED_NAME_OF_MINISTRY_4)
-                .areaOfMinistry4(UPDATED_AREA_OF_MINISTRY_4)
-                .md5Key(UPDATED_MD_5_KEY)
-                .years2(UPDATED_YEARS_2)
-                .years3(UPDATED_YEARS_3)
-                .years4(UPDATED_YEARS_4)
-                .nameOfMinistry1(UPDATED_NAME_OF_MINISTRY_1)
-                .areaOfMinistry1(UPDATED_AREA_OF_MINISTRY_1)
-                .years1(UPDATED_YEARS_1);
+            .nameOfMinistry2(UPDATED_NAME_OF_MINISTRY_2)
+            .areaOfMinistry2(UPDATED_AREA_OF_MINISTRY_2)
+            .nameOfMinistry3(UPDATED_NAME_OF_MINISTRY_3)
+            .areaOfMinistry3(UPDATED_AREA_OF_MINISTRY_3)
+            .nameOfMinistry4(UPDATED_NAME_OF_MINISTRY_4)
+            .areaOfMinistry4(UPDATED_AREA_OF_MINISTRY_4)
+            .md5Key(UPDATED_MD_5_KEY)
+            .years2(UPDATED_YEARS_2)
+            .years3(UPDATED_YEARS_3)
+            .years4(UPDATED_YEARS_4)
+            .nameOfMinistry1(UPDATED_NAME_OF_MINISTRY_1)
+            .areaOfMinistry1(UPDATED_AREA_OF_MINISTRY_1)
+            .years1(UPDATED_YEARS_1);
 
         restMinisterialWorkExperienceMockMvc.perform(put("/api/ministerial-work-experiences")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -297,15 +304,15 @@ public class MinisterialWorkExperienceResourceIntTest {
 
         // Create the MinisterialWorkExperience
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restMinisterialWorkExperienceMockMvc.perform(put("/api/ministerial-work-experiences")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(ministerialWorkExperience)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the MinisterialWorkExperience in the database
         List<MinisterialWorkExperience> ministerialWorkExperienceList = ministerialWorkExperienceRepository.findAll();
-        assertThat(ministerialWorkExperienceList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(ministerialWorkExperienceList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -313,6 +320,7 @@ public class MinisterialWorkExperienceResourceIntTest {
     public void deleteMinisterialWorkExperience() throws Exception {
         // Initialize the database
         ministerialWorkExperienceRepository.saveAndFlush(ministerialWorkExperience);
+
         int databaseSizeBeforeDelete = ministerialWorkExperienceRepository.findAll().size();
 
         // Get the ministerialWorkExperience
@@ -323,5 +331,20 @@ public class MinisterialWorkExperienceResourceIntTest {
         // Validate the database is empty
         List<MinisterialWorkExperience> ministerialWorkExperienceList = ministerialWorkExperienceRepository.findAll();
         assertThat(ministerialWorkExperienceList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    @Transactional
+    public void equalsVerifier() throws Exception {
+        TestUtil.equalsVerifier(MinisterialWorkExperience.class);
+        MinisterialWorkExperience ministerialWorkExperience1 = new MinisterialWorkExperience();
+        ministerialWorkExperience1.setId(1L);
+        MinisterialWorkExperience ministerialWorkExperience2 = new MinisterialWorkExperience();
+        ministerialWorkExperience2.setId(ministerialWorkExperience1.getId());
+        assertThat(ministerialWorkExperience1).isEqualTo(ministerialWorkExperience2);
+        ministerialWorkExperience2.setId(2L);
+        assertThat(ministerialWorkExperience1).isNotEqualTo(ministerialWorkExperience2);
+        ministerialWorkExperience1.setId(null);
+        assertThat(ministerialWorkExperience1).isNotEqualTo(ministerialWorkExperience2);
     }
 }

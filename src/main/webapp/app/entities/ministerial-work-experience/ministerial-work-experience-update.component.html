@@ -1,0 +1,193 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+            <h2 id="jhi-ministerial-work-experience-heading">Create or edit a Ministerial Work Experience</h2>
+            <div>
+                <jhi-alert-error></jhi-alert-error>
+                <div class="form-group" [hidden]="!ministerialWorkExperience.id">
+                    <label for="id">ID</label>
+                    <input type="text" class="form-control" id="id" name="id"
+                        [(ngModel)]="ministerialWorkExperience.id" readonly />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_nameOfMinistry2">Name Of Ministry 2</label>
+                    <input type="text" class="form-control" name="nameOfMinistry2" id="field_nameOfMinistry2"
+                        [(ngModel)]="ministerialWorkExperience.nameOfMinistry2" maxlength="1000"/>
+                    <div [hidden]="!(editForm.controls.nameOfMinistry2?.dirty && editForm.controls.nameOfMinistry2?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.nameOfMinistry2?.errors?.maxlength">
+                        This field cannot be longer than 1000 characters.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_areaOfMinistry2">Area Of Ministry 2</label>
+                    <input type="text" class="form-control" name="areaOfMinistry2" id="field_areaOfMinistry2"
+                        [(ngModel)]="ministerialWorkExperience.areaOfMinistry2" maxlength="1000"/>
+                    <div [hidden]="!(editForm.controls.areaOfMinistry2?.dirty && editForm.controls.areaOfMinistry2?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.areaOfMinistry2?.errors?.maxlength">
+                        This field cannot be longer than 1000 characters.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_nameOfMinistry3">Name Of Ministry 3</label>
+                    <input type="text" class="form-control" name="nameOfMinistry3" id="field_nameOfMinistry3"
+                        [(ngModel)]="ministerialWorkExperience.nameOfMinistry3" maxlength="1000"/>
+                    <div [hidden]="!(editForm.controls.nameOfMinistry3?.dirty && editForm.controls.nameOfMinistry3?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.nameOfMinistry3?.errors?.maxlength">
+                        This field cannot be longer than 1000 characters.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_areaOfMinistry3">Area Of Ministry 3</label>
+                    <input type="text" class="form-control" name="areaOfMinistry3" id="field_areaOfMinistry3"
+                        [(ngModel)]="ministerialWorkExperience.areaOfMinistry3" maxlength="1000"/>
+                    <div [hidden]="!(editForm.controls.areaOfMinistry3?.dirty && editForm.controls.areaOfMinistry3?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.areaOfMinistry3?.errors?.maxlength">
+                        This field cannot be longer than 1000 characters.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_nameOfMinistry4">Name Of Ministry 4</label>
+                    <input type="text" class="form-control" name="nameOfMinistry4" id="field_nameOfMinistry4"
+                        [(ngModel)]="ministerialWorkExperience.nameOfMinistry4" maxlength="1000"/>
+                    <div [hidden]="!(editForm.controls.nameOfMinistry4?.dirty && editForm.controls.nameOfMinistry4?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.nameOfMinistry4?.errors?.maxlength">
+                        This field cannot be longer than 1000 characters.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_areaOfMinistry4">Area Of Ministry 4</label>
+                    <input type="text" class="form-control" name="areaOfMinistry4" id="field_areaOfMinistry4"
+                        [(ngModel)]="ministerialWorkExperience.areaOfMinistry4" maxlength="1000"/>
+                    <div [hidden]="!(editForm.controls.areaOfMinistry4?.dirty && editForm.controls.areaOfMinistry4?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.areaOfMinistry4?.errors?.maxlength">
+                        This field cannot be longer than 1000 characters.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_md5Key">Md 5 Key</label>
+                    <input type="text" class="form-control" name="md5Key" id="field_md5Key"
+                        [(ngModel)]="ministerialWorkExperience.md5Key" />
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_years2">Years 2</label>
+                    <input type="number" class="form-control" name="years2" id="field_years2"
+                        [(ngModel)]="ministerialWorkExperience.years2" min="1" jhiMin="1" max="100" jhiMax="100"/>
+                    <div [hidden]="!(editForm.controls.years2?.dirty && editForm.controls.years2?.invalid)">
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.years2?.errors?.min">
+                            This field should be at least 1.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.years2?.errors?.max">
+                            This field cannot be more than 100.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.years2?.errors?.number">
+                            This field should be a number.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_years3">Years 3</label>
+                    <input type="number" class="form-control" name="years3" id="field_years3"
+                        [(ngModel)]="ministerialWorkExperience.years3" min="1" jhiMin="1" max="100" jhiMax="100"/>
+                    <div [hidden]="!(editForm.controls.years3?.dirty && editForm.controls.years3?.invalid)">
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.years3?.errors?.min">
+                            This field should be at least 1.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.years3?.errors?.max">
+                            This field cannot be more than 100.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.years3?.errors?.number">
+                            This field should be a number.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_years4">Years 4</label>
+                    <input type="number" class="form-control" name="years4" id="field_years4"
+                        [(ngModel)]="ministerialWorkExperience.years4" min="1" jhiMin="1" max="100" jhiMax="100"/>
+                    <div [hidden]="!(editForm.controls.years4?.dirty && editForm.controls.years4?.invalid)">
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.years4?.errors?.min">
+                            This field should be at least 1.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.years4?.errors?.max">
+                            This field cannot be more than 100.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.years4?.errors?.number">
+                            This field should be a number.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_nameOfMinistry1">Name Of Ministry 1</label>
+                    <input type="text" class="form-control" name="nameOfMinistry1" id="field_nameOfMinistry1"
+                        [(ngModel)]="ministerialWorkExperience.nameOfMinistry1" maxlength="1000"/>
+                    <div [hidden]="!(editForm.controls.nameOfMinistry1?.dirty && editForm.controls.nameOfMinistry1?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.nameOfMinistry1?.errors?.maxlength">
+                        This field cannot be longer than 1000 characters.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_areaOfMinistry1">Area Of Ministry 1</label>
+                    <input type="text" class="form-control" name="areaOfMinistry1" id="field_areaOfMinistry1"
+                        [(ngModel)]="ministerialWorkExperience.areaOfMinistry1" maxlength="1000"/>
+                    <div [hidden]="!(editForm.controls.areaOfMinistry1?.dirty && editForm.controls.areaOfMinistry1?.invalid)">
+                        <small class="form-text text-danger"
+                        [hidden]="!editForm.controls.areaOfMinistry1?.errors?.maxlength">
+                        This field cannot be longer than 1000 characters.
+                        </small>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label" for="field_years1">Years 1</label>
+                    <input type="number" class="form-control" name="years1" id="field_years1"
+                        [(ngModel)]="ministerialWorkExperience.years1" min="1" jhiMin="1" max="100" jhiMax="100"/>
+                    <div [hidden]="!(editForm.controls.years1?.dirty && editForm.controls.years1?.invalid)">
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.years1?.errors?.min">
+                            This field should be at least 1.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.years1?.errors?.max">
+                            This field cannot be more than 100.
+                        </small>
+                        <small class="form-text text-danger"
+                            [hidden]="!editForm.controls.years1?.errors?.number">
+                            This field should be a number.
+                        </small>
+                    </div>
+                </div>
+
+            </div>
+            <div>
+                <button type="button" id="cancel-save" class="btn btn-secondary"  (click)="previousState()">
+                    <fa-icon [icon]="'ban'"></fa-icon>&nbsp;<span>Cancel</span>
+                </button>
+                <button type="submit" id="save-entity" [disabled]="editForm.form.invalid || isSaving" class="btn btn-primary">
+                    <fa-icon [icon]="'save'"></fa-icon>&nbsp;<span>Save</span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -5,6 +5,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -19,13 +20,14 @@ public class CustomStudentReportType implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @NotNull
-    @Column(name = "label", nullable = false)
+    @Column(name = "jhi_label", nullable = false)
     private String label;
 
+    // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
     }
@@ -46,6 +48,7 @@ public class CustomStudentReportType implements Serializable {
     public void setLabel(String label) {
         this.label = label;
     }
+    // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
     @Override
     public boolean equals(Object o) {
@@ -56,22 +59,22 @@ public class CustomStudentReportType implements Serializable {
             return false;
         }
         CustomStudentReportType customStudentReportType = (CustomStudentReportType) o;
-        if (customStudentReportType.id == null || id == null) {
+        if (customStudentReportType.getId() == null || getId() == null) {
             return false;
         }
-        return Objects.equals(id, customStudentReportType.id);
+        return Objects.equals(getId(), customStudentReportType.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(id);
+        return Objects.hashCode(getId());
     }
 
     @Override
     public String toString() {
         return "CustomStudentReportType{" +
-            "id=" + id +
-            ", label='" + label + "'" +
-            '}';
+            "id=" + getId() +
+            ", label='" + getLabel() + "'" +
+            "}";
     }
 }

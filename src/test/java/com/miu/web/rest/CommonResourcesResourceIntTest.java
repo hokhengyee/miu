@@ -4,26 +4,28 @@ import com.miu.MiuApp;
 
 import com.miu.domain.CommonResources;
 import com.miu.repository.CommonResourcesRepository;
+import com.miu.web.rest.errors.ExceptionTranslator;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.MockitoAnnotations;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Base64Utils;
 
-import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import java.util.List;
 
+
+import static com.miu.web.rest.TestUtil.createFormattingConversionService;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -42,7 +44,7 @@ public class CommonResourcesResourceIntTest {
     private static final String UPDATED_TITLE = "BBBBBBBBBB";
 
     private static final byte[] DEFAULT_CONTENT = TestUtil.createByteArray(1, "0");
-    private static final byte[] UPDATED_CONTENT = TestUtil.createByteArray(2, "1");
+    private static final byte[] UPDATED_CONTENT = TestUtil.createByteArray(1, "1");
     private static final String DEFAULT_CONTENT_CONTENT_TYPE = "image/jpg";
     private static final String UPDATED_CONTENT_CONTENT_TYPE = "image/png";
 
@@ -55,16 +57,19 @@ public class CommonResourcesResourceIntTest {
     private static final String DEFAULT_WEBSITE_LINK = "AAAAAAAAAA";
     private static final String UPDATED_WEBSITE_LINK = "BBBBBBBBBB";
 
-    @Inject
+    @Autowired
     private CommonResourcesRepository commonResourcesRepository;
 
-    @Inject
+    @Autowired
     private MappingJackson2HttpMessageConverter jacksonMessageConverter;
 
-    @Inject
+    @Autowired
     private PageableHandlerMethodArgumentResolver pageableArgumentResolver;
 
-    @Inject
+    @Autowired
+    private ExceptionTranslator exceptionTranslator;
+
+    @Autowired
     private EntityManager em;
 
     private MockMvc restCommonResourcesMockMvc;
@@ -74,10 +79,11 @@ public class CommonResourcesResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        CommonResourcesResource commonResourcesResource = new CommonResourcesResource();
-        ReflectionTestUtils.setField(commonResourcesResource, "commonResourcesRepository", commonResourcesRepository);
+        final CommonResourcesResource commonResourcesResource = new CommonResourcesResource(commonResourcesRepository);
         this.restCommonResourcesMockMvc = MockMvcBuilders.standaloneSetup(commonResourcesResource)
             .setCustomArgumentResolvers(pageableArgumentResolver)
+            .setControllerAdvice(exceptionTranslator)
+            .setConversionService(createFormattingConversionService())
             .setMessageConverters(jacksonMessageConverter).build();
     }
 
@@ -89,12 +95,12 @@ public class CommonResourcesResourceIntTest {
      */
     public static CommonResources createEntity(EntityManager em) {
         CommonResources commonResources = new CommonResources()
-                .title(DEFAULT_TITLE)
-                .content(DEFAULT_CONTENT)
-                .contentContentType(DEFAULT_CONTENT_CONTENT_TYPE)
-                .description(DEFAULT_DESCRIPTION)
-                .displayOrder(DEFAULT_DISPLAY_ORDER)
-                .websiteLink(DEFAULT_WEBSITE_LINK);
+            .title(DEFAULT_TITLE)
+            .content(DEFAULT_CONTENT)
+            .contentContentType(DEFAULT_CONTENT_CONTENT_TYPE)
+            .description(DEFAULT_DESCRIPTION)
+            .displayOrder(DEFAULT_DISPLAY_ORDER)
+            .websiteLink(DEFAULT_WEBSITE_LINK);
         return commonResources;
     }
 
@@ -109,7 +115,6 @@ public class CommonResourcesResourceIntTest {
         int databaseSizeBeforeCreate = commonResourcesRepository.findAll().size();
 
         // Create the CommonResources
-
         restCommonResourcesMockMvc.perform(post("/api/common-resources")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(commonResources)))
@@ -133,16 +138,15 @@ public class CommonResourcesResourceIntTest {
         int databaseSizeBeforeCreate = commonResourcesRepository.findAll().size();
 
         // Create the CommonResources with an existing ID
-        CommonResources existingCommonResources = new CommonResources();
-        existingCommonResources.setId(1L);
+        commonResources.setId(1L);
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restCommonResourcesMockMvc.perform(post("/api/common-resources")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
-            .content(TestUtil.convertObjectToJsonBytes(existingCommonResources)))
+            .content(TestUtil.convertObjectToJsonBytes(commonResources)))
             .andExpect(status().isBadRequest());
 
-        // Validate the Alice in the database
+        // Validate the CommonResources in the database
         List<CommonResources> commonResourcesList = commonResourcesRepository.findAll();
         assertThat(commonResourcesList).hasSize(databaseSizeBeforeCreate);
     }
@@ -183,7 +187,7 @@ public class CommonResourcesResourceIntTest {
             .andExpect(jsonPath("$.[*].displayOrder").value(hasItem(DEFAULT_DISPLAY_ORDER.intValue())))
             .andExpect(jsonPath("$.[*].websiteLink").value(hasItem(DEFAULT_WEBSITE_LINK.toString())));
     }
-
+    
     @Test
     @Transactional
     public void getCommonResources() throws Exception {
@@ -216,17 +220,20 @@ public class CommonResourcesResourceIntTest {
     public void updateCommonResources() throws Exception {
         // Initialize the database
         commonResourcesRepository.saveAndFlush(commonResources);
+
         int databaseSizeBeforeUpdate = commonResourcesRepository.findAll().size();
 
         // Update the commonResources
-        CommonResources updatedCommonResources = commonResourcesRepository.findOne(commonResources.getId());
+        CommonResources updatedCommonResources = commonResourcesRepository.findById(commonResources.getId()).get();
+        // Disconnect from session so that the updates on updatedCommonResources are not directly saved in db
+        em.detach(updatedCommonResources);
         updatedCommonResources
-                .title(UPDATED_TITLE)
-                .content(UPDATED_CONTENT)
-                .contentContentType(UPDATED_CONTENT_CONTENT_TYPE)
-                .description(UPDATED_DESCRIPTION)
-                .displayOrder(UPDATED_DISPLAY_ORDER)
-                .websiteLink(UPDATED_WEBSITE_LINK);
+            .title(UPDATED_TITLE)
+            .content(UPDATED_CONTENT)
+            .contentContentType(UPDATED_CONTENT_CONTENT_TYPE)
+            .description(UPDATED_DESCRIPTION)
+            .displayOrder(UPDATED_DISPLAY_ORDER)
+            .websiteLink(UPDATED_WEBSITE_LINK);
 
         restCommonResourcesMockMvc.perform(put("/api/common-resources")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
@@ -252,15 +259,15 @@ public class CommonResourcesResourceIntTest {
 
         // Create the CommonResources
 
-        // If the entity doesn't have an ID, it will be created instead of just being updated
+        // If the entity doesn't have an ID, it will throw BadRequestAlertException
         restCommonResourcesMockMvc.perform(put("/api/common-resources")
             .contentType(TestUtil.APPLICATION_JSON_UTF8)
             .content(TestUtil.convertObjectToJsonBytes(commonResources)))
-            .andExpect(status().isCreated());
+            .andExpect(status().isBadRequest());
 
         // Validate the CommonResources in the database
         List<CommonResources> commonResourcesList = commonResourcesRepository.findAll();
-        assertThat(commonResourcesList).hasSize(databaseSizeBeforeUpdate + 1);
+        assertThat(commonResourcesList).hasSize(databaseSizeBeforeUpdate);
     }
 
     @Test
@@ -268,6 +275,7 @@ public class CommonResourcesResourceIntTest {
     public void deleteCommonResources() throws Exception {
         // Initialize the database
         commonResourcesRepository.saveAndFlush(commonResources);
+
         int databaseSizeBeforeDelete = commonResourcesRepository.findAll().size();
 
         // Get the commonResources
@@ -278,5 +286,20 @@ public class CommonResourcesResourceIntTest {
         // Validate the database is empty
         List<CommonResources> commonResourcesList = commonResourcesRepository.findAll();
         assertThat(commonResourcesList).hasSize(databaseSizeBeforeDelete - 1);
+    }
+
+    @Test
+    @Transactional
+    public void equalsVerifier() throws Exception {
+        TestUtil.equalsVerifier(CommonResources.class);
+        CommonResources commonResources1 = new CommonResources();
+        commonResources1.setId(1L);
+        CommonResources commonResources2 = new CommonResources();
+        commonResources2.setId(commonResources1.getId());
+        assertThat(commonResources1).isEqualTo(commonResources2);
+        commonResources2.setId(2L);
+        assertThat(commonResources1).isNotEqualTo(commonResources2);
+        commonResources1.setId(null);
+        assertThat(commonResources1).isNotEqualTo(commonResources2);
     }
 }
