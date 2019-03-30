@@ -141,3 +141,4 @@ Desktop.ini
 /.apt_generated/
 
 yarn.lock
+package-lock.json

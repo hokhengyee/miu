@@ -106,7 +106,7 @@ public class CourseAccessResourceIntTest {
         // Validate the CourseAccess in the database
         List<CourseAccess> courseAccessList = courseAccessRepository.findAll();
         assertThat(courseAccessList).hasSize(databaseSizeBeforeCreate + 1);
-        CourseAccess testCourseAccess = courseAccessList.get(courseAccessList.size() - 1);
+        courseAccessList.get(courseAccessList.size() - 1);
     }
 
     @Test
@@ -181,7 +181,7 @@ public class CourseAccessResourceIntTest {
         // Validate the CourseAccess in the database
         List<CourseAccess> courseAccessList = courseAccessRepository.findAll();
         assertThat(courseAccessList).hasSize(databaseSizeBeforeUpdate);
-        CourseAccess testCourseAccess = courseAccessList.get(courseAccessList.size() - 1);
+        courseAccessList.get(courseAccessList.size() - 1);
     }
 
     @Test

@@ -6,7 +6,6 @@ import com.miu.domain.StudentProfile;
 import com.miu.domain.Salutation;
 import com.miu.domain.Gender;
 import com.miu.domain.User;
-import com.miu.domain.User;
 import com.miu.repository.StudentProfileRepository;
 
 import org.junit.Before;
