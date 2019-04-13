@@ -116,7 +116,7 @@ public class MailService {
 				output.add(managedUserVM);
 			}
 		}
-        // List<User> userList = userService.getAllAdminUser();
+
         if (output.size() > 0) {
             for (int i = 0; i < output.size(); i++) {
                 ManagedUserVM user = output.get(i);
