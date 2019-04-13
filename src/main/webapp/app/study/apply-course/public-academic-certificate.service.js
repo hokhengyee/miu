@@ -1,17 +1,17 @@
-(function() {
-	'use strict';
-	angular.module('miuApp').factory('PublicAcademicCertificate',
-			PublicAcademicCertificate);
+(function () {
+    'use strict';
+    angular.module('miuApp').factory('PublicAcademicCertificate',
+        PublicAcademicCertificate);
 
-	PublicAcademicCertificate.$inject = [ '$resource' ];
+    PublicAcademicCertificate.$inject = ['$resource'];
 
-	function PublicAcademicCertificate($resource) {
-		var resourceUrl = 'api/public/academic-certificates/:id';
+    function PublicAcademicCertificate($resource) {
+        var resourceUrl = 'api/public/academic-certificates/:id';
 
-		return $resource(resourceUrl, {}, {
-			'update' : {
-				method : 'PUT'
-			}
-		});
-	}
+        return $resource(resourceUrl, {}, {
+            'update': {
+                method: 'PUT'
+            }
+        });
+    }
 })();

@@ -178,7 +178,7 @@ public class PublicResource {
 		}
 
 		OnlineApplication result = onlineApplicationRepository.save(onlineApplication);
-		mailService.sendOnlineApplicationEmail(result);
+        mailService.sendOnlineApplicationEmail(result);
 		return ResponseEntity.created(new URI("/api/online-applications/" + result.getId()))
 				.headers(HeaderUtil.createEntityCreationAlert("onlineApplication", result.getId().toString()))
 				.body(result);

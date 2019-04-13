@@ -17,7 +17,7 @@ import com.miu.domain.User;
 public interface UserRepository extends JpaRepository<User, Long> {
 
 	@Query("select user from User user where user.login = 'admin'")
-	User findAdminUser();
+    User findAdminUser();
 
 	List<User> findAllByActivatedIsFalseAndCreatedDateBefore(ZonedDateTime dateTime);
 
